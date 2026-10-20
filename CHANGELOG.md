@@ -5,6 +5,7 @@
 - Exclude private directories entirely from the published tree, including policy markers; local copies remain ignored.
 - Correct strict static typing without weakening runtime validation or analytical evidence requirements.
 - Add native profile-reader parity checks and wait for the exact relationship response in browser handoff qualification.
+- Make optional semantic-provider absence explicit, keep its unit tests independent of installed ML packages, and qualify graphics/Ruby tests with portable tool discovery.
 
 This is the first public-beta candidate. Preparing these notes does not publish it. Original development history and internal qualification records are preserved privately.
 

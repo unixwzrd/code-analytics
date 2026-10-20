@@ -54,6 +54,7 @@ def test_semantic_nomination_is_local_bounded_and_deterministic(
     report = _report()
     model = _model_directory(tmp_path)
     monkeypatch.setattr("code_analysis.semantic_nomination._vectors", _mock_vectors)
+    monkeypatch.setattr("code_analysis.semantic_nomination._provider_version", lambda: "synthetic")
     first = build_semantic_nomination_report(report, model, max_nominations=2)
     second = build_semantic_nomination_report(report, model, max_nominations=2)
     assert first == second
@@ -117,6 +118,7 @@ def test_semantic_cli_reads_saved_report_and_reports_partiality(
     report_path.write_text(render_json(_report()), encoding="utf-8")
     model = _model_directory(tmp_path)
     monkeypatch.setattr("code_analysis.semantic_nomination._vectors", _mock_vectors)
+    monkeypatch.setattr("code_analysis.semantic_nomination._provider_version", lambda: "synthetic")
     result = main(
         [
             "semantic-nominate",
@@ -149,6 +151,38 @@ def test_missing_optional_model_provider_remains_unavailable(tmp_path, monkeypat
     monkeypatch.setitem(sys.modules, "sentence_transformers", None)
     with pytest.raises(SemanticProviderUnavailable, match="unavailable"):
         _vectors(tmp_path, ("one",))
+
+
+def test_missing_provider_metadata_cannot_succeed_for_empty_candidates(
+    tmp_path, monkeypatch, capsys
+):
+    import importlib.metadata
+
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "empty.py").write_text('"""No candidate functions."""\n')
+    report = scan_refactor(discover_context(project, AnalysisConfig()))
+    assert report.function_profiles == ()
+    model = _model_directory(tmp_path)
+    original_version = importlib.metadata.version
+
+    def missing_version(name):
+        if name == "sentence-transformers":
+            raise importlib.metadata.PackageNotFoundError(name)
+        return original_version(name)
+
+    monkeypatch.setattr(importlib.metadata, "version", missing_version)
+    with pytest.raises(SemanticProviderUnavailable, match="metadata is unavailable"):
+        build_semantic_nomination_report(report, model)
+    report_path = tmp_path / "report.json"
+    report_path.write_text(render_json(report))
+    status = main(
+        ["semantic-nominate", str(report_path), "--model-directory", str(model), "--json-compact"]
+    )
+    captured = capsys.readouterr()
+    assert status == ExitCode.ENODATA
+    assert captured.out == ""
+    assert "metadata is unavailable" in captured.err
 
 
 @pytest.mark.parametrize("factory", [None, lambda *args, **kwargs: object()])

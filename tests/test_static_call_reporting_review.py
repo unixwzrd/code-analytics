@@ -1,5 +1,6 @@
 """Independent regressions for static-call assembly boundaries."""
 
+import shutil
 from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
@@ -144,7 +145,7 @@ def test_ruby_operator_calls_retained_without_invalid_static_records(tmp_path: P
     (tmp_path / "app.rb").write_text(ruby_source)
     prism_walk = subprocess.run(
         [
-            "/usr/local/bin/ruby",
+            shutil.which("ruby") or "ruby",
             "-rprism",
             "-e",
             _PRISM_CALL_SITE_COUNTER,

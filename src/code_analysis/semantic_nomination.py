@@ -27,6 +27,13 @@ class SemanticProviderUnavailable(ComparisonBuildError):
     """The optional local semantic provider is not importable."""
 
 
+def _provider_version() -> str:
+    try:
+        return importlib.metadata.version("sentence-transformers")
+    except importlib.metadata.PackageNotFoundError as exc:
+        raise SemanticProviderUnavailable("sentence-transformers metadata is unavailable") from exc
+
+
 class _EmbeddingVector(Protocol):
     def tolist(self) -> Iterable[float]: ...
 
@@ -185,6 +192,7 @@ def build_semantic_nomination_report(
         raise ComparisonBuildError("semantic model must be an existing absolute local directory")
     if isinstance(max_nominations, bool) or not 1 <= max_nominations <= 50_000:
         raise ComparisonBuildError("semantic nomination limit must be between 1 and 50000")
+    provider_version = _provider_version()
     pairs, omitted = _candidate_pairs(report, max_nominations)
     texts = _profile_text(report)
     subject_ids = tuple(sorted({subject for pair in pairs for subject in pair}))
@@ -272,7 +280,7 @@ def build_semantic_nomination_report(
             model_sha256=model_hash,
             configuration_sha256=configuration_hash,
             vector_dimension=dimension,
-            provider_version=importlib.metadata.version("sentence-transformers"),
+            provider_version=provider_version,
             license_identity=license_identity,
             license_files=license_files,
         ),

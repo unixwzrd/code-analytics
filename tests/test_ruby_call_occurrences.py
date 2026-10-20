@@ -442,7 +442,7 @@ def test_batch_output_stable_in_separate_python_processes() -> None:
         f"driver = {str(DRIVER)!r}; "
         "source = 'a();\\nb();\\nc();\\n'; "
         "out = subprocess.check_output("
-        "['/usr/local/bin/ruby', driver, '2'], input=source.encode()); "
+        f"[{RUBY!r}, driver, '2'], input=source.encode()); "
         "doc = _PrismDocument.model_validate_json(out); "
         "batch = ruby_call_occurrence_batch(doc.call_occurrences); "
         "print(json.dumps(dataclasses.asdict(batch), sort_keys=True))"

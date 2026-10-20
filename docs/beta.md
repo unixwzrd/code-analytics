@@ -10,7 +10,7 @@ Python, JavaScript/JSX and Ruby have peer parser-adapter packages, but they do n
 
 ## Candidate qualification
 
-On Python 3.12.13, the `0.2.0b1` candidate passed 2,811 product tests across a disjoint 852-test UI/support gate and 1,959-test non-UI partition, with no failures or skips. A focused 100-case regression selection also passed; those cases overlap the full partitions and must not be added to that total. Black, Ruff, 559 documentation links, compiled-help freshness, archived package builds and installed offline Chromium/WebKit checks passed. The source distribution retains all 135 tutorial files; all nine supplied reports' source hashes were checked without rerunning or rewriting the exercises.
+Python 3.12.13 is the reproducible qualification baseline. The workflow runs Black, Ruff, strict mypy, the complete product suite in disjoint non-UI and UI/support partitions, clean package builds, and installed offline Chromium/WebKit checks. See [the commit-bound CI results](https://github.com/unixwzrd/code-analytics/actions) for current statuses and test counts; pending or failed jobs remain pending or failed. The source distribution retains all 135 tutorial files, and supplied report source hashes are checked without rerunning or rewriting the exercises.
 
 These technical checks do not establish unfamiliar-user comprehension, real Safari/hardware IME or every interpreter/platform combination. The `0.2.0b1` preparation additionally corrects the strict mypy failures exposed by clean CI; the local checker now passes across 213 source modules with psutil development stubs, without disabling checks. Source self-analysis retains partiality for bounded/unresolved evidence rather than returning a clean verdict.
 
