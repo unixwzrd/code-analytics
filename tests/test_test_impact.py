@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from graphviz_assertions import assert_graphviz_golden
 
 from code_analysis.config import AnalysisConfig, PhaseFourLimits
 from code_analysis.models import Completeness, ProviderState, SourceLanguage
@@ -238,13 +239,10 @@ def test_test_impact_projections_are_saved_report_only_and_golden() -> None:
         assert "/Users/" not in rendered
     if shutil.which("dot") is not None:
         graph = build_projection(report, ProjectionName.TEST_IMPACT_GRAPH)
-        for output_format, filename in (
-            (ProjectionFormat.SVG, "phase4-test-impact.svg"),
-            (ProjectionFormat.PNG, "phase4-test-impact.png"),
-        ):
-            rendered = render_projection_binary(graph, output_format)
-            assert rendered == render_projection_binary(graph, output_format)
-            assert rendered == (GOLDEN / filename).read_bytes()
+        assert_graphviz_golden(
+            lambda output_format: render_projection_binary(graph, output_format),
+            GOLDEN / "phase4-test-impact.dot",
+        )
 
 
 def test_malformed_test_source_is_failed_evidence_not_empty_success(tmp_path: Path) -> None:

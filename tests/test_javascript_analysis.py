@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from graphviz_assertions import assert_graphviz_golden
 from pydantic import ValidationError
 
 import code_analysis.cohesion_reporting as cohesion_reporting
@@ -458,13 +459,10 @@ def test_javascript_report_and_projections_are_authoritative_goldens() -> None:
             ProjectionName.DEPENDENCIES,
             languages=(SourceLanguage.JAVASCRIPT,),
         )
-        for output_format, filename in (
-            (ProjectionFormat.SVG, "projection-javascript-dependencies.svg"),
-            (ProjectionFormat.PNG, "projection-javascript-dependencies.png"),
-        ):
-            assert (
-                render_projection_binary(graph, output_format) == (GOLDEN / filename).read_bytes()
-            )
+        assert_graphviz_golden(
+            lambda output_format: render_projection_binary(graph, output_format),
+            GOLDEN / "projection-javascript-dependencies.dot",
+        )
 
 
 def test_all_javascript_projections_use_only_retained_report_evidence(monkeypatch) -> None:

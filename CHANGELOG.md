@@ -6,6 +6,7 @@
 - Correct strict static typing without weakening runtime validation or analytical evidence requirements.
 - Add native profile-reader parity checks and wait for the exact relationship response in browser handoff qualification.
 - Make optional semantic-provider absence explicit, keep its unit tests independent of installed ML packages, and qualify graphics/Ruby tests with portable tool discovery.
+- Validate rendered graph meaning and same-provider determinism without requiring cross-platform Graphviz pixel/layout equality; authoritative JSON/DOT goldens remain byte-exact.
 
 This is the first public-beta candidate. Preparing these notes does not publish it. Original development history and internal qualification records are preserved privately.
 
