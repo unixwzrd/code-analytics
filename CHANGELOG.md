@@ -4,7 +4,7 @@
 
 - Exclude private directories entirely from the published tree, including policy markers; local copies remain ignored.
 - Correct strict static typing without weakening runtime validation or analytical evidence requirements.
-- Add native profile-reader parity checks and wait for the exact relationship response in browser handoff qualification.
+- Add native profile-reader parity checks and synchronize browser assertions with relationship responses and loaded finding details; held-response regressions exercise the loading state explicitly.
 - Make optional semantic-provider absence explicit, keep its unit tests independent of installed ML packages, and qualify graphics/Ruby tests with portable tool discovery.
 - Validate rendered graph meaning and same-provider determinism without requiring cross-platform Graphviz pixel/layout equality; authoritative JSON/DOT goldens remain byte-exact.
 

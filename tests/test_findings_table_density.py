@@ -127,9 +127,15 @@ def test_findings_table_keeps_compact_rows_and_discloses_long_text(
                 assert "&amp;'quoted" in rationale_html
                 assert page.evaluate(DOCUMENT_WIDTH_CONTAINED)
 
+                held = []
+                page.route("**/api/evidence?*", lambda route: held.append(route))
                 page.get_by_role("button", name=PROBE_TITLE, exact=True).click()
                 page.get_by_role("dialog").wait_for()
-                assert "Source completeness" in page.locator("#evidence-content").inner_text()
+                content = page.locator("#evidence-content")
+                playwright.expect(content).to_have_text("Loading evidence…")
+                assert len(held) == 1
+                held[0].continue_()
+                playwright.expect(content).to_contain_text("Source completeness")
                 page.keyboard.press("Escape")
                 assert not page.get_by_role("dialog").is_visible()
                 assert not errors
