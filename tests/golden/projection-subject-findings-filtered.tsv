@@ -1,0 +1,2 @@
+subject-id	kind	module	logical-name	finding-count	errors	warnings	info	category-counts	rule-counts	evidence-count	affected-proposals
+subject-dc537fbe8077aaa3b39a	symbol	package.combine_a	package.combine_a:transform	1	0	1	0	duplication=1	duplication.normalized-ast=1	5	2

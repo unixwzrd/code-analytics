@@ -1,0 +1,1 @@
+"""Synthetic ordinary package."""

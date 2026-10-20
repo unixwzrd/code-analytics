@@ -1,0 +1,1 @@
+"""Synthetic src-layout package."""

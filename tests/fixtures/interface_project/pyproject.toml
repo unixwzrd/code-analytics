@@ -1,0 +1,4 @@
+[tool.code-analysis]
+source-roots = ["."]
+languages = ["auto"]
+

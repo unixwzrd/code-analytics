@@ -1,0 +1,14 @@
+[tool.code-analysis]
+strictness = "normal"
+
+[tool.code-analysis.clone-thresholds]
+commonality-max-feature-subject-fraction = 1.0
+
+[[tool.code-analysis.architecture-layers]]
+name = "application"
+module-patterns = ["package.combine_a", "package.combine_b", "package.work"]
+may-import-layers = ["domain"]
+
+[[tool.code-analysis.architecture-layers]]
+name = "domain"
+module-patterns = ["package.dependencies", "package.domain_bad"]

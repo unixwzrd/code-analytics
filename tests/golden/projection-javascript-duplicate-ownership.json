@@ -1,0 +1,140 @@
+{
+  "columns": [
+    {
+      "alignment": "left",
+      "column_id": "duplicate-id",
+      "label": "Duplicate ID",
+      "position": 0,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "state",
+      "label": "State",
+      "position": 1,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "subject-id",
+      "label": "Canonical subject",
+      "position": 2,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "reason",
+      "label": "Reason",
+      "position": 3,
+      "value_kind": "string"
+    }
+  ],
+  "completeness": "complete",
+  "inputs": [
+    {
+      "report_schema_name": "code-analysis-report",
+      "report_schema_version": "1.0.0",
+      "report_sha256": "25830751f89eb197400c70470a2015a2dc2406a4dd15273b0d821df2eece9214",
+      "role": "source",
+      "run_identity_sha256": "9848c6124e1cb9c3a2854eff110670a1750d24caa6117edffa0b67c2e2633337"
+    }
+  ],
+  "limitations": [
+    "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+    "Clone evidence is syntax-only; semantic equivalence and runtime behavior are unmeasured.",
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Data-structure topology is syntax-only and limited to evidenced dictionary operations and declarations.",
+    "Dictionary analysis is syntax-only and bounded; dynamic calls and keys remain unresolved.",
+    "Dictionary evidence is descriptive and does not authorize a representation change.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Feature profiles describe syntax and do not establish runtime behavior or common ownership.",
+    "Growth indicators are measurement prompts, not performance findings.",
+    "Interface evidence is static and does not transfer authorization or domain semantics.",
+    "JavaScript analysis is syntax-only; dynamic dispatch, package export maps, bundler aliases, and framework semantics remain unresolved.",
+    "Mutable-state and side-effect evidence is syntax-only; runtime ownership and outcomes are unmeasured.",
+    "Names and literals remain significant for token clones and are categorical in AST clones.",
+    "Operational filesystem, path, symlink, authorization, security, and runtime-state validation is excluded.",
+    "Phase 4 test-impact evidence is unavailable.",
+    "Runtime ownership, lock behavior and coverage, persistence success, cleanup effectiveness, and growth remain unmeasured.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved.",
+    "Shadowing, dynamic dispatch, cleanup effectiveness, and arbitrary receiver provenance remain unresolved.",
+    "Static graph simulation does not establish runtime behavior or authorize source changes.",
+    "Structural validation currently covers proven dictionary membership, truthiness, and coercion checks.",
+    "Validation-relative mutation timing and data-structure ownership remain unavailable.",
+    "runtime-binding-is-not-established-by-static-call-evidence",
+    "static-call-evidence-is-syntactic-and-does-not-establish-runtime-dispatch"
+  ],
+  "projection_id": "projection-48beb15a921d3603f2c7",
+  "projection_kind": "table",
+  "record_count": 1,
+  "rows": [
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplicate-5f2c55a7148c0fea1242"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "suggested"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-ed2f62b844893bbb2fdd"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "one-way resolved local import direction supports the canonical owner"
+        }
+      ],
+      "evidence_ids": [],
+      "row_id": "duplicate-5f2c55a7148c0fea1242"
+    }
+  ],
+  "schema_name": "code-analysis-projection",
+  "schema_version": "1.0.0",
+  "selection": {
+    "after_id": null,
+    "candidate_decisions": [],
+    "candidate_exclude_patterns": [],
+    "candidate_kinds": [],
+    "candidate_module_patterns": [],
+    "candidate_states": [],
+    "collapse": "none",
+    "cross_module_only": false,
+    "depth": null,
+    "edge_kinds": [],
+    "finding_categories": [],
+    "finding_rule_ids": [],
+    "finding_severities": [],
+    "languages": [
+      "javascript"
+    ],
+    "max_edges": 250,
+    "max_nodes": 100,
+    "max_records": 500,
+    "min_shared_dimensions": 0,
+    "module_prefixes": [],
+    "prefer_existing_owner": false,
+    "production_only": false,
+    "selected_ids": []
+  },
+  "sort": [],
+  "title": "Duplicate ownership review",
+  "truncated": false,
+  "truncation_reason": null
+}

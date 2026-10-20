@@ -1,0 +1,5 @@
+owner	shape-id	variant	variant-id	field-count	field-names	discriminator	discriminator-values	requiredness	lifecycle-states	producer-defaults	consumer-fallbacks	confidence	evidence-path	evidence-line
+package.consumer:consume:value	shape-97b3d9ce5b3a6e698725	observed	variant-9ecb9d514509df3886a9	1	trace_id			optional		0	1	resolved	package/consumer.py	2
+package.producer:advance:payload	shape-5f876cd2eaccd1907c68	observed	variant-d73d391457a12cb7a241	1	state			always	state="queued", state="running"	0	0	resolved	package/producer.py	14
+package.producer:build:payload	shape-bc2f366f4dab190ba0d8	if@5:4:body	variant-4fbbec4ccbac2d77e3a4	2	job_id, kind	kind	"queued"	always		0	0	resolved	package/producer.py	6
+package.producer:build:payload	shape-bc2f366f4dab190ba0d8	if@5:4:else	variant-28a8b55969018ade94cf	2	kind, result	kind	"done"	always		0	0	resolved	package/producer.py	8

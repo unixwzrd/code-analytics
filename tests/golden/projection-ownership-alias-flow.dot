@@ -1,0 +1,19 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+  "structure-1d5063aa7f4e71113d49" [label="package.state:<module>:registry"];
+  "structure-f42fb998549a30e7ca35" [label="package.state:build:payload"];
+  "subject-4fa02ee9c44eca7b2b56" [label="package.state:build:payload"];
+  "subject-54c25888aa43458cc3ff" [label="package.state:<module>:registry"];
+  "subject-b417ce5fdc419e72f148" [label="package.state:build:alias"];
+  "subject-4fa02ee9c44eca7b2b56" -> "structure-f42fb998549a30e7ca35" [label="mutator: mutator", style="solid"];
+  "subject-4fa02ee9c44eca7b2b56" -> "structure-f42fb998549a30e7ca35" [label="producer: producer", style="solid"];
+  "subject-4fa02ee9c44eca7b2b56" -> "structure-f42fb998549a30e7ca35" [label="writer: writer", style="solid"];
+  "structure-f42fb998549a30e7ca35" -> "subject-b417ce5fdc419e72f148" [label="alias: alias", style="solid"];
+  "subject-54c25888aa43458cc3ff" -> "structure-1d5063aa7f4e71113d49" [label="mutator: mutator", style="solid"];
+  "subject-54c25888aa43458cc3ff" -> "structure-1d5063aa7f4e71113d49" [label="producer: producer", style="solid"];
+  "subject-4fa02ee9c44eca7b2b56" -> "structure-f42fb998549a30e7ca35" [label="owner: owner", style="solid"];
+  "subject-54c25888aa43458cc3ff" -> "structure-1d5063aa7f4e71113d49" [label="writer: writer", style="solid"];
+  "subject-54c25888aa43458cc3ff" -> "structure-1d5063aa7f4e71113d49" [label="owner: owner", style="solid"];
+}

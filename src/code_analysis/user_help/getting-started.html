@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Getting started</title><link rel="stylesheet" href="/help/styles.css"></head><body><main class="help-document"><h1 id="getting-started">Getting started</h1>
+<h2 id="installation">Installation</h2>
+<p>Install the repository into an isolated Python environment; these commands do not depend on a PyPI release:</p>
+<pre><code class="language-bash">git clone https://github.com/unixwzrd/code-analytics.git
+cd code-analytics
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install .
+code-analysis doctor
+</code></pre>
+<p>Choose optional capabilities explicitly from the checkout:</p>
+<pre><code class="language-bash">python -m pip install '.[javascript]'  # JavaScript/JSX parsing
+python -m pip install '.[tui]'         # terminal investigation
+python -m pip install '.[runtime]'     # explicit coverage/profiling workflows
+</code></pre>
+<p>The base installation supports Python analysis and saved-report browsing without Node, Ruby or optional language parsers. JavaScript uses pinned Tree-sitter bindings and grammar, not Node or npm. Ruby analysis uses an existing configured Ruby/Prism installation through an external parser driver; it does not load the target Ruby application. Run <code>doctor</code> and <code>providers</code> to check availability. Missing parsers remain visible as unavailable evidence.</p>
+<p>The separate <code>semantic</code> extra requires an explicitly configured existing local model; the tool never downloads a model automatically. See the <a href="/help/cli-reference.html">CLI reference</a> for optional-provider configuration.</p>
+<p>On macOS, <code>code-analysis</code> opens or reuses a compatible background UI session and returns your prompt. Closing the browser tab leaves that session running; use <strong>Stop Code Analysis</strong> or <code>code-analysis ui-stop</code> to stop it. For terminal-controlled operation without browser launch, use <code>code-analysis ui --foreground --no-open</code>. Global <strong>Help</strong> opens the bundled offline guide. See the <a href="/help/user-guide.html">UI guide</a> for collection roots, source binding and browser preferences.</p>
+<h2 id="everyday-commands">Everyday commands</h2>
+<pre><code class="language-bash">code-analysis doctor
+code-analysis providers
+code-analysis scan .
+code-analysis refactor . --json-compact -o refactor.json
+code-analysis summary refactor.json
+code-analysis diff baseline.json candidate.json --format markdown
+code-analysis export refactor.json --projection dependencies --format svg -o dependencies.svg
+code-analysis ui refactor.json --source-root . --no-collection
+</code></pre>
+<p>The <a href="/help/cli-reference.html">CLI reference</a>, <a href="/help/examples.html">examples</a>, <a href="/help/user-guide.html">UI guide</a> and <a href="/help/reports.html">report and diagram catalog</a> cover focused analysis, queries, projections, comparisons, workspaces and explicit runtime evidence. SVG rendering requires the optional Graphviz executable; a missing renderer is an error, not an empty diagram.</p>
+</main></body></html>

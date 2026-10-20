@@ -1,0 +1,126 @@
+{
+  "title": "The Reservation Desk",
+  "language": "python",
+  "level": "beginner",
+  "scenario": "Ada reserves two standard rooms for one night; 1200 pennies per room, gold-tier discount, total 2160 pennies; room inventory 8 to 6; one disposable receipt.",
+  "commands": {
+    "demo": "python src/demo.py",
+    "tests": "python -m unittest discover -s tests -v"
+  },
+  "observations": [
+    {
+      "id": "PY-BEG-01",
+      "label": "Basil has occupied the whole reservation desk",
+      "path": "src/reception.py",
+      "symbol": "ReceptionDesk.make_reservation",
+      "expectation": "supported",
+      "view": "Findings",
+      "check": {
+        "kind": "complexity",
+        "min_score": 15
+      },
+      "meaning": "Validation, optional requests, billing, formatting and persistence share one front-desk method.",
+      "limitation": "Metrics prompt maintenance review, not a failed booking."
+    },
+    {
+      "id": "PY-BEG-02",
+      "label": "Manuel has supplied two calculators",
+      "path": "src/reception.py",
+      "symbol": "direct_booking_total",
+      "expectation": "supported",
+      "view": "Clones",
+      "check": {
+        "kind": "clone_pair",
+        "symbols": [
+          "direct_booking_total",
+          "agency_booking_total"
+        ]
+      },
+      "meaning": "The direct and agency calculators duplicate validation and integer rate arithmetic.",
+      "limitation": "Clone evidence does not decide whether the two policies should share an owner."
+    },
+    {
+      "id": "PY-BEG-03",
+      "label": "The desk sends the paperwork in a circle",
+      "path": "src/billing.py",
+      "symbol": "quote_stay",
+      "expectation": "supported",
+      "view": "Architecture",
+      "check": {
+        "kind": "cycle",
+        "modules": [
+          "billing",
+          "reception"
+        ]
+      },
+      "meaning": "There is a safe local import cycle, with imported values used after initialization.",
+      "limitation": "A cycle does not prove a startup failure."
+    },
+    {
+      "id": "PY-BEG-04",
+      "label": "Basil keeps a process-wide notebook",
+      "path": "src/billing.py",
+      "symbol": "quote_stay",
+      "expectation": "supported",
+      "view": "State / effects",
+      "check": {
+        "kind": "global",
+        "logical_name": "billing:QUOTES_SEEN"
+      },
+      "meaning": "Quoted totals or bookings remain in a shared process-global collection until explicitly cleared.",
+      "limitation": "Syntax evidence does not prove concurrency safety or an unbounded production leak."
+    },
+    {
+      "id": "PY-BEG-05",
+      "label": "Basil and Polly disagree on the room form",
+      "path": "src/rooms.py",
+      "symbol": "RoomOffer",
+      "expectation": "supported",
+      "view": "Contracts / Dictionary shapes",
+      "check": {
+        "kind": "contract"
+      },
+      "meaning": "Standard room offers and annex offers represent the same domain with different keys.",
+      "limitation": "The RoomOffer declaration and shape observations are descriptive, not a proven runtime violation."
+    },
+    {
+      "id": "PY-BEG-06",
+      "label": "Polly adjusts the actual room notebook",
+      "path": "src/rooms.py",
+      "symbol": "reserve",
+      "expectation": "heuristic",
+      "view": "Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Reservation decrements the caller-owned room mapping in place; behavior checks verify object identity and remaining rooms.",
+      "limitation": "The dynamic stock field has no dedicated argument-mutation finding; source and tests supply that evidence."
+    },
+    {
+      "id": "PY-BEG-07",
+      "label": "Polly coordinates one successful booking",
+      "path": "src/demo.py",
+      "symbol": "run_demo",
+      "expectation": "negative_control",
+      "view": "Browse code",
+      "check": {
+        "kind": "negative_control"
+      },
+      "meaning": "The short demo legitimately coordinates a booking and disposable receipt persistence.",
+      "limitation": "Orchestration is intentional; no finding targets this coordinator. Absence of a finding is not proof of design quality."
+    },
+    {
+      "id": "PY-BEG-08",
+      "label": "One desk owns billing and the filing cabinet",
+      "path": "src/reception.py",
+      "symbol": "ReceptionDesk",
+      "expectation": "heuristic",
+      "view": "Candidates / Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "One class owns guest-facing presentation, receipt state and persistence as well as billing coordination.",
+      "limitation": "No refactor proposal is emitted. Review ownership manually; the empty Candidates view is not approval."
+    }
+  ]
+}

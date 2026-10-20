@@ -1,0 +1,17 @@
+record-type	identity	state	operation	reason	unresolved	truncated	evidence-path	evidence-line
+section	clones	complete			0	0		0
+section	cohesion-refactoring	complete			0	0		0
+section	contracts	complete			0	0		0
+section	coverage	disabled			0	0		0
+section	data-structures	complete			0	0		0
+section	dictionary-shapes	partial			1	0		0
+section	function-commonality	complete			0	0		0
+section	generation-history	disabled			0	0		0
+section	git-history	disabled			0	0		0
+section	interfaces	complete			0	0		0
+section	r1-static-analysis	complete			0	0		0
+section	state-side-effects	complete			0	0		0
+section	static-call-occurrences	complete			0	0		0
+section	test-impact	unavailable			0	0		0
+section	validation	complete			0	0		0
+unresolved-edge	unresolved-fdf67320704e4cc6a455	partial	dictionary-argument	call target or parameter is not exactly resolved locally	1	0	package/consumer.py	3

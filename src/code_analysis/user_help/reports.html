@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Report and diagram catalog</title><link rel="stylesheet" href="/help/styles.css"></head><body><main class="help-document"><h1 id="report-and-diagram-catalog">Report and diagram catalog</h1>
+<h2 id="synchronized-code-browser">Synchronized code browser</h2>
+<p>The implemented <span class="help-unbundled-reference">current scope and roadmap</span> combines saved entity and relationship views into a synchronized outline, focused map and source pane. Containment, imports, static calls, runtime calls and data flow remain separately labelled; default graph bounds stay at 100 nodes/250 edges with omissions disclosed. No source rescan is needed for analytical maps or exports. Verified original source is a separately authorized transient view, and session drafts are neither analytical records nor report/projection artifacts. These controls do not add projection names. The <span class="help-unbundled-reference">current scope and roadmap</span> tracks planned guidance, tutorials and storage management around these delivered views, not new analytical report types.</p>
+<p><code>static-call-sites</code> answers where invocation syntax was recorded, with exact portable spans, language, scope/evaluation context and conditional/deferred/unknown flags. Unknown callee spellings and navigation anchors remain null. <code>static-call-graph</code> shows source-file containment of those distinct sites; it does not infer callee targets, runtime caller relationships or execution order. Both views are built from saved JSON; tables support JSON/TSV/Markdown and the graph supports JSON/Markdown/DOT/Mermaid plus optional Graphviz SVG/PNG. Source partiality and display omissions remain explicit. The prepared-index and UI integration is tracked in the <span class="help-unbundled-reference">current scope and roadmap</span>; the existence of these builders alone does not establish browser acceptance.</p>
+<p><code>lexical-call-graph</code> displays unique callee names recorded in function profiles. A unique exact same-language subject-name match links to that saved subject; unmatched or ambiguous names remain caller-scoped nodes without invented source navigation. Edges do not carry call-site spans, occurrence counts or runtime dispatch proof. Declaration evidence is labeled as such; aggregate unresolved counts describe language-selected profiles before neighborhood/display bounds, with provider differences disclosed. Web Explore and terminal Static views → Graphs support saved-only language/focus/grouping/bounds, navigation where recorded, export and Web handoff. Missing function profiles are unavailable, not an empty successful graph. Rich call-site collection and static/runtime call-edge reconciliation remain separate work.</p>
+<p>Saved structure diagrams are available as <code>structure-lifecycle-graph</code> (recorded roles and observed dictionary states without inferred transitions) and <code>conversion-graph</code> (actual saved conversion/serialization sites, preserving repeated sites). They support the common bounded graph selection and JSON/Markdown/DOT/Mermaid/HTML renderers plus optional Graphviz SVG/PNG. The existing <code>structure-lifecycle</code> and <code>conversion-churn</code> tables remain available. Neither graph claims temporal execution order, runtime ownership or successful conversion; lifecycle prose remains in the table instead of becoming fabricated edges.</p>
+<p><code>runtime query REPORT --section categories|correlations|process|lifecycle|steps</code> provides typed saved-only JSON, TSV and Markdown views with canonical source identity, bounds and omission counts. Default bound: 500 records. Source partiality and truncation return <code>ENODATA</code>. General static query/export selector convergence and true static call-edge overlays remain separate unfinished gates.</p>
+<p>The Phase 4P runtime command family additionally produces <code>runtime-summary.json</code> as authority; Markdown summary; functions/callers/callees TSV; category/identity/diagnostic JSON; bounded top-down DOT/SVG/PNG callgraphs; hotspot SVG; and a hash-bound subject overlay SVG. <code>manifest.json</code> records every artifact, missing renderer, and retained/omitted graph scope. These runtime views operate from saved JSON, outside the static projection-name registry. Full runtime registry/query integration and static call-edge overlays remain outstanding; see <span class="help-unbundled-reference">current scope and roadmap</span>.</p>
+<p>Status: implementation plan with <code>code-analysis-projection@1.0.0</code>, deterministic JSON, and report-only health/module/symbol/finding/hierarchy/complexity/dependency overview/neighborhood/SCC/canonical-cycle/contract inventory/boundary table and graph projections implemented. Availability is stated per view; inclusion here does not imply that another analyzer, projection builder, or renderer is already implemented.</p>
+<p>Code Analysis Suite should provide multiple views of the same validated evidence for developers, coding agents, CI, architecture reviews, refactoring work, and system documentation. The versioned JSON report remains authoritative. Tables, review packets, DOT, Mermaid, Markdown, SVG, PNG, static HTML, and interactive views are projections and must not require another source scan.</p>
+<h2 id="design-rules">Design rules</h2>
+<ul>
+<li>Commonality omission counts carry exact-versus-lower-bound certainty. <code>commonality-admission</code> exposes a Count kind column; <code>signal-quality</code> states when the remaining total is unknown. A bounded prefix must never be presented as an exact census of omitted pairs.</li>
+<li>Every projection answers a named engineering question. A diagram is not generated merely because nodes and edges exist.</li>
+<li>Public, persisted, projection, query, and report records use strict frozen Pydantic v2 models. Internal aggregation and layout inputs use frozen slotted dataclasses.</li>
+<li>Every projection binds the source report schema/version and SHA-256, projection schema/version, configuration, filters, stable ordering, completeness, limitations, and truncation.</li>
+<li>Findings remain evidence for review. No table, score, cluster, or diagram authorizes combining, extracting, rewriting, or deleting code.</li>
+<li>Refactoring views include supporting evidence, counter-evidence, affected boundaries, unresolved behavior, and likely validation needs.</li>
+<li>Portable artifacts contain logical paths and stable identities, never host paths, temporary paths, environment prefixes, or repository-external absolute paths.</li>
+<li>Large graphs use bounded overview, cluster, neighborhood, path, and cycle projections. The default must not be an unreadable whole-repository hairball.</li>
+<li>A missing renderer produces an unavailable rendering state, not an empty successful graph. Canonical projection JSON remains usable.</li>
+<li>Renderers escape labels and URLs for their target format. Source text is excluded from labels by default and is available only through bounded evidence references.</li>
+</ul>
+<h2 id="projection-families">Projection families</h2>
+<p>Language selection in ownership/alias and structure-lifecycle graphs matches the recorded structure owner's language and retains that structure's related subjects. Dictionary-flow and conversion graphs match either endpoint language and retain both endpoints; selecting one language does not sever a recorded cross-language relationship. Filters apply before exact-node focus and display bounds. A language selection with no matching structures/flows is explicitly unavailable rather than returning unrelated-language records or a successful empty graph. These shared saved-report rules apply to CLI/Web projections and prepared terminal graph requests.</p>
+<p>Prepared terminal indexes now retain ownership/alias flow, structure lifecycle, conversion and dictionary-flow graphs as bounded individual records. <strong>Static views → Graphs</strong> provides exact-node neighborhoods, typed node/edge inspection and shared graph exports without the source tree or report file. <strong>Graph filters</strong> / Ctrl+L stages multiple language choices and None/Module/Package collapse; Apply loads the selected scope using prepared membership and exact-owner metadata. Individual node details offer <strong>Navigate recorded spans</strong> with 25-row paging; source preview is separately enabled and hash-checked. Group details explain their display-only identity and offer no invented source span. Unmapped nodes and edges receive no inferred source location. Preparation availability and omissions are distinct from intentional focus/grouping and display truncation; source failure/partiality is retained. Grouping reads the focused input within explicit byte budgets and can require a narrower focus.</p>
+<p>The projection envelope is implemented as <code>code-analysis-projection@1.0.0</code>. Concrete Pydantic models include declared records rather than arbitrary payload dictionaries:</p>
+<ul>
+<li><code>TableProjection</code>: typed columns, typed rows, stable sort, grouping, totals, and truncation.</li>
+<li><code>GraphProjection</code>: typed nodes and edges, direction, clusters, metrics, legend, and pruning explanation.</li>
+<li>Matrix views use a strict sparse <code>MatrixProjection</code> with bounded row/column identities and evidence-linked cells; unbounded dense materialization is prohibited.</li>
+<li><code>HierarchyProjection</code>: parent/child records for package, symbol, ownership, and structure trees.</li>
+<li><code>SequenceProjection</code>: participants and ordered events for lifecycle and producer/consumer paths.</li>
+<li><code>StateProjection</code>: states, transitions, guards, validation, and terminal/error states.</li>
+<li><code>ComparisonProjection</code>: compatible baseline/candidate identities, added/removed/changed records, deltas, and compatibility diagnostics.</li>
+<li><code>ReviewPacketProjection</code>: bounded findings, evidence, counter-evidence, impacted identities, tests/runtime evidence when available, limitations, and next review questions.</li>
+</ul>
+<p>TSV is produced only from declared scalar table columns. DOT and Mermaid currently render <code>GraphProjection</code> and <code>HierarchyProjection</code>; sequence and state renderers remain planned. SVG and PNG are renderer outputs from DOT or Mermaid. Markdown and HTML may compose several validated projections but cannot reinterpret severity, confidence, completeness, or authorization.</p>
+<h2 id="foundation-and-architecture-views">Foundation and architecture views</h2>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Engineering question</th>
+<th>Canonical projection</th>
+<th>Useful renderings</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analysis health and provenance</td>
+<td>Can this evidence be trusted and what was unavailable, partial, malformed, or truncated?</td>
+<td>table/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Repository overview</td>
+<td>What packages, modules, symbols, LOC, findings, and analyzer coverage exist?</td>
+<td>table/hierarchy</td>
+<td>JSON, Markdown, TSV, Mermaid</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Package and module tree</td>
+<td>Where is code physically and logically organized?</td>
+<td>hierarchy</td>
+<td>JSON, Markdown tree, Mermaid</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Symbol inventory</td>
+<td>Where are classes, functions, methods, nested symbols, parameters, returns, and decorators?</td>
+<td>table/hierarchy</td>
+<td>JSON, Markdown, TSV</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Symbol declaration graph (<code>symbol-graph</code>)</td>
+<td>Which symbols are recorded in each module? Exact membership only, not calls or inferred lexical parentage.</td>
+<td>graph</td>
+<td>JSON, Markdown, DOT, Mermaid, SVG, PNG, HTML</td>
+<td>P5</td>
+</tr>
+<tr>
+<td>Complexity hotspots</td>
+<td>Which symbols exceed structural thresholds and why?</td>
+<td>table/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>R1</td>
+</tr>
+<tr>
+<td>Complexity distribution</td>
+<td>Is complexity concentrated or broadly distributed?</td>
+<td>table/matrix</td>
+<td>JSON, TSV, static HTML chart</td>
+<td>P2/P5</td>
+</tr>
+<tr>
+<td>Module coupling</td>
+<td>Which modules have high fan-in, fan-out, or instability?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Dependency overview</td>
+<td>What are the principal package/module relationships?</td>
+<td>graph</td>
+<td>JSON, DOT, Mermaid, SVG, PNG</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Dependency neighborhood</td>
+<td>What directly depends on or is depended on by one selected identity?</td>
+<td>graph/review packet</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Dependency path</td>
+<td>How can one module or symbol reach another?</td>
+<td>graph/sequence</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>SCC and cycle report</td>
+<td>Which dependency loops exist and what edges form each canonical cycle?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Layer-policy report</td>
+<td>Which edges violate declared architecture boundaries?</td>
+<td>table/graph/review packet</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Provider agreement</td>
+<td>Where do native, Ruff, Pyreverse, Pydeps, or later providers agree or disagree?</td>
+<td>matrix/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>P3</td>
+</tr>
+</tbody>
+</table>
+<p>Dependency diagrams should support package, module, class, and resolved-symbol levels when corresponding evidence exists. Overview graphs default to packages or bounded high-signal modules. Focused module/symbol graphs use explicit selectors, depth, edge-kind filters, and node limits. Runtime, type-checking, optional, lazy, and dynamic/unresolved edges remain visually distinct.</p>
+<h2 id="data-contract-and-data-structure-views">Data-contract and data-structure views</h2>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Engineering question</th>
+<th>Canonical projection</th>
+<th>Useful renderings</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contract inventory</td>
+<td>Which Pydantic models, dataclasses, <code>TypedDict</code>s, protocols, enums, mappings, and serialization contracts exist?</td>
+<td>table/hierarchy</td>
+<td>JSON, Markdown, TSV, Mermaid</td>
+<td>P2-C (table implemented)</td>
+</tr>
+<tr>
+<td>Contract boundary map</td>
+<td>Which contracts cross persistence, API, subsystem, module, or test boundaries?</td>
+<td>graph/matrix</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P2-C (table and graph implemented)</td>
+</tr>
+<tr>
+<td>Contract boundary matrix</td>
+<td>Which contracts have multiple evidenced producer, consumer, persistence, API, or subsystem boundary roles?</td>
+<td>matrix/table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P2-C (table implemented)</td>
+</tr>
+<tr>
+<td>Dictionary-shape report</td>
+<td>What keys, types, defaults, requiredness, coercions, conflicts, and unknown-field behavior were observed?</td>
+<td>table/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>P2-D</td>
+</tr>
+<tr>
+<td>Shape variants and states</td>
+<td>Which discriminator values, lifecycle states, and conditional fields distinguish non-flattened dictionary variants?</td>
+<td>table/state</td>
+<td>JSON, Markdown, TSV, Mermaid</td>
+<td>P2-D/P2-F</td>
+</tr>
+<tr>
+<td>Producer/consumer flow</td>
+<td>Where is a contract or shape produced, transformed, validated, serialized, and consumed?</td>
+<td>graph/sequence</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P2-D</td>
+</tr>
+<tr>
+<td>Conversion graph</td>
+<td>Where do models, dataclasses, dictionaries, rows, tuples, JSON, or binary records convert between representations?</td>
+<td>graph</td>
+<td>JSON, TSV, DOT, Mermaid</td>
+<td>P2-D/P2-E</td>
+</tr>
+<tr>
+<td>Validation-sprawl report</td>
+<td>Which structural validations repeat or diverge, and which operational checks must remain in their owner?</td>
+<td>table/matrix/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>P2-E</td>
+</tr>
+<tr>
+<td>Conversion churn</td>
+<td>Which subjects repeatedly convert or revalidate compatible representations?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P2-E/P2-F</td>
+</tr>
+<tr>
+<td>Untyped-boundary blast radius</td>
+<td>Which consumers and persisted/API/subsystem boundaries depend on intentionally or accidentally untyped values?</td>
+<td>graph/matrix</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P2-F</td>
+</tr>
+<tr>
+<td>Structure topology</td>
+<td>How is a significant graph, tree, queue, cache, registry, index, journal, manifest, event row, or tensor metadata structure composed?</td>
+<td>graph/hierarchy</td>
+<td>JSON, DOT, Mermaid, SVG, PNG</td>
+<td>P2-E</td>
+</tr>
+<tr>
+<td>Structure lifecycle</td>
+<td>How is a structure constructed, owned, mutated, copied, persisted, shared, cleaned up, or leaked?</td>
+<td>sequence/state</td>
+<td>JSON, Markdown, Mermaid</td>
+<td>P2-E</td>
+</tr>
+<tr>
+<td>Ownership and alias map</td>
+<td>Which mutable values cross module, instance, thread, request, process, or persistence owners?</td>
+<td>graph</td>
+<td>JSON, DOT, Mermaid</td>
+<td>P2-E</td>
+</tr>
+<tr>
+<td>Unresolved-evidence coverage</td>
+<td>Which subjects, flows, shapes, and findings are affected by unresolved, ambiguous, failed, or truncated evidence?</td>
+<td>table/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>P2-F</td>
+</tr>
+<tr>
+<td>Schema/version state machine</td>
+<td>Which schema states, migrations, compatibility paths, and rejected transitions exist?</td>
+<td>state</td>
+<td>JSON, Markdown, Mermaid</td>
+<td>P2-E</td>
+</tr>
+<tr>
+<td>Growth and cleanup review</td>
+<td>Which collections may grow, what bounds/eviction exist, and where is cleanup enforced?</td>
+<td>table/state/review packet</td>
+<td>JSON, Markdown, TSV, Mermaid</td>
+<td>P2-E</td>
+</tr>
+</tbody>
+</table>
+<p>Dictionary and contract diagrams distinguish exact, resolved, inferred, and heuristic edges. Ambiguous names, unresolved dynamic calls, recursion limits, and truncated paths remain visible. A classification such as “Pydantic candidate” or “dataclass candidate” is a typed evidence record with counter-evidence, not a migration instruction.</p>
+<h2 id="refactoring-and-change-views">Refactoring and change views</h2>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Engineering question</th>
+<th>Canonical projection</th>
+<th>Useful renderings</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orchestration review</td>
+<td>Is a large function coordinating cohesive responsibilities or mixing unrelated ownership?</td>
+<td>review packet</td>
+<td>JSON, Markdown</td>
+<td>R1/P2</td>
+</tr>
+<tr>
+<td>Subject findings</td>
+<td>Which findings, severities, rules, evidence, and proposals converge on each analyzed symbol within an exact subject or dotted-module scope?</td>
+<td>filtered table</td>
+<td>JSON, Markdown, TSV</td>
+<td>R1/P3</td>
+</tr>
+<tr>
+<td>Proposal admission</td>
+<td>Which responsibility-derived proposal candidates were admitted, rejected as call-resolution-only, or omitted by the proposal bound?</td>
+<td>funnel/table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Actionable candidate worklist</td>
+<td>Which stable candidates should a maintainer review after explicit filters, decisions, gates, costs, behavior, and qualification state?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Abstraction cost breakdown</td>
+<td>What lower, likely, and upper deletion, helper, migration, and net production LOC ranges support a candidate?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Existing-owner alternatives</td>
+<td>Which existing semantic owner, primitive, or domain module can own shared behavior, and why were alternatives rejected?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Candidate behavioral differences</td>
+<td>Which exact behavior events or proven ordering constraints block or constrain a candidate?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Cross-module duplication</td>
+<td>Which clone clusters span distinct logical modules while preserving their original evidence?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Internal contract risks</td>
+<td>Which internal dictionary boundaries have mutable, configuration, cross-subsystem, or unresolved ownership?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Producer/consumer schema drift</td>
+<td>Which statically correlated backend and frontend payload fields agree or diverge?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Frontend/backend interface mismatches</td>
+<td>Which exact route, method, field, null, status, error, event, retry, or lifecycle assumptions differ?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Candidate qualification</td>
+<td>Which direct, likely-path, coverage, positive, adversarial, parity, rollback, failure, and canonical-discovery requirements are evidenced, missing, or unresolved?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Ownership and contract flow</td>
+<td>Which statically correlated producer and consumer endpoints participate in a contract flow?</td>
+<td>graph</td>
+<td>JSON, DOT, Mermaid, SVG, PNG</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Candidate architecture changes</td>
+<td>What dependency-edge, SCC, and cycle deltas are predicted for a candidate?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Domain regression summary</td>
+<td>Which duplication, ownership, internal-contract, growth, candidate, edge, SCC, or cycle observations changed between compatible saved reports?</td>
+<td>comparison/table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Semantic nomination audit</td>
+<td>Which locally nominated pairs were supported or rejected by deterministic evidence, and what bounded evidence was omitted?</td>
+<td>table/audit packet</td>
+<td>JSON</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Ruby inventory and duplicates</td>
+<td>Which <code>.rb</code> modules, classes, methods, literal dependencies, calls, exception/effect facts, and bounded duplicate methods were observed by Prism?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P4R</td>
+</tr>
+<tr>
+<td>Module responsibility report</td>
+<td>Do symbols, contracts, imports, and state indicate one or several ownership clusters?</td>
+<td>matrix/review packet</td>
+<td>JSON, Markdown, TSV</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Clone clusters</td>
+<td>Which exact, token, AST, statement, validation, or serialization fragments repeat?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Function commonality</td>
+<td>Which functions share inputs, outputs, calls, state, exceptions, and contract operations?</td>
+<td>matrix</td>
+<td>JSON, Markdown, TSV, static HTML</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Extraction candidate</td>
+<td>Does a cohesive cluster have a plausible owner and improve dependency direction?</td>
+<td>review packet/graph</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Combine-module candidate</td>
+<td>Would combining modules reduce a false boundary without producing excessive coupling or ownership ambiguity?</td>
+<td>review packet/comparison</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Before/after architecture estimate</td>
+<td>How would a proposed extraction or combination change dependencies, cycles, fan-in/out, and layer rules?</td>
+<td>comparison/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Test-impact map</td>
+<td>Which tests, fixtures, patches, coverage contexts, and qualification paths protect affected symbols?</td>
+<td>graph/table</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P4</td>
+</tr>
+<tr>
+<td>Git change coupling</td>
+<td>Which files or symbols change together after excluding bulk or formatting-only changes?</td>
+<td>matrix/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P4</td>
+</tr>
+<tr>
+<td>Refactor candidate packet</td>
+<td>What evidence, counter-evidence, affected contracts, tests, runtime paths, risks, and unresolved questions belong in review?</td>
+<td>review packet</td>
+<td>JSON, Markdown, HTML</td>
+<td>P3/P4</td>
+</tr>
+<tr>
+<td>Refactor shortlist</td>
+<td>Which proposal should be reviewed first based on explicit state, failed/unresolved gates, and bounded affected scope?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P3/P4</td>
+</tr>
+<tr>
+<td>Baseline/candidate architecture diff</td>
+<td>Did a change add/remove/change symbols, edges, cycles, findings, contracts, shapes, or policy violations, and how much unchanged inventory was omitted from the default view?</td>
+<td>comparison</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid, HTML</td>
+<td>P3/P5</td>
+</tr>
+<tr>
+<td>Compatible P2 evidence delta</td>
+<td>Between compatible reports, which contracts, boundaries, variants, validations, conversions, unresolved records, and findings changed?</td>
+<td>comparison</td>
+<td>JSON, Markdown, TSV</td>
+<td>P2-F</td>
+</tr>
+<tr>
+<td>Bounded refactoring review packet</td>
+<td>What supporting and counter-evidence, affected identities, limitations, completeness, and validation needs should a developer or agent review?</td>
+<td>review packet</td>
+<td>JSON, Markdown</td>
+<td>P2-F</td>
+</tr>
+</tbody>
+</table>
+<p>A combine-module candidate requires more than a cycle or bidirectional imports. It should include responsibility overlap, contract ownership, public API compatibility, state ownership, test impact, dependency changes, and counter-evidence for preserving separate modules. Extraction candidates likewise require cohesion and ownership evidence and must identify potential “utility module” coupling risk.</p>
+<h2 id="javascript-duplicate-behavior-views">JavaScript duplicate-behavior views</h2>
+<p>These implemented Phase 4J views use the same strict projection envelopes and saved authoritative report as Python views. Source language, syntax mode, module system, parser provenance, completeness, and unresolved dynamic behavior remain visible in every applicable result.</p>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Engineering question</th>
+<th>Canonical projection</th>
+<th>Useful renderings</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-module duplicate functions</td>
+<td>Which JavaScript functions implement substantially the same operation across modules?</td>
+<td>sparse matrix/table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Clone membership</td>
+<td>Which exact, token, structural, statement, control/call, validation, serialization, retry, or lifecycle clusters contain a selected function?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Normalized structure comparison</td>
+<td>Which source-bound structural events match without retaining raw source text?</td>
+<td>sequence/comparison</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Behavioral differences</td>
+<td>Which branches, calls, constants, defaults, exceptions, state accesses, and side effects differ?</td>
+<td>comparison/table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Ownership and consumers</td>
+<td>Which module/package appears to own the behavior, and which callers/tests depend on each copy?</td>
+<td>graph/review packet</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Divergence reasons</td>
+<td>Which typed validation, constant, exception, effect, lifecycle, caller/test, or unresolved-ownership asymmetries merit review?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>Canonical-owner evidence</td>
+<td>Does dependency, caller, contract, state, and side-effect evidence support one owner, or is ownership unresolved?</td>
+<td>review packet/graph</td>
+<td>JSON, Markdown, DOT, Mermaid</td>
+<td>P4J</td>
+</tr>
+<tr>
+<td>JavaScript refactor packet</td>
+<td>What matched evidence, differences, affected consumers/tests, blockers, limitations, and validation needs belong in review?</td>
+<td>review packet</td>
+<td>JSON, Markdown</td>
+<td>P4J</td>
+</tr>
+</tbody>
+</table>
+<p>No view uses an opaque similarity, quality, risk, or refactoring score. Names and comments/docstrings cannot originate a candidate. Cross-language comparisons, embeddings, framework semantics, and UI-owned interpretation remain deferred. All views must render from saved JSON without a JavaScript parser, Node/npm, or source access.</p>
+<h2 id="runtime-and-performance-views">Runtime and performance views</h2>
+<p>These views are Phase 4 and require explicit runtime authorization. Static scans never collect them implicitly.</p>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Engineering question</th>
+<th>Canonical projection</th>
+<th>Useful renderings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Profile hotspots</td>
+<td>Where did the authorized workload spend total and cumulative time?</td>
+<td>table</td>
+<td>JSON, Markdown, TSV</td>
+</tr>
+<tr>
+<td>Caller/callee report</td>
+<td>Which functions call or are called by a selected hotspot?</td>
+<td>table/graph</td>
+<td>JSON, Markdown, TSV, DOT, Mermaid</td>
+</tr>
+<tr>
+<td>Dynamic call graph</td>
+<td>What call relationships were observed under the bounded workload?</td>
+<td>graph</td>
+<td>JSON, DOT, Mermaid, SVG, PNG</td>
+</tr>
+<tr>
+<td>Repetition and variance</td>
+<td>Which calls repeat and how stable are selected measurements across compatible runs?</td>
+<td>table/matrix</td>
+<td>JSON, Markdown, TSV, HTML chart</td>
+</tr>
+<tr>
+<td>Baseline/candidate profile diff</td>
+<td>What absolute and relative timing/call-count changes exist between compatible profiles?</td>
+<td>comparison</td>
+<td>JSON, Markdown, TSV, HTML</td>
+</tr>
+<tr>
+<td>Static/runtime overlay</td>
+<td>Which runtime hotspots coincide with complexity, coupling, contract, clone, or ownership findings?</td>
+<td>graph/review packet</td>
+<td>JSON, Markdown, DOT, Mermaid, HTML</td>
+</tr>
+</tbody>
+</table>
+<p>Profile comparisons fail closed when workload, interpreter, configuration, repetition, or source identity is incompatible. A single profile is observation, not proof of an optimization win.</p>
+<h2 id="documentation-artifacts">Documentation artifacts</h2>
+<p>Selected diagrams and tables may be published as system documentation. Documentation output uses the same projection JSON with a deterministic documentation rendering profile:</p>
+<ul>
+<li>stable title, caption, legend, logical-root label, schema identity, and source-report digest</li>
+<li>bounded node/row limits and a visible pruning or truncation note</li>
+<li>portable relative links when source documentation is included</li>
+<li>light and dark compatible palettes where the renderer supports them</li>
+<li>accessible text alternative in Markdown or TSV for every graphical view</li>
+<li><code>.mmd</code> or <code>.dot</code> source retained beside SVG/PNG when the documentation build accepts it</li>
+<li>an artifact manifest containing input projection hashes and output hashes</li>
+<li>no timestamps unless explicitly requested as local publication metadata</li>
+<li>no absolute paths, environment values, source secrets, or unrestricted source excerpts</li>
+</ul>
+<p>Generated documentation artifacts are not automatically added to Git. The user selects an output directory and decides whether generated sources or rendered files belong in project documentation. Re-rendering documentation from retained JSON must not require the analyzed repository to remain present.</p>
+<h2 id="recommended-report-bundles">Recommended report bundles</h2>
+<h3 id="quick-architecture-review">Quick architecture review</h3>
+<ul>
+<li>analysis health and provenance</li>
+<li>repository overview</li>
+<li>top complexity and orchestration candidates</li>
+<li>module coupling table</li>
+<li>bounded dependency overview</li>
+<li>SCC/cycle report</li>
+</ul>
+<h3 id="data-contract-review">Data-contract review</h3>
+<ul>
+<li>contract inventory and boundary map</li>
+<li>dictionary-shape report</li>
+<li>producer/consumer and conversion graphs</li>
+<li>validation-sprawl matrix</li>
+<li>structure topology and lifecycle</li>
+<li>ownership, alias, growth, and cleanup review</li>
+</ul>
+<h3 id="refactoring-review-packet">Refactoring review packet</h3>
+<ul>
+<li>selected candidate with supporting and counter-evidence</li>
+<li>responsibility and dependency neighborhood</li>
+<li>affected contracts and data flows</li>
+<li>clone/commonality evidence when available</li>
+<li>test and Git impact when available</li>
+<li>compatible before/after architecture estimate</li>
+<li>unresolved behavior, completeness, limitations, and suggested validation commands</li>
+</ul>
+<h3 id="documentation-bundle">Documentation bundle</h3>
+<ul>
+<li>package/module hierarchy</li>
+<li>bounded architecture overview</li>
+<li>selected subsystem dependency views</li>
+<li>contract boundary and producer/consumer diagrams</li>
+<li>significant structure topology/lifecycle diagrams</li>
+<li>Markdown captions and TSV text alternatives</li>
+<li>projection and rendered-artifact manifest</li>
+</ul>
+<h2 id="delivery-order">Delivery order</h2>
+<ol>
+<li>R1/P2 report-only projections: health, inventory, module metrics, dependency graph, SCC/cycles, complexity, contracts, shapes, and flows.</li>
+<li>P2-F deterministic JSON, TSV, DOT, and Mermaid exporters operating only on retained reports.</li>
+<li>P3 clone, responsibility, extraction/combination, and architecture-estimate projections.</li>
+<li>P4 test, Git, runtime, profile, compatible comparison, DOT/Mermaid, and optional Graphviz SVG/PNG projections — implemented.</li>
+<li>P4J language-aware JavaScript duplicate, ownership, divergence, caller/test, and review-packet projections over the same backend models — implemented and internally qualified.</li>
+<li>P5 bounded read-only WebUI overview, modules, findings, candidates, providers, and report comparison — prototype implemented. Static HTML, rendered documentation bundles, TUI navigation, source evidence, runtime profiles, and large-graph interaction remain deferred.</li>
+</ol>
+<p>This order keeps analysis semantics in the service and report models, presentation in projections/renderers, and source mutation deferred to separately authorized Phase 6 codemods.</p>
+</main></body></html>

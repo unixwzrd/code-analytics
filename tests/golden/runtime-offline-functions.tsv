@@ -1,0 +1,2 @@
+frame_id	path	line	function	ownership	calls	self_seconds	cumulative_seconds	self_per_call	cumulative_per_primitive_call
+profile-frame-48bdcd7debd362b4e7db	unresolved/ff561f757134c8f1c31c2717	1	work	unresolved	2	0.125	0.25	0.0625	0.25

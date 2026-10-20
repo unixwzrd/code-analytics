@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CLI reference</title><link rel="stylesheet" href="/help/styles.css"></head><body><main class="help-document"><h1 id="cli-reference">CLI reference</h1>
+<p>Reference for the current unreleased CLI: inputs, outputs, side effects, exit behavior and exact command syntax. Implementation history and planned capabilities are not part of this reference.</p>
+<ul>
+<li><a href="/help/examples.html">Worked examples and produced artifacts</a></li>
+<li><a href="/help/user-guide.html">Web and terminal usage</a></li>
+<li><a href="/help/reports.html">Report and diagram catalog</a></li>
+<li><span class="help-unbundled-reference">Report schemas</span></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<p><a href="/help/cli-reference.html#invocation">Invocation</a> · <a href="/help/cli-reference.html#command-families">Command families</a> · <a href="/help/cli-reference.html#static-analysis">Static analysis</a> · <a href="/help/cli-reference.html#saved-evidence">Saved evidence</a> · <a href="/help/cli-reference.html#project-workspace">Project workspace</a> · <a href="/help/cli-reference.html#runtime-evidence">Runtime evidence</a> · <a href="/help/cli-reference.html#configuration">Configuration</a> · <a href="/help/cli-reference.html#output-streams">Output streams</a> · <a href="/help/cli-reference.html#posix-errno-based-exit-statuses">Exit statuses</a> · <a href="/help/cli-reference.html#detailed-command-syntax">Detailed syntax</a></p>
+<h2 id="invocation">Invocation</h2>
+<p>Collection: <code>code-analysis ui [REPORT]</code> defaults to the current directory as its confined collection root and enables confirmed managed jobs. Use <code>--collection-root PATH</code> to choose another root or <code>--no-collection</code> for previews without launch capability. <code>--allow-collection</code> explicitly selects the default enabled state. No startup or preview executes a workload or writes a workspace; every job requires confirmation and profiling separately requires execution acknowledgment. The lower-level <code>web</code> command remains opt-in through both <code>--collection-root</code> and <code>--allow-collection</code>. See <a href="/help/user-guide.html#collection-command-planning">the collection guide</a>.</p>
+<p>Trusted environments: repeat <code>--collection-python /absolute/path/to/python</code> with <code>--collection-root</code> on <code>ui</code>, <code>web</code> or <code>tui</code> to offer additional interpreter choices. The default is the current interpreter. Each selected environment must already contain a compatible Code Analysis installation; no package installation or project-environment discovery occurs. Both analyzer and profile workload use the selected launcher. The UI accepts only startup-approved choice identities, not arbitrary executable paths.</p>
+<p>Web and terminal collection forms also support <code>import-profile</code>, generating <code>runtime ingest</code> for saved cProfile/pstats inputs. Managed imports require an existing owned workspace and confirmed writes, not workload authorization. Imports without a static report open runtime-only diagnostic views in either UI; missing capture/source evidence stays partial and source previews remain unavailable.</p>
+<p>Full static commands (<code>scan</code>, <code>clones</code>, <code>refactor</code>) accept repeatable <code>--exclude-dir NAME</code> to add exact directory basenames to configured exclusions. These are not path/glob patterns; invalid names return <code>EINVAL</code>.</p>
+<pre><code class="language-text">code-analysis COMMAND [OPTIONS]
+code-analysis COMMAND --help
+code-analysis runtime SUBCOMMAND --help
+</code></pre>
+<p>Options belong to the selected command, not to a universal global option set. The <a href="/help/cli-reference.html#detailed-command-syntax">detailed syntax</a> lists every implemented leaf command and its options.</p>
+<p>With <strong>no arguments</strong>, <code>code-analysis</code> launches <code>ui</code>: it discovers the latest validated analysis in an owned workspace in the current directory or its parents. If no workspace or analysis generation exists, it opens collection setup instead. Collection defaults to the current directory even when an existing report is loaded. On macOS it opens the browser by default. An explicitly missing report still returns <code>ENOENT</code>; damaged workspace/report errors are not hidden. Startup does not scan a project, create a workspace or authorize a runtime workload. Automation should always name a batch command.</p>
+<p><code>ui [REPORT]</code> starts a detached loopback server or reopens a compatible session, waits for readiness, and returns the prompt. <code>--no-open</code> only suppresses browser launch. <code>ui --foreground</code> and lower-level <code>web REPORT</code> remain terminal-controlled services; <code>web</code> launches a browser only with <code>--open</code>. Explicit UI reports can be JSON files or generation directories. Read-only source previews require an explicit root and matching source hashes.</p>
+<p><code>ui-stop [--session ID] [--cancel-jobs]</code> stops a capability-verified background session. Without an ID, it selects the single running session whose collection root is the current directory; multiple matches return <code>EINVAL</code> and list their IDs. Active jobs return <code>EBUSY</code> unless cancellation is explicitly authorized with <code>--cancel-jobs</code>. Browser <strong>Stop Code Analysis</strong> provides equivalent confirmation. Closing/reloading a tab never stops the server. Sessions with different roots, reports/input hashes, source permissions, interpreter/environment or collection permissions are not silently reused. Private launch receipts and logs live in <code>~/.cache/code-analysis/ui/</code> (override <code>CODE_ANALYSIS_UI_STATE_DIR</code> with an owned mode-0700 directory); they are local process state, not analytical artifacts. Startup logs/session URLs contain a capability token: do not share them.</p>
+<h2 id="command-families">Command families</h2>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Commands</th>
+<th>Inputs and effects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Environment</td>
+<td><code>doctor</code>, <code>providers</code></td>
+<td>Read local interpreter/provider provenance; availability is not a successful analysis</td>
+</tr>
+<tr>
+<td>Static analysis</td>
+<td><code>scan</code>, <code>clones</code>, <code>refactor</code>, <code>contracts</code>, <code>dict-shapes</code></td>
+<td>Read source without target imports/execution; normally publish a workspace generation</td>
+</tr>
+<tr>
+<td>Saved investigation</td>
+<td><code>summary</code>, <code>query</code>, <code>candidates</code></td>
+<td>Validate saved reports; no source scan</td>
+</tr>
+<tr>
+<td>Analysis comparison</td>
+<td><code>diff</code>, <code>regress</code></td>
+<td>Compare compatible saved reports; no source scan</td>
+</tr>
+<tr>
+<td>Presentation</td>
+<td><code>export</code>, <code>html</code></td>
+<td>Derive requested artifacts from JSON</td>
+</tr>
+<tr>
+<td>Browsing</td>
+<td><code>ui</code>, <code>web</code>, <code>index</code>, <code>tui</code></td>
+<td>Serve saved evidence or explicitly prepare/read a disposable index</td>
+</tr>
+<tr>
+<td>UI lifecycle</td>
+<td><code>ui-stop</code></td>
+<td>Stop an authenticated background session; active jobs require <code>--cancel-jobs</code></td>
+</tr>
+<tr>
+<td>Retention</td>
+<td><code>workspace list/pin/unpin/prune</code></td>
+<td>List is read-only; other operations change owned local retention state</td>
+</tr>
+<tr>
+<td>Decisions</td>
+<td><code>decisions list/set/export/import</code></td>
+<td>Maintain an explicit local ledger; never change analytical reports</td>
+</tr>
+<tr>
+<td>Change evidence</td>
+<td><code>history</code></td>
+<td>Explicit Git collection, or retained snapshots with <code>--generations</code></td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td><code>coverage-import</code>, <code>coverage-run</code></td>
+<td>Import data or execute an explicitly authorized workload</td>
+</tr>
+<tr>
+<td>Simple profiles</td>
+<td><code>profile</code>, <code>profile-report</code>, <code>profile-diff</code></td>
+<td>Authorized collection or saved-profile presentation/comparison</td>
+</tr>
+<tr>
+<td>Runtime evidence</td>
+<td><code>runtime ingest/run/render/compare/query</code></td>
+<td>Offline artifacts except explicitly authorized <code>run</code></td>
+</tr>
+<tr>
+<td>Semantic nomination</td>
+<td><code>semantic-nominate</code></td>
+<td>Optional model execution from an existing local directory; no download or target execution</td>
+</tr>
+</tbody>
+</table>
+<h2 id="static-analysis">Static analysis</h2>
+<p><code>scan</code>, <code>clones</code> and <code>refactor</code> share the enabled analysis pipeline with different presentation emphasis. <code>contracts</code> and <code>dict-shapes</code> are Python-focused and disable unrelated later sections. The default source path is <code>.</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--language</code></td>
+<td>Repeatable selection. General scans accept <code>auto/python/javascript/ruby</code>; focused commands accept <code>auto/python</code>. Do not combine <code>auto</code> with explicit values.</td>
+</tr>
+<tr>
+<td><code>--javascript-module-mode</code></td>
+<td>General-scan override: <code>auto/esm/commonjs/script</code></td>
+</tr>
+<tr>
+<td><code>--config PATH</code></td>
+<td>Explicit TOML file</td>
+</tr>
+<tr>
+<td><code>--strictness</code></td>
+<td>Preset; supported CLI threshold overrides take precedence</td>
+</tr>
+<tr>
+<td><code>--json</code>, <code>--json-compact</code>, <code>--markdown</code></td>
+<td>Select output format; compact JSON is canonical analysis storage</td>
+</tr>
+<tr>
+<td><code>--output PATH</code>, <code>-o PATH</code></td>
+<td>Additional output file; does not disable workspace publication</td>
+</tr>
+<tr>
+<td><code>--no-workspace</code></td>
+<td>Disable project workspace/cache writes</td>
+</tr>
+<tr>
+<td><code>--workspace PATH</code></td>
+<td>Explicit owned storage, mutually exclusive with <code>--no-workspace</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td>Suppress ordinary stdout, not diagnostics or status</td>
+</tr>
+<tr>
+<td><code>--fail-on-findings</code></td>
+<td>Apply the finding-policy exit condition</td>
+</tr>
+</tbody>
+</table>
+<p>Supported suffixes are <code>.py</code>, <code>.js</code>, <code>.mjs</code>, <code>.cjs</code>, <code>.jsx</code> and <code>.rb</code>, subject to language selection and optional providers. Unsupported explicit file targets return <code>EINVAL</code>; no selected supported source returns <code>ENODATA</code>. Unavailable parsers, malformed source and analytical bounds remain explicit, not successful empty reports.</p>
+<p><strong>Selecting <code>src</code> does not disable test discovery.</strong> Full commands still inspect configured test roots; set <code>test-roots = []</code> to omit test-impact discovery. Static analysis never executes tests. Git collection is explicit through <code>history</code>, not an ordinary scan side effect.</p>
+<p>For predecessor script aliases and threshold mappings, see <span class="help-unbundled-reference">the flag map</span>.</p>
+<h2 id="saved-evidence">Saved evidence</h2>
+<p><code>query REPORT --call-site CALL_OCCURRENCE_ID [--json]</code> selects a saved syntactic invocation and its recorded navigation relationships. It does not resolve runtime dispatch. <code>export REPORT --projection static-call-sites</code> produces a bounded table; <code>--projection static-call-graph</code> produces source-to-invocation containment, not a runtime call graph. The table accepts occurrence, source-file, module and enclosing-subject selection; the graph currently accepts source-file and occurrence node IDs. Both retain source partiality and read only saved JSON.</p>
+<p><code>query</code> requires exactly one supported identity/path selector. Unknown IDs, invalid limits and unrelated continuation tokens fail with <code>EINVAL</code>. Applicable profile queries accept frame/edge identities. <code>candidates</code> applies filters before its visible deterministic ordering and bounds; decisions may affect the worklist, not analytical facts.</p>
+<p><code>diff BASELINE CANDIDATE</code> requires compatible schema, target and static configuration identities; command names can differ. Canonically identical reports produce <code>identical=true</code>, zero records and no comparison truncation, while retaining source partiality. Non-identical comparisons report global counts and show changes only by default; <code>--include-unchanged</code> restores the bounded inventory. Hidden unchanged records are not truncation.</p>
+<p><code>export</code> requires a projection and supported format. Defaults are 500 records, 100 nodes and 250 edges. Selection precedes bounds. Omitted eligible records remain explicit and return <code>ENODATA</code>; intentional filtering alone is not incompleteness. SVG/PNG require optional Graphviz. Missing or failed rendering never becomes a successful empty image.</p>
+<p><code>subject-findings</code> supports module-prefix/category/severity/rule filters: OR within a dimension, AND across dimensions. Dotted prefixes match a module or descendants; exact subject selection cannot be combined with module prefixes. <code>dependency-neighborhood</code> requires one module and supports depth and recorded edge-kind filters. See the <a href="/help/reports.html">catalog</a> for supported selectors/formats per view.</p>
+<h2 id="project-workspace">Project workspace</h2>
+<p>Source analysis normally creates/reuses a self-ignored <code>.code-analysis/</code> at the discovered logical project root. Explicit output files are additional exports.</p>
+<pre><code class="language-text">.code-analysis/
+  workspace.json
+  .gitignore
+  generations/
+    analysis/GENERATION_ID/{report.json,report.md,run.json,manifest.json}
+    coverage/GENERATION_ID/...
+    profile/GENERATION_ID/...
+    analysis/latest -&gt; GENERATION_ID
+    coverage/latest -&gt; GENERATION_ID
+    profile/latest -&gt; GENERATION_ID
+  pins/
+  cache/
+  decisions/ledger.json          # when decisions are recorded
+</code></pre>
+<p>Manifests describe actual artifacts. Generations publish atomically; local manifests may contain physical provenance and timing, whereas portable JSON must not. Workspace/cache settings have a separate storage identity and do not change portable analytical configuration.</p>
+<p><code>workspace prune --dry-run</code> previews removals. Pruning validates owned direct children, does not follow arbitrary symlinks, does not remove pins and ignores live-process temporary generations. Foreign or malformed workspaces are not silently adopted.</p>
+<p>Decision imports default to conflict error (<code>EEXIST</code>), with explicit <code>keep-local</code> or <code>use-incoming</code> alternatives. Records are append-only within atomically replaced validated ledgers. <code>history --generations</code> compares retained source hashes, not atomic commit coupling. Ordinary <code>history</code> defaults to Python Git paths and three shared changes for coupling.</p>
+<h3 id="indexed-terminal-browsing">Indexed terminal browsing</h3>
+<p><code>index REPORT --output NEW_DIRECTORY</code> prepares a disposable SQLite cache and manifest. The parent must exist and the destination must be new. Optional <code>--compare</code>, <code>--profile-report</code> and <code>--compare-profile</code> attach saved evidence. Preparation emits a JSON receipt; a valid partial-source cache still returns <code>ENODATA</code>. Preparation-bound failures do not publish a misleading cache.</p>
+<p><code>tui INDEX --report-sha256 SHA256</code> validates the expected canonical report hash and requires a terminal plus the optional Textual extra. Rebuild indexes after artifact/implementation changes. See the <a href="/help/user-guide.html#indexed-terminal-browsing">UI guide</a> for navigation and exports.</p>
+<p><strong>Ctrl+W</strong> prepares a read-only loopback Web handoff of the current report. Finding, module and symbol dialogs also expose exact-selection handoff actions. Select the original saved JSON; its canonical hash must match the index. Browser opening is explicit through the trusted display configuration, with a copyable URL fallback. Exiting the terminal closes its Web server. See <a href="/help/user-guide.html#terminal-handoff-to-the-web-ui">terminal handoff</a> for scope and lifecycle details.</p>
+<h2 id="runtime-evidence">Runtime evidence</h2>
+<p>Only <code>coverage-run</code>, <code>profile</code> and <code>runtime run</code> execute workloads. They require <code>--allow-execution</code>; the first two also require a command after <code>--</code>. Workloads use argument arrays, bounded owned processes and controlled environments. Missing authorization returns <code>EPERM</code> before execution.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Input/output contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coverage-import REPORT DATA...</code></td>
+<td>CoverageData or supported coverage JSON; source mismatch stays unbound/partial</td>
+</tr>
+<tr>
+<td><code>coverage-run REPORT --allow-execution -- COMMAND...</code></td>
+<td>Authorized coverage workload and local raw/normalized evidence</td>
+</tr>
+<tr>
+<td><code>profile --source-report REPORT --allow-execution -- COMMAND...</code></td>
+<td>Simple Python profiling/repetitions and resource observations</td>
+</tr>
+<tr>
+<td><code>profile-report PROFILE</code></td>
+<td>Saved profile/generation or supported standalone input; missing binding remains partial</td>
+</tr>
+<tr>
+<td><code>profile-diff BASELINE CANDIDATE</code></td>
+<td>Comparison subject to source/workload identity and diagnostic-only rules</td>
+</tr>
+<tr>
+<td><code>runtime ingest --profile FILE...</code></td>
+<td>Offline stdlib/cProfile normalization; repeat <code>--profile</code> per input</td>
+</tr>
+<tr>
+<td><code>runtime render REPORT --output NEW_DIRECTORY</code></td>
+<td>Saved-only runtime bundle</td>
+</tr>
+<tr>
+<td><code>runtime query REPORT --section SECTION</code></td>
+<td>Saved JSON/TSV/Markdown with bounded records and optional frame</td>
+</tr>
+<tr>
+<td><code>runtime compare BASELINE CANDIDATE</code></td>
+<td>Complete matching identity, or explicit claim-ineligible <code>--diagnostic-only</code></td>
+</tr>
+<tr>
+<td><code>runtime run --spec SPEC --allow-execution</code></td>
+<td>Managed lifecycle; output paths come from the strict local specification</td>
+</tr>
+</tbody>
+</table>
+<p>Offline runtime ingestion emits JSON on stdout without <code>--output</code>; with it, the command publishes a new report directory instead. The bundle contains <code>runtime-summary.json</code>, Markdown, functions/callers/callees TSV, identity/category/diagnostic JSON, DOT, graphics and a manifest. Optional rendering failures and bounds are recorded there. Portable pstats is returned by the ingestion API and retained by managed capture, not automatically published by offline bundle export.</p>
+<p><code>runtime ingest --workspace EXISTING_WORKSPACE</code> additionally retains the imported report and available sanitized portable pstats in an immutable profile generation, while still emitting JSON on stdout. It uses normal workspace retention and pinning. The workspace must already be owned; ingestion does not claim a new project or discover source. <code>--workspace</code> and standalone <code>--output</code> are mutually exclusive. The local generation identifies the importing command/process, not the historical capture's producer or process. Portable report identity, missing provenance and ENODATA remain unchanged. Imported generations are available to saved-profile selectors and the shared Web/terminal import workflow.</p>
+<p>External <code>--metadata</code> accepts strict <code>CollectionMetadata</code>, not arbitrary application JSON. Sorted <code>producer_bindings</code> declare <code>profile</code> or <code>cprofile</code> against exact input SHA-256 values. Invalid/mismatched bindings return <code>EBADMSG</code>. Missing producers remain unknown; mixed producers are retained individually. Declarations are supplied evidence, not authenticated attestation. See the <a href="/help/examples.html#bind-an-external-profiler-declaration">metadata example</a>.</p>
+<p>Managed specifications contain absolute paths, typed argv, lifecycle controls and optional source/external-input evidence. The current sidecar checks direct subject PID/start/parent/nonce, profile hash, completed serialization and <code>subject-interpreter</code> scope. <strong>This is not whole-program or thread-coverage proof.</strong> Local cProfile tests reproduced false cross-thread parents; managed callback-scope certification is proposed, not implemented. See the <span class="help-unbundled-reference">threaded investigation</span> and <span class="help-unbundled-reference">runtime design</span>. The syntax below—not design-stage examples—is the implemented interface.</p>
+<p>Integer caller edges preserve counts and null unavailable timings. Process wall time, CPU telemetry, Python frame duration and opaque native/device work are distinct. Historical missing facts stay missing. Producer identification alone never qualifies performance comparisons.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Use <code>[tool.code-analysis]</code> in project TOML or an explicit <code>--config</code> file on commands that expose that option. See the <a href="/help/examples.html#source-only-analysis-without-test-discovery">source-only configuration example</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>languages</code>, <code>source-roots</code>, <code>excludes</code>, <code>test-roots</code></td>
+<td>Analytical scope</td>
+</tr>
+<tr>
+<td><code>strictness</code>, <code>[tool.code-analysis.thresholds]</code></td>
+<td>Presets and thresholds; supported CLI overrides win</td>
+</tr>
+<tr>
+<td><code>[[tool.code-analysis.contract-boundaries]]</code></td>
+<td>Classification rules over portable contract/site identities; not runtime proof</td>
+</tr>
+<tr>
+<td><code>git-path-scope</code>, <code>[tool.code-analysis.phase-four-limits]</code></td>
+<td>Explicit history scope/limits</td>
+</tr>
+<tr>
+<td><code>[tool.code-analysis.workspace]</code></td>
+<td>Local cache/storage; overridden by explicit workspace CLI selection</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration is strict and analysis-affecting values enter report identity. Storage paths do not. This is an entry point, not the complete TOML schema: domain details are in <span class="help-unbundled-reference">architecture</span>, <span class="help-unbundled-reference">report schemas</span> and the current configuration models.</p>
+<h2 id="output-streams">Output streams</h2>
+<ul>
+<li>Batch stdout contains the requested representation unless redirected by a command-specific output option. JSON is not universal; <code>summary</code> renders text.</li>
+<li>Diagnostics and usage errors go to stderr; UI services also print their session URL there.</li>
+<li><code>--quiet</code> applies only where listed and does not change completeness/status.</li>
+<li><code>--output</code> is not uniform: analysis/export name a file; runtime bundles/index preparation require a new directory. Do not assume universal no-overwrite behavior.</li>
+<li>A partial artifact may be written with <code>ENODATA</code>. Neither file existence nor a nonzero status alone establishes artifact validity.</li>
+<li>Query, comparison, export and rendering do not rescan source.</li>
+<li>No-argument launch, <code>ui</code>, <code>web</code> and <code>tui</code> are interactive exceptions; do not use them as unattended health checks.</li>
+</ul>
+<p>See <a href="/help/examples.html#preserve-status-in-automation">status-preserving automation</a>.</p>
+<h2 id="posix-errno-based-exit-statuses">POSIX errno-based exit statuses</h2>
+<p>The application uses host Python <code>errno</code> values as its nonzero status policy without redefining their symbolic meanings. Resolve values on the executing host; numeric values are not portable. This is an application exit contract based on errno—not a claim that POSIX defines errno numbers as universal process exit statuses. Some symbols are platform extensions.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Application use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Operation succeeded under its policy; not refactoring authorization or exhaustive coverage</td>
+</tr>
+<tr>
+<td><code>EPERM</code></td>
+<td>Missing execution authorization, forbidden environment addition or finding-policy rejection</td>
+</tr>
+<tr>
+<td><code>EINVAL</code></td>
+<td>Invalid usage/selector/limit, unsupported options or incompatible comparison</td>
+</tr>
+<tr>
+<td><code>ENODATA</code></td>
+<td>Incomplete/unavailable evidence or bounded omissions</td>
+</tr>
+<tr>
+<td><code>EBADMSG</code></td>
+<td>Malformed configuration/artifact or inconsistent hash binding</td>
+</tr>
+<tr>
+<td><code>EPROTO</code></td>
+<td>Provider/workload failure, unexpected status or managed ownership mismatch</td>
+</tr>
+<tr>
+<td><code>ETIMEDOUT</code></td>
+<td>Owned execution exceeded its deadline</td>
+</tr>
+<tr>
+<td><code>EFAULT</code></td>
+<td>Invalid internal boundary reached</td>
+</tr>
+<tr>
+<td><code>ENOENT</code>, <code>EACCES</code>, <code>ENOTDIR</code>, <code>EROFS</code></td>
+<td>Native filesystem failures</td>
+</tr>
+<tr>
+<td><code>EEXIST</code></td>
+<td>Existing no-overwrite destination or decision conflict</td>
+</tr>
+<tr>
+<td><code>ELOOP</code></td>
+<td>Disallowed symlink traversal</td>
+</tr>
+<tr>
+<td><code>ENOTTY</code></td>
+<td>Terminal invocation without a terminal</td>
+</tr>
+</tbody>
+</table>
+<p>Positive filesystem <code>OSError.errno</code> values are preserved where surfaced. Invalid argument parsing returns <code>EINVAL</code>, not argparse's usual <code>2</code>. Do not hard-code the qualification machine's values in monitoring.</p>
+<h2 id="detailed-command-syntax">Detailed command syntax</h2>
+<p><a href="/help/cli-reference.html#command-ui-stop">ui-stop</a> stops a background browser session; its syntax is listed immediately after <code>ui</code>.</p>
+<p><a href="/help/cli-reference.html#command-doctor">doctor</a> · <a href="/help/cli-reference.html#command-providers">providers</a> · <a href="/help/cli-reference.html#command-scan">scan</a> · <a href="/help/cli-reference.html#command-clones">clones</a> · <a href="/help/cli-reference.html#command-refactor">refactor</a> · <a href="/help/cli-reference.html#command-contracts">contracts</a> · <a href="/help/cli-reference.html#command-dict-shapes">dict-shapes</a> · <a href="/help/cli-reference.html#command-summary">summary</a> · <a href="/help/cli-reference.html#command-index">index</a> · <a href="/help/cli-reference.html#command-tui">tui</a> · <a href="/help/cli-reference.html#command-html">html</a> · <a href="/help/cli-reference.html#command-web">web</a> · <a href="/help/cli-reference.html#command-ui">ui</a> · <a href="/help/cli-reference.html#command-candidates">candidates</a> · <a href="/help/cli-reference.html#command-decisions-list">decisions list</a> · <a href="/help/cli-reference.html#command-decisions-set">decisions set</a> · <a href="/help/cli-reference.html#command-decisions-export">decisions export</a> · <a href="/help/cli-reference.html#command-decisions-import">decisions import</a> · <a href="/help/cli-reference.html#command-query">query</a> · <a href="/help/cli-reference.html#command-diff">diff</a> · <a href="/help/cli-reference.html#command-regress">regress</a> · <a href="/help/cli-reference.html#command-semantic-nominate">semantic-nominate</a> · <a href="/help/cli-reference.html#command-export">export</a> · <a href="/help/cli-reference.html#command-workspace-list">workspace list</a> · <a href="/help/cli-reference.html#command-workspace-pin">workspace pin</a> · <a href="/help/cli-reference.html#command-workspace-unpin">workspace unpin</a> · <a href="/help/cli-reference.html#command-workspace-prune">workspace prune</a> · <a href="/help/cli-reference.html#command-history">history</a> · <a href="/help/cli-reference.html#command-coverage-import">coverage-import</a> · <a href="/help/cli-reference.html#command-coverage-run">coverage-run</a> · <a href="/help/cli-reference.html#command-profile">profile</a> · <a href="/help/cli-reference.html#command-profile-report">profile-report</a> · <a href="/help/cli-reference.html#command-profile-diff">profile-diff</a> · <a href="/help/cli-reference.html#command-runtime-ingest">runtime ingest</a> · <a href="/help/cli-reference.html#command-runtime-render">runtime render</a> · <a href="/help/cli-reference.html#command-runtime-compare">runtime compare</a> · <a href="/help/cli-reference.html#command-runtime-run">runtime run</a> · <a href="/help/cli-reference.html#command-runtime-query">runtime query</a></p>
+<p>Each expandable entry is captured from the current parser's help interface. This is the full flag inventory; the sections above explain constraints beyond argparse help. Recheck installed <code>--help</code> when using another checkout. Entries follow parser order.</p>
+<h3 id="command-doctor"><code>code-analysis doctor</code></h3>
+<pre><code class="language-text">usage: code-analysis doctor [-h] [--json]
+
+options:
+  -h, --help  show this help message and exit
+  --json      retained for explicit output identity
+</code></pre>
+<h3 id="command-providers"><code>code-analysis providers</code></h3>
+<pre><code class="language-text">usage: code-analysis providers [-h] [--json]
+
+options:
+  -h, --help  show this help message and exit
+  --json
+</code></pre>
+<h3 id="command-scan"><code>code-analysis scan</code></h3>
+<pre><code class="language-text">usage: code-analysis scan [-h] [--config CONFIG] [--exclude-dir EXCLUDE_DIR]
+                          [--json | --json-compact | --markdown]
+                          [--output OUTPUT]
+                          [--no-workspace | --workspace WORKSPACE] [--summary]
+                          [--only-refactor-targets] [--only-local-imports]
+                          [--all-imports] [--max-items MAX_ITEMS]
+                          [--max-findings MAX_FINDINGS]
+                          [--strictness {lenient,normal,strict}]
+                          [--god-loc GOD_LOC] [--god-branches GOD_BRANCHES]
+                          [--god-nesting GOD_NESTING] [--god-args GOD_ARGS]
+                          [--god-score GOD_SCORE]
+                          [--symbol-filter SYMBOL_FILTER] [--fail-on-findings]
+                          [--no-color] [--quiet] [--verbose]
+                          [--language {auto,python,javascript,ruby}]
+                          [--javascript-module-mode {auto,esm,commonjs,script}]
+                          [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --exclude-dir EXCLUDE_DIR
+                        add an exact directory name to exclusions (repeatable;
+                        no glob matching)
+  --json                emit authoritative JSON
+  --json-compact        emit compact JSON
+  --markdown            emit concise Markdown
+  --output OUTPUT, -o OUTPUT
+  --no-workspace        disable project-local reports and cache
+  --workspace WORKSPACE
+                        use an explicit owned workspace
+  --summary             function-analysis alias for Markdown summary
+  --only-refactor-targets
+  --only-local-imports
+  --all-imports
+  --max-items MAX_ITEMS
+                        function-analysis display flag; accepted but ignored
+  --max-findings MAX_FINDINGS
+  --strictness {lenient,normal,strict}
+  --god-loc GOD_LOC
+  --god-branches GOD_BRANCHES
+  --god-nesting GOD_NESTING
+  --god-args GOD_ARGS
+  --god-score GOD_SCORE
+  --symbol-filter SYMBOL_FILTER
+  --fail-on-findings
+  --no-color
+  --quiet
+  --verbose
+  --language {auto,python,javascript,ruby}
+                        select auto, python, or javascript; explicit languages
+                        may be repeated
+  --javascript-module-mode {auto,esm,commonjs,script}
+</code></pre>
+<h3 id="command-clones"><code>code-analysis clones</code></h3>
+<pre><code class="language-text">usage: code-analysis clones [-h] [--config CONFIG]
+                            [--json | --json-compact | --markdown]
+                            [--output OUTPUT] [--exclude-dir EXCLUDE_DIR]
+                            [--no-workspace | --workspace WORKSPACE]
+                            [--only-local-imports | --all-imports]
+                            [--max-findings MAX_FINDINGS]
+                            [--strictness {lenient,normal,strict}]
+                            [--symbol-filter SYMBOL_FILTER] [--quiet]
+                            [--language {auto,python,javascript,ruby}]
+                            [--javascript-module-mode {auto,esm,commonjs,script}]
+                            [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --json
+  --json-compact
+  --markdown
+  --output OUTPUT, -o OUTPUT
+  --exclude-dir EXCLUDE_DIR
+                        add an exact directory name to exclusions (repeatable;
+                        no glob matching)
+  --no-workspace
+  --workspace WORKSPACE
+  --only-local-imports
+  --all-imports
+  --max-findings MAX_FINDINGS
+  --strictness {lenient,normal,strict}
+  --symbol-filter SYMBOL_FILTER
+  --quiet
+  --language {auto,python,javascript,ruby}
+                        select auto, python, or javascript; explicit languages
+                        may be repeated
+  --javascript-module-mode {auto,esm,commonjs,script}
+</code></pre>
+<h3 id="command-refactor"><code>code-analysis refactor</code></h3>
+<pre><code class="language-text">usage: code-analysis refactor [-h] [--config CONFIG]
+                              [--json | --json-compact | --markdown]
+                              [--output OUTPUT] [--exclude-dir EXCLUDE_DIR]
+                              [--no-workspace | --workspace WORKSPACE]
+                              [--only-local-imports | --all-imports]
+                              [--max-findings MAX_FINDINGS]
+                              [--strictness {lenient,normal,strict}]
+                              [--symbol-filter SYMBOL_FILTER] [--quiet]
+                              [--language {auto,python,javascript,ruby}]
+                              [--javascript-module-mode {auto,esm,commonjs,script}]
+                              [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --json
+  --json-compact
+  --markdown
+  --output OUTPUT, -o OUTPUT
+  --exclude-dir EXCLUDE_DIR
+                        add an exact directory name to exclusions (repeatable;
+                        no glob matching)
+  --no-workspace
+  --workspace WORKSPACE
+  --only-local-imports
+  --all-imports
+  --max-findings MAX_FINDINGS
+  --strictness {lenient,normal,strict}
+  --symbol-filter SYMBOL_FILTER
+  --quiet
+  --language {auto,python,javascript,ruby}
+                        select auto, python, or javascript; explicit languages
+                        may be repeated
+  --javascript-module-mode {auto,esm,commonjs,script}
+</code></pre>
+<h3 id="command-contracts"><code>code-analysis contracts</code></h3>
+<pre><code class="language-text">usage: code-analysis contracts [-h] [--config CONFIG]
+                               [--json | --json-compact | --markdown]
+                               [--output OUTPUT]
+                               [--no-workspace | --workspace WORKSPACE]
+                               [--only-local-imports | --all-imports]
+                               [--quiet]
+                               [--language {auto,python,javascript,ruby}]
+                               [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --json                emit authoritative JSON
+  --json-compact        emit compact JSON
+  --markdown            emit concise Markdown
+  --output OUTPUT, -o OUTPUT
+  --no-workspace        disable project-local reports and cache
+  --workspace WORKSPACE
+                        use an explicit owned workspace
+  --only-local-imports
+  --all-imports
+  --quiet
+  --language {auto,python,javascript,ruby}
+                        select auto or python; other languages are
+                        inapplicable to this focused command
+</code></pre>
+<h3 id="command-dict-shapes"><code>code-analysis dict-shapes</code></h3>
+<pre><code class="language-text">usage: code-analysis dict-shapes [-h] [--config CONFIG]
+                                 [--json | --json-compact | --markdown]
+                                 [--output OUTPUT]
+                                 [--no-workspace | --workspace WORKSPACE]
+                                 [--only-local-imports | --all-imports]
+                                 [--quiet]
+                                 [--language {auto,python,javascript,ruby}]
+                                 [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --json                emit authoritative JSON
+  --json-compact        emit compact JSON
+  --markdown            emit concise Markdown
+  --output OUTPUT, -o OUTPUT
+  --no-workspace        disable project-local reports and cache
+  --workspace WORKSPACE
+                        use an explicit owned workspace
+  --only-local-imports
+  --all-imports
+  --quiet
+  --language {auto,python,javascript,ruby}
+                        select auto or python; other languages are
+                        inapplicable to this focused command
+</code></pre>
+<h3 id="command-summary"><code>code-analysis summary</code></h3>
+<pre><code class="language-text">usage: code-analysis summary [-h] [--max-findings MAX_FINDINGS] report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --max-findings MAX_FINDINGS
+</code></pre>
+<h3 id="command-index"><code>code-analysis index</code></h3>
+<pre><code class="language-text">usage: code-analysis index [-h] [--compare-profile COMPARE_PROFILE] -o OUTPUT
+                           [--profile-report PROFILE_REPORT]
+                           [--compare COMPARE]
+                           report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --compare-profile COMPARE_PROFILE
+                        saved candidate Python profile
+  -o OUTPUT, --output OUTPUT
+  --profile-report PROFILE_REPORT
+                        saved Python profile to index; no execution
+  --compare COMPARE     candidate report; positional report is the baseline
+</code></pre>
+<h3 id="command-tui"><code>code-analysis tui</code></h3>
+<pre><code class="language-text">usage: code-analysis tui [-h] [--workspace WORKSPACE]
+                         [--report-sha256 REPORT_SHA256]
+                         [--page-size PAGE_SIZE] [--source-root SOURCE_ROOT]
+                         [--display-config DISPLAY_CONFIG]
+                         [--collection-root COLLECTION_ROOT]
+                         [--collection-python COLLECTION_PYTHON]
+                         [--allow-collection]
+                         [--viewer-command VIEWER_COMMAND] [--no-viewer]
+                         [index]
+
+positional arguments:
+  index
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+                        owned workspace for explicit saved-run selection
+  --report-sha256 REPORT_SHA256
+                        required with an existing index
+  --page-size PAGE_SIZE
+  --source-root SOURCE_ROOT
+  --display-config DISPLAY_CONFIG
+                        trusted local display JSON
+  --collection-root COLLECTION_ROOT
+                        confined terminal collection planning root
+  --collection-python COLLECTION_PYTHON
+                        additional trusted Python interpreter for collection (repeatable)
+  --allow-collection    enable confirmed terminal collection jobs
+  --viewer-command VIEWER_COMMAND
+                        JSON argument array for an absolute viewer launcher
+  --no-viewer           show artifact paths without launching a viewer
+</code></pre>
+<h3 id="command-html"><code>code-analysis html</code></h3>
+<pre><code class="language-text">usage: code-analysis html [-h] [--compare COMPARE]
+                          [--projection {signal-quality,commonality-admission,prevalent-features,proposal-admission,proposal-decisions,proposal-gates,refactor-shortlist,health,modules,symbols,symbol-graph,findings,subject-findings,hierarchy,complexity,dependencies,dependency-neighborhood,sccs,cycles,cycle-list,contracts,contract-boundaries,contract-boundary-graph,shape-variants,dictionary-flow,validation-divergence,ownership-alias-flow,structure-lifecycle,structure-lifecycle-graph,conversion-churn,conversion-graph,representation-candidates,review-packet,unresolved-coverage,clone-clusters,clone-graph,function-commonality,module-responsibilities,state-side-effects,state-side-effect-graph,extraction-candidates,module-combination-candidates,architecture-estimates,architecture-contract-suggestions,refactor-packet,test-impact,test-impact-graph,git-churn,change-coupling,change-coupling-graph,generation-changes,coverage-files,coverage-matrix,uncovered-proposal-subjects,duplicate-functions,clone-membership,behavior-differences,duplicate-ownership,duplicate-callers-tests,divergence-reasons,canonical-owner,javascript-refactor-packet,candidate-worklist,abstraction-cost,existing-owner-alternatives,candidate-behavioral-differences,cross-module-duplication,internal-contract-risks,producer-consumer-schema-drift,frontend-backend-interface-mismatches,candidate-qualification,ownership-contract-flow,candidate-architecture-changes}]
+                          [--max-records MAX_RECORDS] -o OUTPUT
+                          report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --compare COMPARE
+  --projection {signal-quality,commonality-admission,prevalent-features,proposal-admission,proposal-decisions,proposal-gates,refactor-shortlist,health,modules,symbols,symbol-graph,findings,subject-findings,hierarchy,complexity,dependencies,dependency-neighborhood,sccs,cycles,cycle-list,contracts,contract-boundaries,contract-boundary-graph,shape-variants,dictionary-flow,validation-divergence,ownership-alias-flow,structure-lifecycle,structure-lifecycle-graph,conversion-churn,conversion-graph,representation-candidates,review-packet,unresolved-coverage,clone-clusters,clone-graph,function-commonality,module-responsibilities,state-side-effects,state-side-effect-graph,extraction-candidates,module-combination-candidates,architecture-estimates,architecture-contract-suggestions,refactor-packet,test-impact,test-impact-graph,git-churn,change-coupling,change-coupling-graph,generation-changes,coverage-files,coverage-matrix,uncovered-proposal-subjects,duplicate-functions,clone-membership,behavior-differences,duplicate-ownership,duplicate-callers-tests,divergence-reasons,canonical-owner,javascript-refactor-packet,candidate-worklist,abstraction-cost,existing-owner-alternatives,candidate-behavioral-differences,cross-module-duplication,internal-contract-risks,producer-consumer-schema-drift,frontend-backend-interface-mismatches,candidate-qualification,ownership-contract-flow,candidate-architecture-changes}
+  --max-records MAX_RECORDS
+  -o OUTPUT, --output OUTPUT
+</code></pre>
+<h3 id="command-web"><code>code-analysis web</code></h3>
+<pre><code class="language-text">usage: code-analysis web [-h] [--compare COMPARE]
+                         [--profile-report PROFILE_REPORT]
+                         [--compare-profile COMPARE_PROFILE]
+                         [--source-root SOURCE_ROOT] [--workspace WORKSPACE]
+                         [--collection-root COLLECTION_ROOT]
+                         [--collection-python COLLECTION_PYTHON] [--host HOST]
+                         [--allow-collection] [--port PORT]
+                         [--display-config DISPLAY_CONFIG] [--open]
+                         report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --compare COMPARE
+  --profile-report PROFILE_REPORT
+  --compare-profile COMPARE_PROFILE
+  --source-root SOURCE_ROOT
+                        explicit root for hash-checked source previews
+  --workspace WORKSPACE
+                        owned workspace for saved-run selection
+  --collection-root COLLECTION_ROOT
+                        enable confined collection command planning beneath
+                        this directory; no execution
+  --collection-python COLLECTION_PYTHON
+                        additional trusted Python interpreter for collection (repeatable)
+  --host HOST
+  --allow-collection    enable explicitly confirmed browser collection jobs
+  --port PORT
+  --display-config DISPLAY_CONFIG
+                        trusted local display JSON
+  --open                open the session URL in a browser
+</code></pre>
+<h3 id="command-ui"><code>code-analysis ui</code></h3>
+<pre><code class="language-text">usage: code-analysis ui [-h] [--compare COMPARE]
+                        [--profile-report PROFILE_REPORT]
+                        [--compare-profile COMPARE_PROFILE]
+                        [--source-root SOURCE_ROOT] [--workspace WORKSPACE]
+                        [--collection-root COLLECTION_ROOT]
+                        [--collection-python COLLECTION_PYTHON] [--host HOST]
+                        [--allow-collection | --no-collection] [--port PORT]
+                        [--foreground] [--display-config DISPLAY_CONFIG]
+                        [--open | --no-open]
+                        [report]
+
+positional arguments:
+  report                report JSON or generation directory
+
+options:
+  -h, --help            show this help message and exit
+  --compare COMPARE     optional comparison report or generation
+  --profile-report PROFILE_REPORT
+  --compare-profile COMPARE_PROFILE
+  --source-root SOURCE_ROOT
+                        explicit root for hash-checked source previews
+  --workspace WORKSPACE
+                        owned workspace for saved-run selection
+  --collection-root COLLECTION_ROOT
+                        enable collection planning, including startup without
+                        a saved report
+  --collection-python COLLECTION_PYTHON
+                        additional trusted Python interpreter for collection
+                        (repeatable)
+  --host HOST
+  --allow-collection    enable explicitly confirmed browser collection jobs
+                        (default)
+  --no-collection       allow previews but disable browser collection jobs
+  --port PORT
+  --foreground          serve in this terminal for debugging
+  --display-config DISPLAY_CONFIG
+                        trusted local display JSON
+  --open                open the session URL in a browser
+  --no-open             serve the UI without opening a browser
+</code></pre>
+<h3 id="command-ui-stop"><code>code-analysis ui-stop</code></h3>
+<pre><code class="language-text">usage: code-analysis ui-stop [-h] [--session SESSION] [--cancel-jobs]
+
+options:
+  -h, --help         show this help message and exit
+  --session SESSION  session identity printed at launch; default is current
+                     project
+  --cancel-jobs      explicitly cancel active collection/profile jobs
+</code></pre>
+<h3 id="command-candidates"><code>code-analysis candidates</code></h3>
+<pre><code class="language-text">usage: code-analysis candidates [-h] [--workspace WORKSPACE]
+                                [--format {json,tsv,markdown}]
+                                [--module-filter MODULE_FILTER]
+                                [--exclude EXCLUDE]
+                                [--kind {responsibility-extraction,module-combination,duplicate-functions,architecture-contract}]
+                                [--cross-module-only] [--production-only]
+                                [--state {observed,blocked,reviewable,reviewable-incomplete,ready-for-maintainer-review}]
+                                [--language {python,javascript,ruby}]
+                                [--min-shared-dimensions MIN_SHARED_DIMENSIONS]
+                                [--prefer-existing-owner] [--top TOP]
+                                [--decision {accepted,implemented,rejected-semantic-divergence,rejected-abstraction-cost,rejected-ownership-mismatch,rejected-behavior-change,deferred-missing-coverage,deferred-prerequisite,superseded,changed-since-decision,undecided}]
+                                report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+  --format {json,tsv,markdown}
+  --module-filter MODULE_FILTER
+  --exclude EXCLUDE
+  --kind {responsibility-extraction,module-combination,duplicate-functions,architecture-contract}
+  --cross-module-only
+  --production-only
+  --state {observed,blocked,reviewable,reviewable-incomplete,ready-for-maintainer-review}
+  --language {python,javascript,ruby}
+  --min-shared-dimensions MIN_SHARED_DIMENSIONS
+  --prefer-existing-owner
+  --top TOP
+  --decision {accepted,implemented,rejected-semantic-divergence,rejected-abstraction-cost,rejected-ownership-mismatch,rejected-behavior-change,deferred-missing-coverage,deferred-prerequisite,superseded,changed-since-decision,undecided}
+</code></pre>
+<h3 id="command-decisions-list"><code>code-analysis decisions list</code></h3>
+<pre><code class="language-text">usage: code-analysis decisions list [-h] [--workspace WORKSPACE] [--json] path
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+  --json
+</code></pre>
+<h3 id="command-decisions-set"><code>code-analysis decisions set</code></h3>
+<pre><code class="language-text">usage: code-analysis decisions set [-h] --report REPORT --decision
+                                   {accepted,implemented,rejected-semantic-divergence,rejected-abstraction-cost,rejected-ownership-mismatch,rejected-behavior-change,deferred-missing-coverage,deferred-prerequisite,superseded}
+                                   --reason REASON [--proposal PROPOSAL]
+                                   [--workspace WORKSPACE]
+                                   path candidate_id
+
+positional arguments:
+  path
+  candidate_id
+
+options:
+  -h, --help            show this help message and exit
+  --report REPORT
+  --decision {accepted,implemented,rejected-semantic-divergence,rejected-abstraction-cost,rejected-ownership-mismatch,rejected-behavior-change,deferred-missing-coverage,deferred-prerequisite,superseded}
+  --reason REASON
+  --proposal PROPOSAL
+  --workspace WORKSPACE
+</code></pre>
+<h3 id="command-decisions-export"><code>code-analysis decisions export</code></h3>
+<pre><code class="language-text">usage: code-analysis decisions export [-h] [--workspace WORKSPACE] path output
+
+positional arguments:
+  path
+  output
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+</code></pre>
+<h3 id="command-decisions-import"><code>code-analysis decisions import</code></h3>
+<pre><code class="language-text">usage: code-analysis decisions import [-h] [--workspace WORKSPACE]
+                                      [--conflict {error,keep-local,use-incoming}]
+                                      [--dry-run]
+                                      path input
+
+positional arguments:
+  path
+  input
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+  --conflict {error,keep-local,use-incoming}
+  --dry-run
+</code></pre>
+<h3 id="command-query"><code>code-analysis query</code></h3>
+<pre><code class="language-text">usage: code-analysis query [-h]
+                           (--contract CONTRACT | --shape SHAPE | --structure STRUCTURE | --finding FINDING | --clone CLONE | --duplicate DUPLICATE | --responsibility RESPONSIBILITY | --proposal PROPOSAL | --refactor-candidate REFACTOR_CANDIDATE | --symbol SYMBOL | --test TEST | --coverage COVERAGE | --git-change GIT_CHANGE | --generation GENERATION | --profile-frame PROFILE_FRAME | --runtime-edge RUNTIME_EDGE | --dependency-path SOURCE TARGET)
+                           [--json | --json-compact | --markdown]
+                           [--limit LIMIT] [--after AFTER] [--output OUTPUT]
+                           report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --contract CONTRACT
+  --shape SHAPE
+  --structure STRUCTURE
+  --finding FINDING
+  --clone CLONE
+  --duplicate DUPLICATE
+  --responsibility RESPONSIBILITY
+  --proposal PROPOSAL
+  --refactor-candidate REFACTOR_CANDIDATE
+  --symbol SYMBOL
+  --test TEST
+  --coverage COVERAGE
+  --git-change GIT_CHANGE
+  --generation GENERATION
+  --profile-frame PROFILE_FRAME
+  --runtime-edge RUNTIME_EDGE
+  --dependency-path SOURCE TARGET
+  --json
+  --json-compact
+  --markdown
+  --limit LIMIT
+  --after AFTER
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-diff"><code>code-analysis diff</code></h3>
+<pre><code class="language-text">usage: code-analysis diff [-h] [--format {json,json-compact,tsv,markdown}]
+                          [--max-records MAX_RECORDS] [--include-unchanged]
+                          [--output OUTPUT]
+                          baseline candidate
+
+positional arguments:
+  baseline
+  candidate
+
+options:
+  -h, --help            show this help message and exit
+  --format {json,json-compact,tsv,markdown}
+  --max-records MAX_RECORDS
+  --include-unchanged   include unchanged records in the bounded comparison
+                        inventory
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-regress"><code>code-analysis regress</code></h3>
+<pre><code class="language-text">usage: code-analysis regress [-h] [--workspace WORKSPACE]
+                             [--format {json,json-compact,tsv,markdown}]
+                             [--top TOP] [--output OUTPUT]
+                             baseline candidate
+
+positional arguments:
+  baseline
+  candidate
+
+options:
+  -h, --help            show this help message and exit
+  --workspace WORKSPACE
+  --format {json,json-compact,tsv,markdown}
+  --top TOP
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-semantic-nominate"><code>code-analysis semantic-nominate</code></h3>
+<pre><code class="language-text">usage: code-analysis semantic-nominate [-h] --model-directory MODEL_DIRECTORY
+                                       [--top TOP] [--json | --json-compact]
+                                       [--output OUTPUT]
+                                       report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --model-directory MODEL_DIRECTORY
+  --top TOP
+  --json
+  --json-compact
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-export"><code>code-analysis export</code></h3>
+<pre><code class="language-text">usage: code-analysis export [-h] --projection
+                            {signal-quality,commonality-admission,prevalent-features,proposal-admission,proposal-decisions,proposal-gates,refactor-shortlist,health,modules,symbols,symbol-graph,findings,subject-findings,hierarchy,complexity,dependencies,dependency-neighborhood,sccs,cycles,cycle-list,contracts,contract-boundaries,contract-boundary-graph,shape-variants,dictionary-flow,validation-divergence,ownership-alias-flow,structure-lifecycle,structure-lifecycle-graph,conversion-churn,conversion-graph,representation-candidates,review-packet,unresolved-coverage,clone-clusters,clone-graph,function-commonality,module-responsibilities,state-side-effects,state-side-effect-graph,extraction-candidates,module-combination-candidates,architecture-estimates,architecture-contract-suggestions,refactor-packet,test-impact,test-impact-graph,git-churn,change-coupling,change-coupling-graph,generation-changes,coverage-files,coverage-matrix,uncovered-proposal-subjects,duplicate-functions,clone-membership,behavior-differences,duplicate-ownership,duplicate-callers-tests,divergence-reasons,canonical-owner,javascript-refactor-packet,candidate-worklist,abstraction-cost,existing-owner-alternatives,candidate-behavioral-differences,cross-module-duplication,internal-contract-risks,producer-consumer-schema-drift,frontend-backend-interface-mismatches,candidate-qualification,ownership-contract-flow,candidate-architecture-changes}
+                            [--format {html,json,json-compact,tsv,markdown,dot,mermaid,svg,png}]
+                            [--max-records MAX_RECORDS]
+                            [--max-nodes MAX_NODES] [--max-edges MAX_EDGES]
+                            [--collapse {none,module,package}] [--select ID]
+                            [--edge-kind {runtime,type_checking,optional,lazy}]
+                            [--depth DEPTH] [--module-prefix MODULE]
+                            [--category {complexity,orchestration,import-cycle,contract-conflict,shape-conflict,coercion-risk,validation-sprawl,ownership-risk,lifecycle-risk,conversion-churn,growth-risk,contract-candidate,duplication,commonality,state-coupling,side-effect-ownership,cohesion,extraction-candidate,module-combination,architecture-contract}]
+                            [--severity {info,warning,error}] [--rule RULE_ID]
+                            [--kind {responsibility-extraction,module-combination,duplicate-functions,architecture-contract}]
+                            [--output OUTPUT]
+                            [--language {python,javascript,ruby}]
+                            report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --projection {signal-quality,commonality-admission,prevalent-features,proposal-admission,proposal-decisions,proposal-gates,refactor-shortlist,health,modules,symbols,symbol-graph,findings,subject-findings,hierarchy,complexity,dependencies,dependency-neighborhood,sccs,cycles,cycle-list,contracts,contract-boundaries,contract-boundary-graph,shape-variants,dictionary-flow,validation-divergence,ownership-alias-flow,structure-lifecycle,structure-lifecycle-graph,conversion-churn,conversion-graph,representation-candidates,review-packet,unresolved-coverage,clone-clusters,clone-graph,function-commonality,module-responsibilities,state-side-effects,state-side-effect-graph,extraction-candidates,module-combination-candidates,architecture-estimates,architecture-contract-suggestions,refactor-packet,test-impact,test-impact-graph,git-churn,change-coupling,change-coupling-graph,generation-changes,coverage-files,coverage-matrix,uncovered-proposal-subjects,duplicate-functions,clone-membership,behavior-differences,duplicate-ownership,duplicate-callers-tests,divergence-reasons,canonical-owner,javascript-refactor-packet,candidate-worklist,abstraction-cost,existing-owner-alternatives,candidate-behavioral-differences,cross-module-duplication,internal-contract-risks,producer-consumer-schema-drift,frontend-backend-interface-mismatches,candidate-qualification,ownership-contract-flow,candidate-architecture-changes}
+  --format {html,json,json-compact,tsv,markdown,dot,mermaid,svg,png}
+  --max-records MAX_RECORDS
+  --max-nodes MAX_NODES
+  --max-edges MAX_EDGES
+  --collapse {none,module,package}
+  --select ID           select a module or contract ID for a focused
+                        projection; may be repeated
+  --edge-kind {runtime,type_checking,optional,lazy}
+                        retain one dependency edge kind; may be repeated
+  --depth DEPTH
+  --module-prefix MODULE
+                        retain findings for an exact dotted module or its
+                        descendants; may be repeated
+  --category {complexity,orchestration,import-cycle,contract-conflict,shape-conflict,coercion-risk,validation-sprawl,ownership-risk,lifecycle-risk,conversion-churn,growth-risk,contract-candidate,duplication,commonality,state-coupling,side-effect-ownership,cohesion,extraction-candidate,module-combination,architecture-contract}
+                        retain one finding category; may be repeated
+  --severity {info,warning,error}
+                        retain one finding severity; may be repeated
+  --rule RULE_ID        retain one finding rule ID; may be repeated
+  --kind {responsibility-extraction,module-combination,duplicate-functions,architecture-contract}
+                        retain one refactor candidate kind; may be repeated
+                        for candidate-worklist
+  --output OUTPUT, -o OUTPUT
+  --language {python,javascript,ruby}
+</code></pre>
+<h3 id="command-workspace-list"><code>code-analysis workspace list</code></h3>
+<pre><code class="language-text">usage: code-analysis workspace list [-h] [--workspace EXPLICIT_WORKSPACE]
+                                    [--json]
+                                    [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --workspace EXPLICIT_WORKSPACE
+  --json
+</code></pre>
+<h3 id="command-workspace-pin"><code>code-analysis workspace pin</code></h3>
+<pre><code class="language-text">usage: code-analysis workspace pin [-h] [--workspace EXPLICIT_WORKSPACE]
+                                   path generation_id
+
+positional arguments:
+  path
+  generation_id
+
+options:
+  -h, --help            show this help message and exit
+  --workspace EXPLICIT_WORKSPACE
+</code></pre>
+<h3 id="command-workspace-unpin"><code>code-analysis workspace unpin</code></h3>
+<pre><code class="language-text">usage: code-analysis workspace unpin [-h] [--workspace EXPLICIT_WORKSPACE]
+                                     path generation_id
+
+positional arguments:
+  path
+  generation_id
+
+options:
+  -h, --help            show this help message and exit
+  --workspace EXPLICIT_WORKSPACE
+</code></pre>
+<h3 id="command-workspace-prune"><code>code-analysis workspace prune</code></h3>
+<pre><code class="language-text">usage: code-analysis workspace prune [-h] [--workspace EXPLICIT_WORKSPACE]
+                                     [--keep-older KEEP_OLDER] [--dry-run]
+                                     [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --workspace EXPLICIT_WORKSPACE
+  --keep-older KEEP_OLDER
+  --dry-run
+</code></pre>
+<h3 id="command-history"><code>code-analysis history</code></h3>
+<pre><code class="language-text">usage: code-analysis history [-h] [--config CONFIG] [--generations]
+                             [--workspace EXPLICIT_WORKSPACE] [--markdown]
+                             [--output OUTPUT]
+                             [path]
+
+positional arguments:
+  path
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --generations         compare retained analysis generations instead of
+                        reading Git
+  --workspace EXPLICIT_WORKSPACE
+  --markdown
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-coverage-import"><code>code-analysis coverage-import</code></h3>
+<pre><code class="language-text">usage: code-analysis coverage-import [-h] [--source-root SOURCE_ROOT]
+                                     [--workspace WORKSPACE] [--replace]
+                                     [--json-compact] [--output OUTPUT]
+                                     report coverage_data [coverage_data ...]
+
+positional arguments:
+  report
+  coverage_data
+
+options:
+  -h, --help            show this help message and exit
+  --source-root SOURCE_ROOT
+  --workspace WORKSPACE
+  --replace
+  --json-compact
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-coverage-run"><code>code-analysis coverage-run</code></h3>
+<pre><code class="language-text">usage: code-analysis coverage-run [-h] [--allow-execution] [--cwd CWD]
+                                  [--workspace WORKSPACE] [--timeout TIMEOUT]
+                                  [--expected-status EXPECTED_STATUS]
+                                  [--repeat REPEAT] [--env ENV] [--quiet]
+                                  [--verbose] [--json-compact]
+                                  [--output OUTPUT]
+                                  report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --allow-execution
+  --cwd CWD
+  --workspace WORKSPACE
+  --timeout TIMEOUT
+  --expected-status EXPECTED_STATUS
+  --repeat REPEAT
+  --env ENV
+  --quiet
+  --verbose
+  --json-compact
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-profile"><code>code-analysis profile</code></h3>
+<pre><code class="language-text">usage: code-analysis profile [-h] --source-report SOURCE_REPORT
+                             [--allow-execution] [--cwd CWD]
+                             [--workspace WORKSPACE] [--timeout TIMEOUT]
+                             [--expected-status EXPECTED_STATUS]
+                             [--repeat REPEAT] [--env ENV] [--quiet]
+                             [--verbose] [--json-compact] [--output OUTPUT]
+
+options:
+  -h, --help            show this help message and exit
+  --source-report SOURCE_REPORT
+  --allow-execution
+  --cwd CWD
+  --workspace WORKSPACE
+  --timeout TIMEOUT
+  --expected-status EXPECTED_STATUS
+  --repeat REPEAT
+  --env ENV
+  --quiet
+  --verbose
+  --json-compact
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-profile-report"><code>code-analysis profile-report</code></h3>
+<pre><code class="language-text">usage: code-analysis profile-report [-h] [--source-report SOURCE_REPORT]
+                                    [--source-root SOURCE_ROOT]
+                                    [--static-report STATIC_REPORT]
+                                    [--format {json,json-compact,markdown,tsv,dot,mermaid,overlay-dot,overlay-mermaid}]
+                                    [--output OUTPUT]
+                                    profile
+
+positional arguments:
+  profile
+
+options:
+  -h, --help            show this help message and exit
+  --source-report SOURCE_REPORT
+  --source-root SOURCE_ROOT
+  --static-report STATIC_REPORT
+  --format {json,json-compact,markdown,tsv,dot,mermaid,overlay-dot,overlay-mermaid}
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-profile-diff"><code>code-analysis profile-diff</code></h3>
+<pre><code class="language-text">usage: code-analysis profile-diff [-h] [--markdown] [--diagnostic-only]
+                                  [--output OUTPUT]
+                                  baseline candidate
+
+positional arguments:
+  baseline
+  candidate
+
+options:
+  -h, --help            show this help message and exit
+  --markdown
+  --diagnostic-only
+  --output OUTPUT, -o OUTPUT
+</code></pre>
+<h3 id="command-runtime-ingest"><code>code-analysis runtime ingest</code></h3>
+<pre><code class="language-text">usage: code-analysis runtime ingest [-h] --profile PROFILE
+                                    [--metadata METADATA]
+                                    [--source-report SOURCE_REPORT]
+                                    [--repo REPO] [--config CONFIG]
+                                    [--output OUTPUT] [--workspace WORKSPACE]
+                                    [--json] [--max-records MAX_RECORDS]
+                                    [--max-nodes MAX_NODES]
+                                    [--max-edges MAX_EDGES]
+                                    [--direction {TB,LR}] [--project-only]
+
+options:
+  -h, --help            show this help message and exit
+  --profile PROFILE
+  --metadata METADATA
+  --source-report SOURCE_REPORT
+  --repo REPO
+  --config CONFIG
+  --output OUTPUT
+  --workspace WORKSPACE
+                        retain import in an existing owned workspace
+  --json
+  --max-records MAX_RECORDS
+  --max-nodes MAX_NODES
+  --max-edges MAX_EDGES
+  --direction {TB,LR}
+  --project-only
+</code></pre>
+<h3 id="command-runtime-render"><code>code-analysis runtime render</code></h3>
+<pre><code class="language-text">usage: code-analysis runtime render [-h] --output OUTPUT
+                                    [--max-records MAX_RECORDS]
+                                    [--max-nodes MAX_NODES]
+                                    [--max-edges MAX_EDGES]
+                                    [--direction {TB,LR}] [--project-only]
+                                    report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --output OUTPUT
+  --max-records MAX_RECORDS
+  --max-nodes MAX_NODES
+  --max-edges MAX_EDGES
+  --direction {TB,LR}
+  --project-only
+</code></pre>
+<h3 id="command-runtime-compare"><code>code-analysis runtime compare</code></h3>
+<pre><code class="language-text">usage: code-analysis runtime compare [-h] [--diagnostic-only] [--markdown]
+                                     [--output OUTPUT]
+                                     baseline candidate
+
+positional arguments:
+  baseline
+  candidate
+
+options:
+  -h, --help         show this help message and exit
+  --diagnostic-only
+  --markdown
+  --output OUTPUT
+</code></pre>
+<h3 id="command-runtime-run"><code>code-analysis runtime run</code></h3>
+<pre><code class="language-text">usage: code-analysis runtime run [-h] --spec SPEC
+                                 [--source-report SOURCE_REPORT]
+                                 [--allow-execution]
+
+options:
+  -h, --help            show this help message and exit
+  --spec SPEC
+  --source-report SOURCE_REPORT
+  --allow-execution
+</code></pre>
+<h3 id="command-runtime-query"><code>code-analysis runtime query</code></h3>
+<pre><code class="language-text">usage: code-analysis runtime query [-h] --section
+                                   {hotspots,calls,variance,resources,categories,correlations,process,lifecycle,steps}
+                                   [--max-records MAX_RECORDS] [--frame FRAME]
+                                   [--format {json,tsv,markdown}]
+                                   report
+
+positional arguments:
+  report
+
+options:
+  -h, --help            show this help message and exit
+  --section {hotspots,calls,variance,resources,categories,correlations,process,lifecycle,steps}
+  --max-records MAX_RECORDS
+  --frame FRAME         exact frame identity for hotspots, calls, or variance
+  --format {json,tsv,markdown}
+</code></pre>
+</main></body></html>

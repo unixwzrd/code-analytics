@@ -1,0 +1,9 @@
+flowchart LR
+  n_5de93d5292854551["package.producer:advance:payload"]
+  n_d7960fc7bf03aa32["package.producer:advance:return"]
+  n_bbc9bc8daf0a3d49["package.consumer:consume:value"]
+  n_a8d2232ab0180a74["package.producer:build:return"]
+  n_083e18bdbf37c996["package.producer:build:payload"]
+  n_5de93d5292854551 -->|return: return| n_d7960fc7bf03aa32
+  n_083e18bdbf37c996 -->|argument: argument| n_bbc9bc8daf0a3d49
+  n_083e18bdbf37c996 -->|return: return| n_a8d2232ab0180a74

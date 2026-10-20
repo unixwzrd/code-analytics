@@ -1,0 +1,15 @@
+flowchart LR
+  n_d17636a634d25046["package.state:<module>:registry"]
+  n_0347b691925e67e8["package.state:build:payload"]
+  n_cd4fbb8e84e66130["package.state:build:payload"]
+  n_bc36f49fe3b96290["package.state:<module>:registry"]
+  n_4d8a9d93cdd3b4d6["package.state:build:alias"]
+  n_cd4fbb8e84e66130 -->|mutator: mutator| n_0347b691925e67e8
+  n_cd4fbb8e84e66130 -->|producer: producer| n_0347b691925e67e8
+  n_cd4fbb8e84e66130 -->|writer: writer| n_0347b691925e67e8
+  n_0347b691925e67e8 -->|alias: alias| n_4d8a9d93cdd3b4d6
+  n_bc36f49fe3b96290 -->|mutator: mutator| n_d17636a634d25046
+  n_bc36f49fe3b96290 -->|producer: producer| n_d17636a634d25046
+  n_cd4fbb8e84e66130 -->|owner: owner| n_0347b691925e67e8
+  n_bc36f49fe3b96290 -->|writer: writer| n_d17636a634d25046
+  n_bc36f49fe3b96290 -->|owner: owner| n_d17636a634d25046

@@ -1,0 +1,7 @@
+subject-id	kind	module	logical-name	finding-count	errors	warnings	info	category-counts	rule-counts	evidence-count	affected-proposals
+subject-dc537fbe8077aaa3b39a	symbol	package.combine_a	package.combine_a:transform	3	0	2	1	duplication=1, extraction-candidate=1, module-combination=1	duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1	13	2
+subject-b7e780419d3c0149f3aa	symbol	package.combine_b	package.combine_b:transform	3	0	2	1	duplication=1, extraction-candidate=1, module-combination=1	duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1	13	2
+subject-6e6c378abe407b0f54a7	symbol	package.work	package.work:first	3	0	2	1	duplication=1, extraction-candidate=1, module-combination=1	duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1	13	2
+subject-7f565e090115d3911cc8	symbol	package.work	package.work:second	3	0	2	1	duplication=1, extraction-candidate=1, module-combination=1	duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1	13	2
+subject-8c8c85262b5b8d5aa3c4	symbol	package.work	package.work:third	3	0	2	1	duplication=1, extraction-candidate=1, module-combination=1	duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1	13	2
+subject-f7326b273e0da8dcf15e	symbol	package.domain_bad	package.domain_bad:violates_direction	1	0	1	0	architecture-contract=1	configured-layer-direction=1	1	0

@@ -1,0 +1,11 @@
+row-id	column-id	shared-callees	shared-control-flow	shared-dictionary-schema	shared-signatures	structural-clone-clusters	evidence-ids
+subject-6e6c378abe407b0f54a7	subject-b7e780419d3c0149f3aa	1	1	1	3	1	evidence-1bd56328db5dfa959996, evidence-a02fc233f4a53faa82fb
+subject-6e6c378abe407b0f54a7	subject-8c8c85262b5b8d5aa3c4	1	1	1	3	1	evidence-1bd56328db5dfa959996, evidence-a30857670b19406113c8
+subject-8c8c85262b5b8d5aa3c4	subject-b7e780419d3c0149f3aa	1	1	1	3	1	evidence-8cf39c324288e02d11a7, evidence-a02fc233f4a53faa82fb
+subject-6e6c378abe407b0f54a7	subject-dc537fbe8077aaa3b39a	1	1	1	3	1	evidence-1bd56328db5dfa959996, evidence-430027e6cd4235c3453b
+subject-7f565e090115d3911cc8	subject-b7e780419d3c0149f3aa	1	1	1	3	1	evidence-a02fc233f4a53faa82fb, evidence-b4658309d0d90e444cdd
+subject-7f565e090115d3911cc8	subject-8c8c85262b5b8d5aa3c4	1	1	1	3	1	evidence-a30857670b19406113c8, evidence-b4658309d0d90e444cdd
+subject-8c8c85262b5b8d5aa3c4	subject-dc537fbe8077aaa3b39a	1	1	1	3	1	evidence-430027e6cd4235c3453b, evidence-8cf39c324288e02d11a7
+subject-b7e780419d3c0149f3aa	subject-dc537fbe8077aaa3b39a	1	1	1	3	1	evidence-30c03c87622d3a7a09ac, evidence-430027e6cd4235c3453b
+subject-7f565e090115d3911cc8	subject-dc537fbe8077aaa3b39a	1	1	1	3	1	evidence-430027e6cd4235c3453b, evidence-b4658309d0d90e444cdd
+subject-6e6c378abe407b0f54a7	subject-7f565e090115d3911cc8	1	1	1	3	1	evidence-1bd56328db5dfa959996, evidence-240f09456cfc6cf16760

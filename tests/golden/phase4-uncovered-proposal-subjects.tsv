@@ -1,0 +1,11 @@
+proposal	subject	state	observations	contexts
+refactor-proposal-a3df68f182fb37291540	package.combine_b:transform	qualification-unresolved	0	0
+refactor-proposal-a3df68f182fb37291540	package.work:third	qualification-unresolved	0	0
+refactor-proposal-9b0d4f7972943799b6ed	package.combine_a:transform	qualification-unresolved	0	0
+refactor-proposal-9b0d4f7972943799b6ed	package.work:third	qualification-unresolved	0	0
+refactor-proposal-9b0d4f7972943799b6ed	package.combine_b:transform	qualification-unresolved	0	0
+refactor-proposal-a3df68f182fb37291540	package.combine_a:transform	qualification-unresolved	0	0
+refactor-proposal-a3df68f182fb37291540	package.work:second	qualification-unresolved	0	0
+refactor-proposal-9b0d4f7972943799b6ed	package.work:first	qualification-unresolved	0	0
+refactor-proposal-a3df68f182fb37291540	package.work:first	qualification-unresolved	0	0
+refactor-proposal-9b0d4f7972943799b6ed	package.work:second	qualification-unresolved	0	0

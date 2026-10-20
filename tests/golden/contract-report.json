@@ -1,0 +1,950 @@
+{
+  "abstraction_cost_estimates": [],
+  "architecture_contract_suggestions": [],
+  "architecture_estimates": [],
+  "behavior_differences": [],
+  "behavioral_events": [],
+  "behavioral_invariants": [],
+  "behavioral_ordering_edges": [],
+  "candidate_behavior_differences": [],
+  "candidate_classifications": [],
+  "candidate_observations": [],
+  "candidate_qualification_requirements": [],
+  "change_couplings": [],
+  "clone_clusters": [],
+  "clone_fragments": [],
+  "command": {
+    "arguments": [
+      ".",
+      "--strictness",
+      "normal",
+      "--only-local-imports"
+    ],
+    "name": "contracts"
+  },
+  "completeness": "complete",
+  "complexity_observations": [
+    {
+      "argument_count": 0,
+      "branches": 0,
+      "cyclomatic_complexity": 1,
+      "language": "python",
+      "logical_loc": 1,
+      "nesting_depth": 0,
+      "physical_loc": 2,
+      "raises": 0,
+      "returns": 1,
+      "weighted_score": 0
+    },
+    {
+      "argument_count": 1,
+      "branches": 0,
+      "cyclomatic_complexity": 1,
+      "language": "python",
+      "logical_loc": 2,
+      "nesting_depth": 0,
+      "physical_loc": 3,
+      "raises": 0,
+      "returns": 1,
+      "weighted_score": 1
+    }
+  ],
+  "configuration": {
+    "digest_sha256": "c758041162e9cab8f27b253c0e19e28eae0058c23b530f37680cb6442201076b",
+    "max_findings": null,
+    "only_local_imports": true,
+    "strictness": "normal",
+    "symbol_filter": null,
+    "thresholds": {
+      "arguments": 7,
+      "branches": 12,
+      "function_loc": 75,
+      "nesting": 4,
+      "weighted_score": 15
+    }
+  },
+  "contracts": [
+    {
+      "boundaries": [
+        {
+          "boundary_class": "module-local",
+          "boundary_id": "boundary-16b415e9da65bbe12de5",
+          "confidence": "exact",
+          "direction": "consumer",
+          "evidence_ids": [
+            "evidence-73800c6a040fd57f3e5f"
+          ],
+          "limitations": [],
+          "site_subject_id": "subject-975b15fb06387d809474"
+        },
+        {
+          "boundary_class": "module-local",
+          "boundary_id": "boundary-553a7aab6670705c31e4",
+          "confidence": "exact",
+          "direction": "producer",
+          "evidence_ids": [
+            "evidence-7c701bab402177634e3a"
+          ],
+          "limitations": [],
+          "site_subject_id": "subject-f830ead7ac5af0265063"
+        },
+        {
+          "boundary_class": "module-local",
+          "boundary_id": "boundary-9106ff33dd6c71a2804c",
+          "confidence": "exact",
+          "direction": "producer",
+          "evidence_ids": [
+            "evidence-f9990e6e39c303339d99"
+          ],
+          "limitations": [],
+          "site_subject_id": "subject-128e208cd1d7d957a554"
+        },
+        {
+          "boundary_class": "module-local",
+          "boundary_id": "boundary-ab6587e6d9e80ed71d2b",
+          "confidence": "exact",
+          "direction": "consumer",
+          "evidence_ids": [
+            "evidence-ec193e7df7a7c5292842"
+          ],
+          "limitations": [],
+          "site_subject_id": "subject-b36c10ed0cdbab4fb314"
+        },
+        {
+          "boundary_class": "module-local",
+          "boundary_id": "boundary-e6d1403eddd50515dacf",
+          "confidence": "exact",
+          "direction": "definition",
+          "evidence_ids": [
+            "evidence-b5417c0176c3b4cd0ab2"
+          ],
+          "limitations": [],
+          "site_subject_id": "subject-5e22477a5d00ce00e7e5"
+        }
+      ],
+      "contract_id": "contract-2530f986268e20763e58",
+      "defining_subject_id": "subject-5e22477a5d00ce00e7e5",
+      "evidence_ids": [
+        "evidence-b5417c0176c3b4cd0ab2"
+      ],
+      "invariants": [],
+      "kind": "pydantic-model",
+      "members": [
+        {
+          "consumer_fallbacks": [],
+          "evidence_ids": [
+            "evidence-396e45f6ceae4ea75416"
+          ],
+          "name": "payload",
+          "producer_defaults": [
+            {
+              "default_id": "default-77fbec9110d3a6fe4642",
+              "detail": null,
+              "evidence_ids": [
+                "evidence-396e45f6ceae4ea75416"
+              ],
+              "json_literal": null,
+              "kind": "absent"
+            }
+          ],
+          "requiredness": {
+            "condition": null,
+            "evidence_ids": [
+              "evidence-396e45f6ceae4ea75416"
+            ],
+            "kind": "always"
+          },
+          "type_expression": {
+            "arguments": [],
+            "kind": "scalar",
+            "literal_values": [],
+            "name": "str"
+          }
+        },
+        {
+          "consumer_fallbacks": [],
+          "evidence_ids": [
+            "evidence-800e8cef6e6f717b010f"
+          ],
+          "name": "schema_version",
+          "producer_defaults": [
+            {
+              "default_id": "default-508a9413b22f254e30cf",
+              "detail": null,
+              "evidence_ids": [
+                "evidence-800e8cef6e6f717b010f"
+              ],
+              "json_literal": {
+                "value": "v1"
+              },
+              "kind": "json-literal"
+            }
+          ],
+          "requiredness": {
+            "condition": null,
+            "evidence_ids": [
+              "evidence-800e8cef6e6f717b010f"
+            ],
+            "kind": "optional"
+          },
+          "type_expression": {
+            "arguments": [],
+            "kind": "literal",
+            "literal_values": [
+              "v1"
+            ],
+            "name": null
+          }
+        }
+      ],
+      "schema_versions": [
+        "v1"
+      ],
+      "serialization_evidence_ids": [
+        "evidence-ec193e7df7a7c5292842"
+      ],
+      "serialization_formats": [
+        "json"
+      ],
+      "unresolved_behavior": []
+    }
+  ],
+  "coverage_artifacts": [],
+  "coverage_files": [],
+  "coverage_observations": [],
+  "cycles": [],
+  "data_structures": [],
+  "diagnostics": [],
+  "dictionary_observations": [],
+  "dictionary_shapes": [],
+  "duplicate_functions": [],
+  "environment": {
+    "executable_identity": "python",
+    "python_implementation": "cpython",
+    "python_version": "3.12.13"
+  },
+  "evidence_catalog": [
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 16,
+      "end_line": 8,
+      "evidence_id": "evidence-396e45f6ceae4ea75416",
+      "observation": "contract member payload",
+      "provider": "native-contracts",
+      "start_column": 4,
+      "start_line": 8
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 26,
+      "end_line": 15,
+      "evidence_id": "evidence-73800c6a040fd57f3e5f",
+      "observation": "contract parameter annotation value",
+      "provider": "native-contracts",
+      "start_column": 18,
+      "start_line": 15
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 40,
+      "end_line": 12,
+      "evidence_id": "evidence-7c701bab402177634e3a",
+      "observation": "contract constructor call",
+      "provider": "native-contracts",
+      "start_column": 11,
+      "start_line": 12
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 40,
+      "end_line": 7,
+      "evidence_id": "evidence-800e8cef6e6f717b010f",
+      "observation": "contract member schema_version",
+      "provider": "native-contracts",
+      "start_column": 4,
+      "start_line": 7
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 16,
+      "end_line": 8,
+      "evidence_id": "evidence-b5417c0176c3b4cd0ab2",
+      "observation": "pydantic-model contract declaration",
+      "provider": "native-contracts",
+      "start_column": 0,
+      "start_line": 6
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 34,
+      "end_line": 17,
+      "evidence_id": "evidence-ec193e7df7a7c5292842",
+      "observation": "contract model_dump_json serialization call",
+      "provider": "native-contracts",
+      "start_column": 11,
+      "start_line": 17
+    },
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "confidence": "exact",
+      "end_column": 24,
+      "end_line": 11,
+      "evidence_id": "evidence-f9990e6e39c303339d99",
+      "observation": "contract return annotation",
+      "provider": "native-contracts",
+      "start_column": 16,
+      "start_line": 11
+    }
+  ],
+  "finding_suppression_evaluation": null,
+  "findings": [],
+  "flow_edges": [],
+  "function_commonalities": [],
+  "function_profiles": [],
+  "generation_changes": [],
+  "git_commits": [],
+  "git_path_changes": [],
+  "git_repository": null,
+  "git_symbol_changes": [],
+  "import_edges": [],
+  "interface_correlations": [],
+  "interface_endpoints": [],
+  "interface_mismatches": [],
+  "interface_payload_variants": [],
+  "language_frontends": [
+    {
+      "assembly_failures": [],
+      "capabilities": [
+        {
+          "capability": "parsing-provenance",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "source-spans",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "module-identity",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "symbols",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "dependencies",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "calls",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "control-flow",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "data-flow",
+          "limitations": [
+            "Bounded data flow is completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "exceptions",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "side-effects",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "contracts-shapes",
+          "limitations": [
+            "Contracts and dictionary shapes are completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "clone-normalization",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "test-discovery",
+          "limitations": [
+            "Framework discovery and dynamic tests remain unresolved."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "coverage-binding",
+          "limitations": [
+            "Coverage binding requires separately imported or executed coverage evidence."
+          ],
+          "state": "partial"
+        }
+      ],
+      "complete": 1,
+      "diagnostic_codes": [],
+      "discovered": 1,
+      "failed": 0,
+      "frontend_id": "python-ast",
+      "language": "python",
+      "partial": 0,
+      "state": "complete",
+      "unavailable": 0
+    }
+  ],
+  "limitations": [
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Dictionary-shape, validation, lifecycle, and candidate analysis remain disabled.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved."
+  ],
+  "module_exports": [],
+  "modules": [
+    {
+      "fan_in": 0,
+      "fan_out": 0,
+      "language": "python",
+      "line_count": 17,
+      "module_system": null,
+      "name": "golden_contract",
+      "nonblank_line_count": 10,
+      "parse_state": "complete",
+      "path": "golden_contract.py",
+      "source_sha256": "f69a5d00dd4bddabd5ec8206b46bedd03db48fe88d74a05c6fcd574cb8c79415",
+      "symbols": [
+        {
+          "async_": false,
+          "complexity": null,
+          "decorators": [],
+          "generator": false,
+          "kind": "class",
+          "language": "python",
+          "name": "Envelope",
+          "parameters": [],
+          "qualified_name": "Envelope",
+          "returns": null,
+          "span": {
+            "end_column": 16,
+            "end_line": 8,
+            "language": "python",
+            "path": "golden_contract.py",
+            "start_column": 0,
+            "start_line": 6
+          }
+        },
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 0,
+            "branches": 0,
+            "cyclomatic_complexity": 1,
+            "language": "python",
+            "logical_loc": 1,
+            "nesting_depth": 0,
+            "physical_loc": 2,
+            "raises": 0,
+            "returns": 1,
+            "weighted_score": 0
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "python",
+          "name": "create",
+          "parameters": [],
+          "qualified_name": "create",
+          "returns": "Envelope",
+          "span": {
+            "end_column": 40,
+            "end_line": 12,
+            "language": "python",
+            "path": "golden_contract.py",
+            "start_column": 0,
+            "start_line": 11
+          }
+        },
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 1,
+            "branches": 0,
+            "cyclomatic_complexity": 1,
+            "language": "python",
+            "logical_loc": 2,
+            "nesting_depth": 0,
+            "physical_loc": 3,
+            "raises": 0,
+            "returns": 1,
+            "weighted_score": 1
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "python",
+          "name": "encode",
+          "parameters": [
+            "value"
+          ],
+          "qualified_name": "encode",
+          "returns": "str",
+          "span": {
+            "end_column": 34,
+            "end_line": 17,
+            "language": "python",
+            "path": "golden_contract.py",
+            "start_column": 0,
+            "start_line": 15
+          }
+        }
+      ],
+      "syntax_mode": null
+    }
+  ],
+  "owner_alternatives": [],
+  "parser_provenance": [],
+  "providers": [
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "module-index",
+        "symbol-index",
+        "complexity",
+        "import-graph"
+      ],
+      "provider_id": "native-ast",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "contract-declaration-inventory",
+        "contract-direct-aliases",
+        "contract-serialization-sites",
+        "contract-use-sites",
+        "normalized-type-expressions",
+        "schema-version-declarations"
+      ],
+      "provider_id": "native-contracts",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    }
+  ],
+  "refactor_candidates": [],
+  "refactor_proposals": [],
+  "responsibility_clusters": [],
+  "run_identity_sha256": "6061b688bd4df48e511e2412368ad0e1015ccb3a09943cf0c6b745ec57a1b3b8",
+  "schema_name": "code-analysis-report",
+  "schema_version": "1.0.0",
+  "section_coverage": [
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "r1-static-analysis",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "static-call-occurrences",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "contracts",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "interfaces",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "dictionary-shapes",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "validation",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "data-structures",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "clones",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "function-commonality",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "state-side-effects",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "cohesion-refactoring",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "test-impact",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "coverage",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "git-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "generation-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    }
+  ],
+  "side_effects": [],
+  "signal_quality": {
+    "commonality_admission": null,
+    "proposal_admission": null,
+    "proposal_decisions": null
+  },
+  "source_bindings": [
+    {
+      "binding_id": "binding-51ca811c99b2b63a4fc7",
+      "language": "python",
+      "logical_path": "golden_contract.py",
+      "source_sha256": "f69a5d00dd4bddabd5ec8206b46bedd03db48fe88d74a05c6fcd574cb8c79415"
+    }
+  ],
+  "source_files": [
+    {
+      "language": "python",
+      "logical_path": "golden_contract.py",
+      "logical_root": ".",
+      "module_name": "golden_contract",
+      "module_system": null,
+      "nonblank_loc": 10,
+      "parse_state": "complete",
+      "physical_loc": 17,
+      "source_file_id": "source-file-42d38523fe0cb1363ad9",
+      "source_sha256": "f69a5d00dd4bddabd5ec8206b46bedd03db48fe88d74a05c6fcd574cb8c79415",
+      "syntax_mode": null
+    }
+  ],
+  "state_resources": [],
+  "static_call_coverage": [],
+  "static_call_occurrences": [],
+  "strongly_connected_components": [],
+  "subjects": [
+    {
+      "evidence_ids": [
+        "evidence-f9990e6e39c303339d99"
+      ],
+      "kind": "boundary",
+      "language": "python",
+      "logical_name": "golden_contract:create:return:golden_contract.Envelope",
+      "module": "golden_contract",
+      "subject_id": "subject-128e208cd1d7d957a554"
+    },
+    {
+      "evidence_ids": [
+        "evidence-b5417c0176c3b4cd0ab2"
+      ],
+      "kind": "symbol",
+      "language": "python",
+      "logical_name": "golden_contract:Envelope",
+      "module": "golden_contract",
+      "subject_id": "subject-5e22477a5d00ce00e7e5"
+    },
+    {
+      "evidence_ids": [
+        "evidence-73800c6a040fd57f3e5f"
+      ],
+      "kind": "boundary",
+      "language": "python",
+      "logical_name": "golden_contract:encode:parameter:value:golden_contract.Envelope",
+      "module": "golden_contract",
+      "subject_id": "subject-975b15fb06387d809474"
+    },
+    {
+      "evidence_ids": [
+        "evidence-ec193e7df7a7c5292842"
+      ],
+      "kind": "boundary",
+      "language": "python",
+      "logical_name": "golden_contract:encode:call@17:11",
+      "module": "golden_contract",
+      "subject_id": "subject-b36c10ed0cdbab4fb314"
+    },
+    {
+      "evidence_ids": [
+        "evidence-7c701bab402177634e3a"
+      ],
+      "kind": "boundary",
+      "language": "python",
+      "logical_name": "golden_contract:create:call@12:11",
+      "module": "golden_contract",
+      "subject_id": "subject-f830ead7ac5af0265063"
+    }
+  ],
+  "summary": {
+    "abstraction_cost_estimates": 0,
+    "architecture_contract_suggestions": 0,
+    "architecture_estimates": 0,
+    "behavior_differences": 0,
+    "behavioral_events": 0,
+    "behavioral_invariants": 0,
+    "behavioral_ordering_edges": 0,
+    "candidate_behavior_differences": 0,
+    "candidate_classifications": 0,
+    "candidate_observations": 0,
+    "candidate_qualification_requirements": 0,
+    "change_couplings": 0,
+    "classes": 1,
+    "clone_clusters": 0,
+    "clone_fragments": 0,
+    "contracts": 1,
+    "coverage_artifacts": 0,
+    "coverage_files": 0,
+    "coverage_observations": 0,
+    "cycles": 0,
+    "data_structures": 0,
+    "dictionary_observations": 0,
+    "dictionary_shapes": 0,
+    "discovered_files": 1,
+    "duplicate_functions": 0,
+    "failed_files": 0,
+    "findings": 0,
+    "flow_edges": 0,
+    "function_commonalities": 0,
+    "function_profiles": 0,
+    "functions": 2,
+    "generation_changes": 0,
+    "git_commits": 0,
+    "git_path_changes": 0,
+    "git_symbol_changes": 0,
+    "import_edges": 0,
+    "interface_correlations": 0,
+    "interface_endpoints": 0,
+    "interface_mismatches": 0,
+    "interface_payload_variants": 0,
+    "methods": 0,
+    "module_exports": 0,
+    "modules": 1,
+    "owner_alternatives": 0,
+    "parsed_files": 1,
+    "refactor_candidates": 0,
+    "refactor_proposals": 0,
+    "responsibility_clusters": 0,
+    "side_effects": 0,
+    "source_files": 1,
+    "state_resources": 0,
+    "static_call_occurrences": 0,
+    "static_calls_observed": 0,
+    "static_calls_omitted": 0,
+    "strongly_connected_components": 0,
+    "subjects": 5,
+    "test_cases": 0,
+    "test_fixtures": 0,
+    "test_modules": 0,
+    "test_relationships": 0,
+    "unresolved_edges": 0,
+    "validation_patterns": 0
+  },
+  "target": {
+    "languages": [
+      "python"
+    ],
+    "logical_root": ".",
+    "source_roots": [
+      "."
+    ],
+    "target_kind": "directory"
+  },
+  "test_cases": [],
+  "test_fixtures": [],
+  "test_modules": [],
+  "test_relationships": [],
+  "tool_version": "0.1.0b1",
+  "unresolved_edges": [],
+  "validation_patterns": []
+}

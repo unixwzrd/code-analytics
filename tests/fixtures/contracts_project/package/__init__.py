@@ -1,0 +1,1 @@
+"""Synthetic contract fixture package."""

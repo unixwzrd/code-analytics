@@ -1,0 +1,1266 @@
+{
+  "columns": [
+    {
+      "alignment": "left",
+      "column_id": "test",
+      "label": "Test, fixture or module",
+      "position": 0,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "relationship",
+      "label": "Relationship",
+      "position": 1,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "target",
+      "label": "Target",
+      "position": 2,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "module",
+      "label": "Target module",
+      "position": 3,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "resolution",
+      "label": "Resolution",
+      "position": 4,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "path",
+      "label": "Evidence path",
+      "position": 5,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "right",
+      "column_id": "line",
+      "label": "Evidence line",
+      "position": 6,
+      "value_kind": "integer"
+    }
+  ],
+  "completeness": "partial",
+  "inputs": [
+    {
+      "report_schema_name": "code-analysis-report",
+      "report_schema_version": "1.0.0",
+      "report_sha256": "edc28fb246b5d65e7724b5d1e29971f19eba11e9fa8fae5f27be47b0aae28826",
+      "role": "source",
+      "run_identity_sha256": "c4d5c5e1621b2d8b377f588914fe3e9a6444a45e789c6973248f261c0f659bde"
+    }
+  ],
+  "limitations": [
+    "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+    "Clone evidence is syntax-only; semantic equivalence and runtime behavior are unmeasured.",
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Data-structure topology is syntax-only and limited to evidenced dictionary operations and declarations.",
+    "Dictionary analysis is syntax-only and bounded; dynamic calls and keys remain unresolved.",
+    "Dictionary evidence is descriptive and does not authorize a representation change.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "Dynamic patches, generated tests, indirect parametrization, reflection, and framework discovery may remain unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Feature profiles describe syntax and do not establish runtime behavior or common ownership.",
+    "Growth indicators are measurement prompts, not performance findings.",
+    "Interface evidence is static and does not transfer authorization or domain semantics.",
+    "Mutable-state and side-effect evidence is syntax-only; runtime ownership and outcomes are unmeasured.",
+    "Names and literals remain significant for token clones and are categorical in AST clones.",
+    "Operational filesystem, path, symlink, authorization, security, and runtime-state validation is excluded.",
+    "Phase 4 test-impact evidence is unavailable.",
+    "Runtime ownership, lock behavior and coverage, persistence success, cleanup effectiveness, and growth remain unmeasured.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved.",
+    "Shadowing, dynamic dispatch, cleanup effectiveness, and arbitrary receiver provenance remain unresolved.",
+    "Static graph simulation does not establish runtime behavior or authorize source changes.",
+    "Static test references indicate likely impact, not execution or behavioral coverage.",
+    "Structural validation currently covers proven dictionary membership, truthiness, and coercion checks.",
+    "Validation-relative mutation timing and data-structure ownership remain unavailable.",
+    "runtime-binding-is-not-established-by-static-call-evidence",
+    "static-call-evidence-is-syntactic-and-does-not-establish-runtime-dispatch"
+  ],
+  "projection_id": "projection-a1c174a172a4cda25336",
+  "projection_kind": "table",
+  "record_count": 20,
+  "rows": [
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "monkeypatch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-28d0be51334c18494348"
+      ],
+      "row_id": "test-relationship-28d0be51334c18494348"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:client"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest:fixture"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/conftest.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 9,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-51094e3f8bbc167febd9"
+      ],
+      "row_id": "test-relationship-51094e3f8bbc167febd9"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest:mark.parametrize"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 9,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-5c57f1f79321bbe69149"
+      ],
+      "row_id": "test-relationship-5c57f1f79321bbe69149"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:configuration"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest:fixture"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/conftest.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 4,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-6858c6316b2129a8dd32"
+      ],
+      "row_id": "test-relationship-6858c6316b2129a8dd32"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_qualification_path"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:client"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 16,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-7d7727d5f095389b5e6f"
+      ],
+      "row_id": "test-relationship-7d7727d5f095389b5e6f"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core:helper"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 11,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-7e884f0aad12cfb9a773"
+      ],
+      "row_id": "test-relationship-7e884f0aad12cfb9a773"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "value"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-828b91f5367560e3b199"
+      ],
+      "row_id": "test-relationship-828b91f5367560e3b199"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unittest.mock:patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unittest.mock"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 12,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-8b591d92c3890e25aeb1"
+      ],
+      "row_id": "test-relationship-8b591d92c3890e25aeb1"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_dynamic_patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unittest.mock:patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unittest.mock"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 21,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-8cc075a016703c7905b4"
+      ],
+      "row_id": "test-relationship-8cc075a016703c7905b4"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "expected"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-9c8bbd1070b0b3f281ec"
+      ],
+      "row_id": "test-relationship-9c8bbd1070b0b3f281ec"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_qualification_path"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "module-import"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 16,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-a8ee898476b7e74c776a"
+      ],
+      "row_id": "test-relationship-a8ee898476b7e74c776a"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:client"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-adc2ddd336d4f449372a"
+      ],
+      "row_id": "test-relationship-adc2ddd336d4f449372a"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core:helper"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 12,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-b43d3707832266b00161"
+      ],
+      "row_id": "test-relationship-b43d3707832266b00161"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_dynamic_patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "target_name"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 20,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-b60b4d0635e00ec91239"
+      ],
+      "row_id": "test-relationship-b60b4d0635e00ec91239"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "module-import"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-bd44c10ca4022008c4ba"
+      ],
+      "row_id": "test-relationship-bd44c10ca4022008c4ba"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_dynamic_patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "module-import"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 20,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-c6afd32b50a3418afcdb"
+      ],
+      "row_id": "test-relationship-c6afd32b50a3418afcdb"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core:calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "sample.core"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-c72a20408e6f99c3ab86"
+      ],
+      "row_id": "test-relationship-c72a20408e6f99c3ab86"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_calculate"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "direct-symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest:mark"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "pytest"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 9,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-d2caeff147aafb29b931"
+      ],
+      "row_id": "test-relationship-d2caeff147aafb29b931"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.test_core:test_dynamic_patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "patch"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "target_name"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "unresolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/test_core.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 21,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-d4ee02bf16b979a59393"
+      ],
+      "row_id": "test-relationship-d4ee02bf16b979a59393"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:client"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "fixture-use"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests.conftest:configuration"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": ""
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "resolved"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "tests/conftest.py"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 10,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "test-relationship-da427402684dcc73d63a"
+      ],
+      "row_id": "test-relationship-da427402684dcc73d63a"
+    }
+  ],
+  "schema_name": "code-analysis-projection",
+  "schema_version": "1.0.0",
+  "selection": {
+    "after_id": null,
+    "candidate_decisions": [],
+    "candidate_exclude_patterns": [],
+    "candidate_kinds": [],
+    "candidate_module_patterns": [],
+    "candidate_states": [],
+    "collapse": "none",
+    "cross_module_only": false,
+    "depth": null,
+    "edge_kinds": [],
+    "finding_categories": [],
+    "finding_rule_ids": [],
+    "finding_severities": [],
+    "languages": [],
+    "max_edges": 250,
+    "max_nodes": 100,
+    "max_records": 500,
+    "min_shared_dimensions": 0,
+    "module_prefixes": [],
+    "prefer_existing_owner": false,
+    "production_only": false,
+    "selected_ids": []
+  },
+  "sort": [],
+  "title": "Static test-impact relationships",
+  "truncated": false,
+  "truncation_reason": null
+}

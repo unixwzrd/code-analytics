@@ -1,0 +1,2 @@
+module	qualified-symbol	name	kind	path	start-line	end-line	parameters	returns	decorators
+visible	visible	visible	function	visible.py	1	2		None	

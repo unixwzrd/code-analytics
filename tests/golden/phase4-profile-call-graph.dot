@@ -1,0 +1,5 @@
+digraph runtime_calls {
+  "profile-frame-11111111111111111111" [label="package/module.py:10:caller"];
+  "profile-frame-22222222222222222222" [label="package/module.py:20:callee"];
+  "profile-frame-11111111111111111111" -> "profile-frame-22222222222222222222" [label="4"];
+}

@@ -1,0 +1,1 @@
+"""Synthetic dictionary-analysis package."""

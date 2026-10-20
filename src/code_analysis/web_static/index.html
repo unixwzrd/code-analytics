@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <title>Code Analysis</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/localops/styles.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/help/styles.css">
+  </head>
+  <body>
+    <div id="localops-bootstrap">
+      <nav aria-label="Report views">
+        <button class="nav" data-view="collection">Collect / plan</button>
+        <button class="nav active" data-view="overview">Overview</button>
+        <button class="nav" data-view="runs">Saved runs</button>
+        <button class="nav" data-view="modules">Modules</button>
+        <button class="nav" data-view="browse">Browse code</button>
+        <button class="nav" data-view="architecture">Architecture</button>
+        <button class="nav" data-view="explore">Explore evidence</button>
+        <button class="nav" data-view="findings">Findings</button>
+        <button class="nav" data-view="state-effects">State / effects</button>
+        <button class="nav" data-view="contracts">Contracts</button>
+        <button class="nav" data-view="dictionary-shapes">Dictionary shapes</button>
+        <button class="nav" data-view="clones">Clones</button>
+        <button class="nav" data-view="test-impact">Test impact</button>
+        <button class="nav" data-view="candidates">Candidates</button>
+        <button class="nav" data-view="comparison">Comparison</button>
+        <button class="nav" data-view="runtime">Runtime</button>
+        <button class="nav" data-view="providers">Providers</button>
+        <button class="nav" data-view="diagnostics">Diagnostics</button>
+      </nav>
+      <div class="app-view">
+        <section class="heading">
+          <div><p class="eyebrow">Saved report explorer</p><h1 id="title" tabindex="-1">Overview</h1><p id="view-description" class="description">Start with the report's scope, completeness, and strongest signals.</p></div>
+          <a class="detail-button" href="/help/getting-started.html" data-global-help aria-label="Help — open the packaged user guide">Help</a>
+          <label class="search"><span>Filter</span><input id="filter" type="search" placeholder="Module, rule, title, or identity"></label>
+        </section>
+        <section id="view-guidance" aria-label="View guidance"></section>
+        <section id="workflow-notice" class="panel" role="status" hidden></section>
+        <div id="content" aria-live="polite"></div>
+      </div>
+    </div>
+    <div id="report-state" class="state">Loading report…</div>
+    <dialog id="evidence-dialog" aria-labelledby="evidence-title">
+      <form method="dialog"><button class="detail-button">Close evidence</button></form>
+      <h2 id="evidence-title">Evidence</h2>
+      <div id="evidence-content" aria-live="polite"></div>
+    </dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

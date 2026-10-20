@@ -1,0 +1,9 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+  "main.js" [label="main.js\\nfan-in: 0\\nfan-out: 1\\nfindings: 2\\nline-count: 14"];
+  "shared.js" [label="shared.js\\nfan-in: 1\\nfan-out: 0\\nfindings: 0\\nline-count: 12"];
+  "widget.jsx" [label="widget.jsx\\nfan-in: 0\\nfan-out: 0\\nfindings: 0\\nline-count: 3"];
+  "main.js" -> "shared.js" [label="esm-static", style="solid"];
+}

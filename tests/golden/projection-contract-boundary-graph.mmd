@@ -1,0 +1,21 @@
+flowchart LR
+  n_547d7e93bf3f34f7["package.contracts:Job"]
+  n_39ac768c25d74c88["package.contracts:ArchivedJob"]
+  n_6cb14d0fab35be28["package.contracts:Request"]
+  n_87040147cb797493["package.contracts:Response"]
+  n_a7a985f6adfac582["package.base:ContractBase"]
+  n_a59d2ab597b9832b["package.usage:serialize_response:parameter:response:package.contracts.Response"]
+  n_ee8c9be0cd481779["package.base:PayloadBase"]
+  n_b25e3c9589b51c76["package.contracts:Request"]
+  n_20d8b249490c9c87["package.contracts:make_response:call@29:11"]
+  n_f33fecf86fdb8753["package.contracts:make_response:return:package.contracts.Response"]
+  n_0a1309026d5b0adb["package.base:RecordBase"]
+  n_d6bf3cf66997e6df["package.contracts:Job"]
+  n_22726f80ee3a1717["package.contracts:Response"]
+  n_fa2fc1c264d13233["package.contracts:ArchivedJob"]
+  n_87040147cb797493 -->|producer: module-local| n_f33fecf86fdb8753
+  n_547d7e93bf3f34f7 -->|definition: module-local| n_d6bf3cf66997e6df
+  n_87040147cb797493 -->|producer: module-local| n_20d8b249490c9c87
+  n_39ac768c25d74c88 -->|definition: module-local| n_fa2fc1c264d13233
+  n_6cb14d0fab35be28 -->|definition: module-local| n_b25e3c9589b51c76
+  n_87040147cb797493 -->|consumer: cross-subsystem-internal| n_a59d2ab597b9832b

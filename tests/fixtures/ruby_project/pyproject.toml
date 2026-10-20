@@ -1,0 +1,3 @@
+[tool.code-analysis]
+languages = ["ruby"]
+source-roots = ["lib"]

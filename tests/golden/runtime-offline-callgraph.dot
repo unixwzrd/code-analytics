@@ -1,0 +1,7 @@
+digraph runtime_calls {
+  rankdir=TB;
+  node [shape=box, style=filled, fontname=Helvetica];
+  label="Runtime call evidence (partial) — 1/1 nodes; 1/1 edges\nWidth = 1 + log10(1 + calls). Fill = ownership. Activity is an independent label.\nSelf and cumulative seconds are distinct; cumulative times overlap. Missing is not zero.\nProducer: unknown. Node weights are frame timings, not wall or GPU time.\nEdge width/label = observed call count; integer caller edge timing is unavailable.\nOwnership: blue project; gray stdlib; orange third party; purple environment; green native; yellow generated; red unresolved.";
+  "profile-frame-48bdcd7debd362b4e7db" [label="unresolved/ff561f757134c8f1c31c2717:1\nwork\ncalls=2 self=0.125 cumulative=0.25\nactivity=unclassified", fillcolor="#ffd7d7"];
+  "profile-frame-48bdcd7debd362b4e7db" -> "profile-frame-48bdcd7debd362b4e7db" [label="2", penwidth=1.477];
+}

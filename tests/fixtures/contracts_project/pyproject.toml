@@ -1,0 +1,4 @@
+[[tool.code-analysis.contract-boundaries]]
+contract-pattern = "package.contracts.*"
+site-pattern = "package.usage:*"
+boundary-class = "cross-subsystem-internal"

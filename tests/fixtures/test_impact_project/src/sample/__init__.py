@@ -1,0 +1,1 @@
+"""Synthetic application package."""

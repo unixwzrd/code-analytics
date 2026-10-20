@@ -1,0 +1,167 @@
+{
+  "title": "The Booking Mix-Up",
+  "language": "javascript",
+  "level": "intermediate",
+  "scenario": "Ada reserves two standard rooms for one night; 1200 pennies per room, gold-tier discount, total 2160 pennies; room inventory 8 to 6; one disposable receipt.",
+  "commands": {
+    "demo": "node src/demo.mjs",
+    "tests": "node --test tests/demo.test.mjs"
+  },
+  "observations": [
+    {
+      "id": "JS-INT-01",
+      "label": "Basil has expanded the tariff rulebook",
+      "path": "src/billing.mjs",
+      "symbol": "quoteStay",
+      "expectation": "supported",
+      "view": "Modules / Browse code",
+      "check": {
+        "kind": "complexity",
+        "min_score": 15
+      },
+      "meaning": "The tariff routine nests guest tier, room representation, group rates, coupons and statement-delivery policy.",
+      "limitation": "Metrics and source are available but finding rows are absent."
+    },
+    {
+      "id": "JS-INT-02",
+      "label": "Manuel has supplied two calculators",
+      "path": "src/reception.mjs",
+      "symbol": "directBookingTotal",
+      "expectation": "supported",
+      "view": "Clones",
+      "check": {
+        "kind": "clone_pair",
+        "symbols": [
+          "directBookingTotal",
+          "agencyBookingTotal"
+        ]
+      },
+      "meaning": "The direct and agency calculators duplicate validation and integer rate arithmetic.",
+      "limitation": "Clone evidence does not decide whether the two policies should share an owner."
+    },
+    {
+      "id": "JS-INT-03",
+      "label": "The desk sends the paperwork in a circle",
+      "path": "src/billing.mjs",
+      "symbol": "quoteStay",
+      "expectation": "deferred",
+      "view": "Architecture",
+      "check": {
+        "kind": "cycle",
+        "modules": [
+          "rooms.mjs",
+          "billing.mjs",
+          "bookings.mjs"
+        ]
+      },
+      "meaning": "There is a safe local import cycle, with imported values used after initialization.",
+      "limitation": "All local edges are recorded, but the report has no aggregated cycle or SCC record."
+    },
+    {
+      "id": "JS-INT-03-EDGES",
+      "label": "Polly traces the individual handoffs",
+      "path": "src/billing.mjs",
+      "symbol": "quoteStay",
+      "expectation": "supported",
+      "view": "Architecture",
+      "check": {
+        "kind": "import_edges",
+        "edges": [
+          [
+            "rooms.mjs",
+            "billing.mjs"
+          ],
+          [
+            "billing.mjs",
+            "bookings.mjs"
+          ],
+          [
+            "bookings.mjs",
+            "rooms.mjs"
+          ]
+        ]
+      },
+      "meaning": "The individual local imports trace the source-level cycle.",
+      "limitation": "This checks edges separately from the missing cycle aggregation."
+    },
+    {
+      "id": "JS-INT-04",
+      "label": "Basil keeps a process-wide notebook",
+      "path": "src/bookings.mjs",
+      "symbol": "createBooking",
+      "expectation": "supported",
+      "view": "State / effects",
+      "check": {
+        "kind": "global",
+        "logical_name": "bookings.mjs:bookings"
+      },
+      "meaning": "Quoted totals or bookings remain in a shared process-global collection until explicitly cleared.",
+      "limitation": "Syntax evidence does not prove concurrency safety or an unbounded production leak."
+    },
+    {
+      "id": "JS-INT-05",
+      "label": "Basil and Polly disagree on the room form",
+      "path": "src/rooms.mjs",
+      "symbol": "standardRoom",
+      "expectation": "deferred",
+      "view": "Contracts / Dictionary shapes",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Standard room offers and annex offers represent the same domain with different keys.",
+      "limitation": "These object/hash shapes have no contract or dictionary-shape records in this provider."
+    },
+    {
+      "id": "JS-INT-06",
+      "label": "Polly adjusts the actual room notebook",
+      "path": "src/rooms.mjs",
+      "symbol": "reserve",
+      "expectation": "heuristic",
+      "view": "Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Reservation decrements the caller-owned room mapping in place; behavior checks verify object identity and remaining rooms.",
+      "limitation": "The dynamic stock field has no dedicated argument-mutation finding; source and tests supply that evidence."
+    },
+    {
+      "id": "JS-INT-07",
+      "label": "Polly coordinates one successful booking",
+      "path": "src/demo.mjs",
+      "symbol": "runDemo",
+      "expectation": "negative_control",
+      "view": "Browse code",
+      "check": {
+        "kind": "negative_control"
+      },
+      "meaning": "The short demo legitimately coordinates a booking and disposable receipt persistence.",
+      "limitation": "Orchestration is intentional; no finding targets this coordinator. Absence of a finding is not proof of design quality."
+    },
+    {
+      "id": "JS-INT-08",
+      "label": "One desk owns billing and the filing cabinet",
+      "path": "src/reception.mjs",
+      "symbol": "ReceptionDesk",
+      "expectation": "heuristic",
+      "view": "Candidates / Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "One class owns guest-facing presentation, receipt state and persistence as well as billing coordination.",
+      "limitation": "No refactor proposal is emitted. Review ownership manually; the empty Candidates view is not approval."
+    },
+    {
+      "id": "JS-INT-09",
+      "label": "Manuel copied the guest checks too",
+      "path": "src/bookings.mjs",
+      "symbol": "previewGuest",
+      "expectation": "heuristic",
+      "view": "Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Booking creation and guest preview repeat name presence, type and blank checks.",
+      "limitation": "The repeated source is visible, but no validation-pattern record is promised."
+    }
+  ]
+}

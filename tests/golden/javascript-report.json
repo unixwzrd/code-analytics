@@ -1,0 +1,4232 @@
+{
+  "abstraction_cost_estimates": [
+    {
+      "added_owner_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "completeness": "partial",
+      "confidence": "inferred",
+      "cost_estimate_id": "abstraction-cost-16470122ea17f6afe38a",
+      "derivation": [
+        "Duplicate LOC is the union of maximal exact-clone member spans.",
+        "Migration LOC is bounded by direct recorded consumers.",
+        "Net LOC uses interval addition for owner and migration LOC minus deletion.",
+        "Owner alternatives are evaluated independently of naming preferences."
+      ],
+      "existing_duplicate_loc": 0,
+      "expected_deleted_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "expected_test_requirement_categories": 4,
+      "graph_edge_change": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "limitations": [
+        "Static LOC ranges do not measure readability, semantic value, or maintenance cost."
+      ],
+      "migration_adapter_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "net_production_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "new_callbacks": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "new_files": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      },
+      "new_imports": {
+        "likely": 2,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_options": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_parameters": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_types": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    {
+      "added_owner_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "partial",
+      "confidence": "inferred",
+      "cost_estimate_id": "abstraction-cost-293ba213ff57cf065969",
+      "derivation": [
+        "Duplicate LOC is the union of maximal exact-clone member spans.",
+        "Migration LOC is bounded by direct recorded consumers.",
+        "Net LOC uses interval addition for owner and migration LOC minus deletion.",
+        "Owner alternatives are evaluated independently of naming preferences."
+      ],
+      "existing_duplicate_loc": 0,
+      "expected_deleted_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "expected_test_requirement_categories": 4,
+      "graph_edge_change": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "limitations": [
+        "Static LOC ranges do not measure readability, semantic value, or maintenance cost."
+      ],
+      "migration_adapter_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "net_production_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "new_callbacks": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "new_files": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      },
+      "new_imports": {
+        "likely": 2,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_options": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_parameters": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_types": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    {
+      "added_owner_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "completeness": "partial",
+      "confidence": "inferred",
+      "cost_estimate_id": "abstraction-cost-cb376df6cbf5a64faafa",
+      "derivation": [
+        "Duplicate LOC is the union of maximal exact-clone member spans.",
+        "Migration LOC is bounded by direct recorded consumers.",
+        "Net LOC uses interval addition for owner and migration LOC minus deletion.",
+        "Owner alternatives are evaluated independently of naming preferences."
+      ],
+      "existing_duplicate_loc": 0,
+      "expected_deleted_loc": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "expected_test_requirement_categories": 4,
+      "graph_edge_change": {
+        "likely": 2,
+        "lower": 2,
+        "upper": 2
+      },
+      "limitations": [
+        "Static LOC ranges do not measure readability, semantic value, or maintenance cost."
+      ],
+      "migration_adapter_loc": {
+        "likely": 2,
+        "lower": 0,
+        "upper": 4
+      },
+      "net_production_loc": {
+        "likely": 2,
+        "lower": 0,
+        "upper": 4
+      },
+      "new_callbacks": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 0
+      },
+      "new_files": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      },
+      "new_imports": {
+        "likely": 2,
+        "lower": 0,
+        "upper": 4
+      },
+      "new_options": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_parameters": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 2
+      },
+      "new_types": {
+        "likely": 0,
+        "lower": 0,
+        "upper": 1
+      }
+    }
+  ],
+  "architecture_contract_suggestions": [],
+  "architecture_estimates": [
+    {
+      "assumptions": [
+        "Affected modules become consumers of the proposed logical owner.",
+        "Recorded resolved callees approximate extracted dependency edges."
+      ],
+      "before": {
+        "cross_boundary_edge_count": 0,
+        "cycle_count": 0,
+        "import_edge_count": 1,
+        "layer_violation_count": 0,
+        "module_count": 3,
+        "proposed_module_fan_in": 0,
+        "proposed_module_fan_out": 0,
+        "scc_count": 0
+      },
+      "completeness": "partial",
+      "estimate_id": "architecture-estimate-671421bde844b8f7bf2c",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "expected_after": {
+        "cross_boundary_edge_count": 2,
+        "cycle_count": 0,
+        "import_edge_count": 3,
+        "layer_violation_count": 0,
+        "module_count": 4,
+        "proposed_module_fan_in": 2,
+        "proposed_module_fan_out": 0,
+        "scc_count": 0
+      },
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ]
+    },
+    {
+      "assumptions": [
+        "Imports to combined modules are redirected to one logical owner.",
+        "Internal edges between combined modules are removed."
+      ],
+      "before": {
+        "cross_boundary_edge_count": 0,
+        "cycle_count": 0,
+        "import_edge_count": 1,
+        "layer_violation_count": 0,
+        "module_count": 3,
+        "proposed_module_fan_in": 0,
+        "proposed_module_fan_out": 0,
+        "scc_count": 0
+      },
+      "completeness": "partial",
+      "estimate_id": "architecture-estimate-eb1d37c6f0cbddf92ee7",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "expected_after": {
+        "cross_boundary_edge_count": 0,
+        "cycle_count": 0,
+        "import_edge_count": 0,
+        "layer_violation_count": 0,
+        "module_count": 2,
+        "proposed_module_fan_in": 0,
+        "proposed_module_fan_out": 0,
+        "scc_count": 0
+      },
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ]
+    }
+  ],
+  "behavior_differences": [
+    {
+      "difference_id": "behavior-difference-0d1f47e55d2cb53984e9",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "kind": "constant",
+      "left_identity": "d418c708b9c7ccb3993d13d5277a776e89f9405875606f5ba5750ade90eaa3b5",
+      "right_identity": "9e1c5a1f72a173d4a067bda0e0223feaf3b0259cd26a4811ae974caf76149019",
+      "statement_index": 5
+    }
+  ],
+  "behavioral_events": [
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-232961f7050ab90a09b5",
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "identity": "new Error(\"empty\")",
+      "kind": "exception",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-2675214393522c140ac8",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "identity": "control:throw_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-3ecb88d37e7c97ae980f",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "identity": "control:return_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-414070bc2754901dd3b3",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "identity": "control:if_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-959c691edd55470649f6",
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "identity": "control:return_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-b69d7794048f0a0acab1",
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "identity": "control:if_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-c0b8a2d6398c37680c5f",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "identity": "JSON.stringify",
+      "kind": "serialization",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-cd0887f56475dd96e049",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "identity": "new Error(\"empty\")",
+      "kind": "exception",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-dd8750faa4ca56ccc6d8",
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "identity": "JSON.stringify",
+      "kind": "serialization",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    },
+    {
+      "confidence": "exact",
+      "event_id": "behavior-event-f730a4886ef0ae87be2d",
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "identity": "control:throw_statement",
+      "kind": "branch-predicate",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    }
+  ],
+  "behavioral_invariants": [
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-cd0887f56475dd96e049"
+      ],
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-4a88e063918c12328faf"
+      ],
+      "invariant_id": "behavior-invariant-0e3af392cb2d6792ba8d",
+      "kind": "exception",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-cd0887f56475dd96e049"
+      ],
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-4a88e063918c12328faf"
+      ],
+      "invariant_id": "behavior-invariant-1097771644e871090f24",
+      "kind": "exception",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-dd8750faa4ca56ccc6d8"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-5f77506fe519c5921609",
+      "kind": "serialization",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-6679a8d835801ae8bda4",
+      "kind": "branch-predicate",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-dd8750faa4ca56ccc6d8"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-7770f12580fcd0aaf4cc",
+      "kind": "serialization",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-dd8750faa4ca56ccc6d8"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-7c5a9d51aed06892afd9",
+      "kind": "serialization",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-a3c716fcf8f9a4845b33",
+      "kind": "branch-predicate",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-cd0887f56475dd96e049"
+      ],
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-4a88e063918c12328faf"
+      ],
+      "invariant_id": "behavior-invariant-ad58c445f9c89a1479d5",
+      "kind": "exception",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "completeness": "complete",
+      "event_ids": [
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "invariant_id": "behavior-invariant-dd3256efdfd541e20964",
+      "kind": "branch-predicate",
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    }
+  ],
+  "behavioral_ordering_edges": [],
+  "candidate_behavior_differences": [],
+  "candidate_classifications": [],
+  "candidate_observations": [
+    {
+      "behavioral_difference_ids": [],
+      "behavioral_event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-cd0887f56475dd96e049",
+        "behavior-event-dd8750faa4ca56ccc6d8",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "behavioral_invariant_ids": [
+        "behavior-invariant-6679a8d835801ae8bda4",
+        "behavior-invariant-7c5a9d51aed06892afd9",
+        "behavior-invariant-ad58c445f9c89a1479d5"
+      ],
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "completeness": "partial",
+      "configuration_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
+      "cost_estimate_id": "abstraction-cost-cb376df6cbf5a64faafa",
+      "counter_evidence_ids": [],
+      "duplicate_ids": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "failed_gate_count": 3,
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "observation_id": "candidate-observation-0c67aafc7c1e26341dc8",
+      "owner_alternative_ids": [
+        "owner-alternative-5a52767507033aa88a5f",
+        "owner-alternative-c042f23719b90ba7df97",
+        "owner-alternative-da0bb61a17520d70ac25",
+        "owner-alternative-eb3efd393ddbccb56058"
+      ],
+      "proposal_ids": [
+        "refactor-proposal-a85e5d78fd1d1e3ce05c"
+      ],
+      "qualification_requirement_ids": [
+        "candidate-qualification-3270c80400be90310d98",
+        "candidate-qualification-68812cf3d29bd68e9359",
+        "candidate-qualification-79e563a9f9dc486c054b",
+        "candidate-qualification-9e0307780b8511b1f10e",
+        "candidate-qualification-a1681fef52002eafc384",
+        "candidate-qualification-a83a900d6cf7ba4b0bde",
+        "candidate-qualification-abbd90406b9107737b57",
+        "candidate-qualification-ac4b43a73280bff76d5b",
+        "candidate-qualification-fb7da7f75da279ea6318"
+      ],
+      "responsibility_ids": [
+        "responsibility-3b8985fe52cd4fd3236e"
+      ],
+      "run_identity_sha256": "c811037e9f5c1d750882a843e9d8a7f103d3d9a652da8884dd9b2b95492a42f1",
+      "source_sha256s": [
+        "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+        "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
+      ],
+      "state": "blocked",
+      "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
+      "unresolved_gate_count": 2
+    },
+    {
+      "behavioral_difference_ids": [],
+      "behavioral_event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-cd0887f56475dd96e049",
+        "behavior-event-dd8750faa4ca56ccc6d8",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "behavioral_invariant_ids": [
+        "behavior-invariant-0e3af392cb2d6792ba8d",
+        "behavior-invariant-7770f12580fcd0aaf4cc",
+        "behavior-invariant-dd3256efdfd541e20964"
+      ],
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "completeness": "partial",
+      "configuration_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
+      "cost_estimate_id": "abstraction-cost-16470122ea17f6afe38a",
+      "counter_evidence_ids": [],
+      "duplicate_ids": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "failed_gate_count": 3,
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "observation_id": "candidate-observation-163ca7fbab77a73beb67",
+      "owner_alternative_ids": [
+        "owner-alternative-225431c559fbb5a24b0e",
+        "owner-alternative-8c9f3163a8faaef7589f",
+        "owner-alternative-a6e0971b9d9864c402e2",
+        "owner-alternative-b526ad408d4b918041c5"
+      ],
+      "proposal_ids": [
+        "refactor-proposal-65293725b72f5a7712bd"
+      ],
+      "qualification_requirement_ids": [
+        "candidate-qualification-18a54951661e289506cd",
+        "candidate-qualification-25f5fc27746c9bf74fd6",
+        "candidate-qualification-47729ba46c29f2833e4e",
+        "candidate-qualification-4a60dade61b87a39028f",
+        "candidate-qualification-b2e98df5599bb452e625",
+        "candidate-qualification-bec8c83154841454d08e",
+        "candidate-qualification-cab0b8c3358fa7aff712",
+        "candidate-qualification-e1eb394a434ddcf44e92",
+        "candidate-qualification-ef9b69952488403c1583"
+      ],
+      "responsibility_ids": [
+        "responsibility-3b8985fe52cd4fd3236e"
+      ],
+      "run_identity_sha256": "c811037e9f5c1d750882a843e9d8a7f103d3d9a652da8884dd9b2b95492a42f1",
+      "source_sha256s": [
+        "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+        "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
+      ],
+      "state": "blocked",
+      "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
+      "unresolved_gate_count": 2
+    },
+    {
+      "behavioral_difference_ids": [],
+      "behavioral_event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-cd0887f56475dd96e049",
+        "behavior-event-dd8750faa4ca56ccc6d8",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "behavioral_invariant_ids": [
+        "behavior-invariant-1097771644e871090f24",
+        "behavior-invariant-5f77506fe519c5921609",
+        "behavior-invariant-a3c716fcf8f9a4845b33"
+      ],
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "partial",
+      "configuration_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
+      "cost_estimate_id": "abstraction-cost-293ba213ff57cf065969",
+      "counter_evidence_ids": [],
+      "duplicate_ids": [
+        "duplicate-5f2c55a7148c0fea1242"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "failed_gate_count": 0,
+      "limitations": [
+        "Duplicate evidence is not refactoring authorization.",
+        "syntax evidence cannot establish semantic equivalence"
+      ],
+      "observation_id": "candidate-observation-f33d827fa63b4f2b012b",
+      "owner_alternative_ids": [
+        "owner-alternative-167ca041b796e999da58",
+        "owner-alternative-27f45c9182fe1a2ef500",
+        "owner-alternative-867fbc3274cbe4970f7d",
+        "owner-alternative-e060c6f54d602653b7d9"
+      ],
+      "proposal_ids": [],
+      "qualification_requirement_ids": [
+        "candidate-qualification-15a77b0990b526c2922b",
+        "candidate-qualification-15e0b0fd85894145e8b3",
+        "candidate-qualification-2ea13cb6f39ee4b2dba1",
+        "candidate-qualification-76df64380b923230327d",
+        "candidate-qualification-857a42d43d5ed06d2922",
+        "candidate-qualification-906b32663fb994f721ee",
+        "candidate-qualification-aa0fe391394192d22d76",
+        "candidate-qualification-b28cbae61808bbbdff7c",
+        "candidate-qualification-dfdbd7f0b42d25b896c4"
+      ],
+      "responsibility_ids": [],
+      "run_identity_sha256": "c811037e9f5c1d750882a843e9d8a7f103d3d9a652da8884dd9b2b95492a42f1",
+      "source_sha256s": [
+        "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+        "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
+      ],
+      "state": "observed",
+      "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
+      "unresolved_gate_count": 0
+    }
+  ],
+  "candidate_qualification_requirements": [
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "rollback-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "rollback-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-15a77b0990b526c2922b",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "parity-fixtures",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "parity-fixtures remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-15e0b0fd85894145e8b3",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "bound-coverage",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "bound-coverage remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-18a54951661e289506cd",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "likely-call-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "likely-call-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-25f5fc27746c9bf74fd6",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "direct-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "direct-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-2ea13cb6f39ee4b2dba1",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "rollback-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "rollback-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-3270c80400be90310d98",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "canonical-test-discovery",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "canonical-test-discovery remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-47729ba46c29f2833e4e",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "direct-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "direct-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-4a60dade61b87a39028f",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "canonical-test-discovery",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "canonical-test-discovery remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-68812cf3d29bd68e9359",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "likely-call-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "likely-call-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-76df64380b923230327d",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "failure-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "failure-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-79e563a9f9dc486c054b",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "negative-adversarial-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "negative-adversarial-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-857a42d43d5ed06d2922",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "canonical-test-discovery",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "canonical-test-discovery remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-906b32663fb994f721ee",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "positive-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "positive-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-9e0307780b8511b1f10e",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "likely-call-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "likely-call-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-a1681fef52002eafc384",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "direct-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "direct-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-a83a900d6cf7ba4b0bde",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "bound-coverage",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "bound-coverage remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-aa0fe391394192d22d76",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "bound-coverage",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "bound-coverage remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-abbd90406b9107737b57",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "negative-adversarial-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "negative-adversarial-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-ac4b43a73280bff76d5b",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "positive-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "positive-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-b28cbae61808bbbdff7c",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "parity-fixtures",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "parity-fixtures remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-b2e98df5599bb452e625",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "positive-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "positive-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-bec8c83154841454d08e",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "failure-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "failure-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-cab0b8c3358fa7aff712",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "failure-path-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "failure-path-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-dfdbd7f0b42d25b896c4",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "negative-adversarial-cases",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "negative-adversarial-cases remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-e1eb394a434ddcf44e92",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "rollback-tests",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "rollback-tests remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-ef9b69952488403c1583",
+      "state": "unresolved",
+      "test_ids": []
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "coverage_observation_ids": [],
+      "evidence_ids": [],
+      "kind": "parity-fixtures",
+      "limitations": [
+        "Static test names and relationships do not prove behavioral coverage."
+      ],
+      "reason": "parity-fixtures remains unresolved because qualification is incomplete.",
+      "requirement_id": "candidate-qualification-fb7da7f75da279ea6318",
+      "state": "unresolved",
+      "test_ids": []
+    }
+  ],
+  "change_couplings": [],
+  "clone_clusters": [],
+  "clone_fragments": [],
+  "command": {
+    "arguments": [
+      ".",
+      "--strictness",
+      "normal",
+      "--only-local-imports"
+    ],
+    "name": "scan"
+  },
+  "completeness": "complete",
+  "complexity_observations": [
+    {
+      "argument_count": 1,
+      "branches": 1,
+      "cyclomatic_complexity": 2,
+      "language": "javascript",
+      "logical_loc": 9,
+      "nesting_depth": 1,
+      "physical_loc": 12,
+      "raises": 1,
+      "returns": 1,
+      "weighted_score": 5
+    },
+    {
+      "argument_count": 1,
+      "branches": 1,
+      "cyclomatic_complexity": 2,
+      "language": "javascript",
+      "logical_loc": 9,
+      "nesting_depth": 1,
+      "physical_loc": 12,
+      "raises": 1,
+      "returns": 1,
+      "weighted_score": 5
+    },
+    {
+      "argument_count": 1,
+      "branches": 0,
+      "cyclomatic_complexity": 1,
+      "language": "javascript",
+      "logical_loc": 1,
+      "nesting_depth": 0,
+      "physical_loc": 3,
+      "raises": 0,
+      "returns": 1,
+      "weighted_score": 1
+    }
+  ],
+  "configuration": {
+    "digest_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
+    "max_findings": null,
+    "only_local_imports": true,
+    "strictness": "normal",
+    "symbol_filter": null,
+    "thresholds": {
+      "arguments": 7,
+      "branches": 12,
+      "function_loc": 75,
+      "nesting": 4,
+      "weighted_score": 15
+    }
+  },
+  "contracts": [],
+  "coverage_artifacts": [],
+  "coverage_files": [],
+  "coverage_observations": [],
+  "cycles": [],
+  "data_structures": [],
+  "diagnostics": [],
+  "dictionary_observations": [],
+  "dictionary_shapes": [],
+  "duplicate_functions": [
+    {
+      "behavior_difference_ids": [
+        "behavior-difference-0d1f47e55d2cb53984e9"
+      ],
+      "canonical_owner": {
+        "reason": "one-way resolved local import direction supports the canonical owner",
+        "state": "suggested",
+        "subject_id": "subject-ed2f62b844893bbb2fdd"
+      },
+      "clone_cluster_ids": [],
+      "deletions": 0,
+      "divergence_reasons": [],
+      "duplicate_id": "duplicate-5f2c55a7148c0fea1242",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "insertions": 0,
+      "language": "javascript",
+      "left_statement_total": 8,
+      "left_subject_id": "subject-8a8904dbf16de495a5e6",
+      "limitations": [
+        "syntax evidence cannot establish semantic equivalence"
+      ],
+      "matched_statements": 7,
+      "right_statement_total": 8,
+      "right_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "substitutions": 1
+    }
+  ],
+  "environment": {
+    "executable_identity": "python",
+    "python_implementation": "cpython",
+    "python_version": "3.12.13"
+  },
+  "evidence_catalog": [
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 12,
+      "evidence_id": "evidence-1303915cd7d81ec2039c",
+      "observation": "JavaScript function declaration",
+      "provider": "javascript-tree-sitter",
+      "start_column": 7,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-05705f8903bb8a5d6551",
+      "confidence": "exact",
+      "end_column": 43,
+      "end_line": 1,
+      "evidence_id": "evidence-21da90c400e269c89ece",
+      "observation": "generic JavaScript test module import",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 28,
+      "end_line": 9,
+      "evidence_id": "evidence-35c4f26b94df98510c0a",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 10,
+      "start_line": 9
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 44,
+      "end_line": 11,
+      "evidence_id": "evidence-4689a322a47795ce3d2e",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 9,
+      "start_line": 11
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 14,
+      "evidence_id": "evidence-4a88e063918c12328faf",
+      "observation": "JavaScript function declaration",
+      "provider": "javascript-tree-sitter",
+      "start_column": 7,
+      "start_line": 3
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 49,
+      "end_line": 5,
+      "evidence_id": "evidence-5521936c80279b7a9fb1",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 21,
+      "start_line": 5
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 12,
+      "evidence_id": "evidence-6659090de57acac58a54",
+      "observation": "JavaScript named export",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 49,
+      "end_line": 7,
+      "evidence_id": "evidence-6cf22e1e8d3fccb99556",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 21,
+      "start_line": 7
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 28,
+      "end_line": 3,
+      "evidence_id": "evidence-6dce88e8c11b917c7970",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 18,
+      "start_line": 3
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 28,
+      "end_line": 5,
+      "evidence_id": "evidence-7e5483b37635350f6ba6",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 18,
+      "start_line": 5
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 28,
+      "end_line": 11,
+      "evidence_id": "evidence-94a16ceb6afdd00b473a",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 10,
+      "start_line": 11
+    },
+    {
+      "binding_id": "binding-07baddc7e1e9f623c630",
+      "confidence": "exact",
+      "end_column": 0,
+      "end_line": 3,
+      "evidence_id": "evidence-99b7cf19320541ac5798",
+      "observation": "JavaScript module or script",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-07baddc7e1e9f623c630",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 3,
+      "evidence_id": "evidence-a368e7ffee08154d2050",
+      "observation": "JavaScript function declaration",
+      "provider": "javascript-tree-sitter",
+      "start_column": 7,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-05705f8903bb8a5d6551",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 5,
+      "evidence_id": "evidence-a6441114c996e8f3ed41",
+      "observation": "generic JavaScript direct symbol reference",
+      "provider": "javascript-tree-sitter",
+      "start_column": 7,
+      "start_line": 3
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 0,
+      "end_line": 12,
+      "evidence_id": "evidence-c4d493a5c407102e943d",
+      "observation": "JavaScript module or script",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 39,
+      "end_line": 4,
+      "evidence_id": "evidence-d0f549f1f22760d4ef5d",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 18,
+      "start_line": 4
+    },
+    {
+      "binding_id": "binding-07baddc7e1e9f623c630",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 3,
+      "evidence_id": "evidence-d7acf5e0768d4237b468",
+      "observation": "JavaScript named export",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 27,
+      "end_line": 4,
+      "evidence_id": "evidence-de8a12d26381ec91f0cb",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 14,
+      "start_line": 4
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 44,
+      "end_line": 13,
+      "evidence_id": "evidence-e005359eefc78d2d1664",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 9,
+      "start_line": 13
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 1,
+      "end_line": 14,
+      "evidence_id": "evidence-e840c090ae430563e292",
+      "observation": "JavaScript named export",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 3
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 0,
+      "end_line": 14,
+      "evidence_id": "evidence-e89436c02970d3fe7cef",
+      "observation": "JavaScript module or script",
+      "provider": "javascript-tree-sitter",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 39,
+      "end_line": 6,
+      "evidence_id": "evidence-e939d8c689a0c4ea9e0e",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 18,
+      "start_line": 6
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "confidence": "exact",
+      "end_column": 27,
+      "end_line": 2,
+      "evidence_id": "evidence-ea158a46021c681d9fda",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 14,
+      "start_line": 2
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "confidence": "exact",
+      "end_column": 32,
+      "end_line": 9,
+      "evidence_id": "evidence-ff7e2b80cf54ce658659",
+      "observation": "syntactic invocation site",
+      "provider": "static-call-occurrences",
+      "start_column": 16,
+      "start_line": 9
+    }
+  ],
+  "finding_suppression_evaluation": null,
+  "findings": [
+    {
+      "affected_clone_cluster_ids": [],
+      "affected_contract_ids": [],
+      "affected_proposal_ids": [
+        "refactor-proposal-65293725b72f5a7712bd"
+      ],
+      "affected_shape_ids": [],
+      "affected_structure_ids": [],
+      "category": "module-combination",
+      "completeness": "partial",
+      "confidence": "inferred",
+      "counter_evidence_ids": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "explanation": "Dependency and responsibility evidence indicate overlapping logical ownership across coupled modules.",
+      "finding_id": "finding-7b8fe74f730fe31e47a0",
+      "language": "javascript",
+      "likely_validation_needs": [
+        "Phase 4 test-impact mapping and focused behavioral tests."
+      ],
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "module": "main.js",
+      "rule_id": "module-combination-candidate",
+      "severity": "warning",
+      "subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ],
+      "suppression": null,
+      "symbol": null,
+      "title": "combine-modules proposal is blocked-insufficient-evidence"
+    },
+    {
+      "affected_clone_cluster_ids": [],
+      "affected_contract_ids": [],
+      "affected_proposal_ids": [
+        "refactor-proposal-a85e5d78fd1d1e3ce05c"
+      ],
+      "affected_shape_ids": [],
+      "affected_structure_ids": [],
+      "category": "extraction-candidate",
+      "completeness": "partial",
+      "confidence": "inferred",
+      "counter_evidence_ids": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "explanation": "A threshold-qualified responsibility cluster repeats strong structural and dependency features across its members.",
+      "finding_id": "finding-f89fdef377c83b979b88",
+      "language": "javascript",
+      "likely_validation_needs": [
+        "Phase 4 test-impact mapping and focused behavioral tests."
+      ],
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "module": "main.js",
+      "rule_id": "extraction-candidate",
+      "severity": "warning",
+      "subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ],
+      "suppression": null,
+      "symbol": null,
+      "title": "extract-responsibility proposal is blocked-insufficient-evidence"
+    }
+  ],
+  "flow_edges": [],
+  "function_commonalities": [
+    {
+      "clone_cluster_ids": [],
+      "commonality_id": "commonality-3b8985fe52cd4fd3236e",
+      "completeness": "complete",
+      "confidence": "resolved",
+      "counter_evidence_ids": [],
+      "dimensions": [
+        {
+          "kind": "attributes-globals",
+          "left_total": 1,
+          "right_total": 1,
+          "shared_identities": [
+            "Error"
+          ]
+        },
+        {
+          "kind": "callees",
+          "left_total": 6,
+          "right_total": 5,
+          "shared_identities": [
+            "JSON.stringify",
+            "String",
+            "lowered.replaceAll",
+            "raw.trim",
+            "trimmed.toLowerCase"
+          ]
+        },
+        {
+          "kind": "control-flow",
+          "left_total": 3,
+          "right_total": 3,
+          "shared_identities": [
+            "control:if_statement",
+            "control:return_statement",
+            "control:throw_statement"
+          ]
+        },
+        {
+          "kind": "dictionary-schema",
+          "left_total": 1,
+          "right_total": 1,
+          "shared_identities": [
+            "JSON.stringify"
+          ]
+        },
+        {
+          "kind": "exceptions",
+          "left_total": 1,
+          "right_total": 1,
+          "shared_identities": [
+            "new Error(\"empty\")"
+          ]
+        }
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "left_subject_id": "subject-8a8904dbf16de495a5e6",
+      "limitations": [
+        "JavaScript commonality is syntax-only"
+      ],
+      "right_subject_id": "subject-ed2f62b844893bbb2fdd"
+    }
+  ],
+  "function_profiles": [
+    {
+      "attributes_globals": [
+        "button"
+      ],
+      "callees": [],
+      "contract_ids": [],
+      "control_flow": [
+        "control:return_statement"
+      ],
+      "dictionary_schema_operations": [],
+      "evidence_ids": [
+        "evidence-a368e7ffee08154d2050"
+      ],
+      "exceptions": [],
+      "language": "javascript",
+      "limitations": [
+        "JavaScript feature resolution is lexical and dynamic dispatch remains unresolved"
+      ],
+      "profile_id": "function-profile-21ef089386cba67822a8",
+      "side_effects": [],
+      "signature_shapes": [
+        "parameters:1"
+      ],
+      "subject_id": "subject-50c3c65575b0f5233f0a",
+      "unresolved_call_count": 0,
+      "weak_semantic_signals": []
+    },
+    {
+      "attributes_globals": [
+        "Error"
+      ],
+      "callees": [
+        "JSON.stringify",
+        "String",
+        "lowered.replaceAll",
+        "raw.trim",
+        "trimmed.toLowerCase"
+      ],
+      "contract_ids": [],
+      "control_flow": [
+        "control:if_statement",
+        "control:return_statement",
+        "control:throw_statement"
+      ],
+      "dictionary_schema_operations": [
+        "JSON.stringify"
+      ],
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "exceptions": [
+        "new Error(\"empty\")"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "JavaScript feature resolution is lexical and dynamic dispatch remains unresolved"
+      ],
+      "profile_id": "function-profile-866cd315bd40b51b067a",
+      "side_effects": [],
+      "signature_shapes": [
+        "parameters:1"
+      ],
+      "subject_id": "subject-ed2f62b844893bbb2fdd",
+      "unresolved_call_count": 0,
+      "weak_semantic_signals": []
+    },
+    {
+      "attributes_globals": [
+        "Error"
+      ],
+      "callees": [
+        "JSON.stringify",
+        "String",
+        "lowered.replaceAll",
+        "normalize",
+        "raw.trim",
+        "trimmed.toLowerCase"
+      ],
+      "contract_ids": [],
+      "control_flow": [
+        "control:if_statement",
+        "control:return_statement",
+        "control:throw_statement"
+      ],
+      "dictionary_schema_operations": [
+        "JSON.stringify"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "exceptions": [
+        "new Error(\"empty\")"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "JavaScript feature resolution is lexical and dynamic dispatch remains unresolved"
+      ],
+      "profile_id": "function-profile-b7e502a604ca5341038b",
+      "side_effects": [],
+      "signature_shapes": [
+        "parameters:1"
+      ],
+      "subject_id": "subject-8a8904dbf16de495a5e6",
+      "unresolved_call_count": 0,
+      "weak_semantic_signals": []
+    }
+  ],
+  "generation_changes": [],
+  "git_commits": [],
+  "git_path_changes": [],
+  "git_repository": null,
+  "git_symbol_changes": [],
+  "import_edges": [
+    {
+      "kind": "esm-static",
+      "local": true,
+      "source": "main.js",
+      "source_language": "javascript",
+      "target": "shared.js",
+      "target_language": "javascript"
+    }
+  ],
+  "interface_correlations": [],
+  "interface_endpoints": [],
+  "interface_mismatches": [],
+  "interface_payload_variants": [],
+  "language_frontends": [
+    {
+      "assembly_failures": [],
+      "capabilities": [
+        {
+          "capability": "parsing-provenance",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "source-spans",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "module-identity",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "symbols",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "dependencies",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "calls",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "control-flow",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "data-flow",
+          "limitations": [
+            "Dynamic JavaScript data flow remains unresolved."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "exceptions",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "side-effects",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "contracts-shapes",
+          "limitations": [
+            "Only syntax-evidenced JSON and object-shape operations are retained."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "clone-normalization",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "test-discovery",
+          "limitations": [
+            "Only generic test-module imports and direct references are retained."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "coverage-binding",
+          "limitations": [
+            "JavaScript runtime coverage binding is not implemented."
+          ],
+          "state": "unsupported"
+        }
+      ],
+      "complete": 3,
+      "diagnostic_codes": [],
+      "discovered": 3,
+      "failed": 0,
+      "frontend_id": "javascript-tree-sitter",
+      "language": "javascript",
+      "partial": 0,
+      "state": "complete",
+      "unavailable": 0
+    },
+    {
+      "assembly_failures": [],
+      "capabilities": [
+        {
+          "capability": "parsing-provenance",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "source-spans",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "module-identity",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "symbols",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "dependencies",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "calls",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "control-flow",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "data-flow",
+          "limitations": [
+            "Bounded data flow is completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "exceptions",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "side-effects",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "contracts-shapes",
+          "limitations": [
+            "Contracts and dictionary shapes are completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "clone-normalization",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "test-discovery",
+          "limitations": [
+            "Framework discovery and dynamic tests remain unresolved."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "coverage-binding",
+          "limitations": [
+            "Coverage binding requires separately imported or executed coverage evidence."
+          ],
+          "state": "partial"
+        }
+      ],
+      "complete": 0,
+      "diagnostic_codes": [],
+      "discovered": 0,
+      "failed": 0,
+      "frontend_id": "python-ast",
+      "language": "python",
+      "partial": 0,
+      "state": "complete",
+      "unavailable": 0
+    }
+  ],
+  "limitations": [
+    "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+    "Clone evidence is syntax-only; semantic equivalence and runtime behavior are unmeasured.",
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Data-structure topology is syntax-only and limited to evidenced dictionary operations and declarations.",
+    "Dictionary analysis is syntax-only and bounded; dynamic calls and keys remain unresolved.",
+    "Dictionary evidence is descriptive and does not authorize a representation change.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Feature profiles describe syntax and do not establish runtime behavior or common ownership.",
+    "Growth indicators are measurement prompts, not performance findings.",
+    "Interface evidence is static and does not transfer authorization or domain semantics.",
+    "JavaScript analysis is syntax-only; dynamic dispatch, package export maps, bundler aliases, and framework semantics remain unresolved.",
+    "Mutable-state and side-effect evidence is syntax-only; runtime ownership and outcomes are unmeasured.",
+    "Names and literals remain significant for token clones and are categorical in AST clones.",
+    "Operational filesystem, path, symlink, authorization, security, and runtime-state validation is excluded.",
+    "Phase 4 test-impact evidence is unavailable.",
+    "Runtime ownership, lock behavior and coverage, persistence success, cleanup effectiveness, and growth remain unmeasured.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved.",
+    "Shadowing, dynamic dispatch, cleanup effectiveness, and arbitrary receiver provenance remain unresolved.",
+    "Static graph simulation does not establish runtime behavior or authorize source changes.",
+    "Structural validation currently covers proven dictionary membership, truthiness, and coercion checks.",
+    "Validation-relative mutation timing and data-structure ownership remain unavailable.",
+    "runtime-binding-is-not-established-by-static-call-evidence",
+    "static-call-evidence-is-syntactic-and-does-not-establish-runtime-dispatch"
+  ],
+  "module_exports": [
+    {
+      "evidence_ids": [
+        "evidence-e840c090ae430563e292"
+      ],
+      "export_id": "module-export-2cb609341d5358423b79",
+      "kind": "named",
+      "local_name": "transform",
+      "module": "main.js",
+      "name": "transform",
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "source_specifier": null
+    },
+    {
+      "evidence_ids": [
+        "evidence-6659090de57acac58a54"
+      ],
+      "export_id": "module-export-6e05ece6739a1237c5ca",
+      "kind": "named",
+      "local_name": "normalize",
+      "module": "shared.js",
+      "name": "normalize",
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "source_specifier": null
+    },
+    {
+      "evidence_ids": [
+        "evidence-d7acf5e0768d4237b468"
+      ],
+      "export_id": "module-export-895110b8e8aa556552a7",
+      "kind": "named",
+      "local_name": "Widget",
+      "module": "widget.jsx",
+      "name": "Widget",
+      "source_file_id": "source-file-daca6ef7c8b064800de4",
+      "source_specifier": null
+    }
+  ],
+  "modules": [
+    {
+      "fan_in": 0,
+      "fan_out": 1,
+      "language": "javascript",
+      "line_count": 14,
+      "module_system": "esm",
+      "name": "main.js",
+      "nonblank_line_count": 13,
+      "parse_state": "complete",
+      "path": "src/main.js",
+      "source_sha256": "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea",
+      "symbols": [
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 1,
+            "branches": 1,
+            "cyclomatic_complexity": 2,
+            "language": "javascript",
+            "logical_loc": 9,
+            "nesting_depth": 1,
+            "physical_loc": 12,
+            "raises": 1,
+            "returns": 1,
+            "weighted_score": 5
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "javascript",
+          "name": "transform",
+          "parameters": [
+            "value"
+          ],
+          "qualified_name": "transform",
+          "returns": null,
+          "span": {
+            "end_column": 1,
+            "end_line": 14,
+            "language": "javascript",
+            "path": "src/main.js",
+            "start_column": 7,
+            "start_line": 3
+          }
+        }
+      ],
+      "syntax_mode": "javascript"
+    },
+    {
+      "fan_in": 1,
+      "fan_out": 0,
+      "language": "javascript",
+      "line_count": 12,
+      "module_system": "esm",
+      "name": "shared.js",
+      "nonblank_line_count": 12,
+      "parse_state": "complete",
+      "path": "src/shared.js",
+      "source_sha256": "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+      "symbols": [
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 1,
+            "branches": 1,
+            "cyclomatic_complexity": 2,
+            "language": "javascript",
+            "logical_loc": 9,
+            "nesting_depth": 1,
+            "physical_loc": 12,
+            "raises": 1,
+            "returns": 1,
+            "weighted_score": 5
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "javascript",
+          "name": "normalize",
+          "parameters": [
+            "value"
+          ],
+          "qualified_name": "normalize",
+          "returns": null,
+          "span": {
+            "end_column": 1,
+            "end_line": 12,
+            "language": "javascript",
+            "path": "src/shared.js",
+            "start_column": 7,
+            "start_line": 1
+          }
+        }
+      ],
+      "syntax_mode": "javascript"
+    },
+    {
+      "fan_in": 0,
+      "fan_out": 0,
+      "language": "javascript",
+      "line_count": 3,
+      "module_system": "esm",
+      "name": "widget.jsx",
+      "nonblank_line_count": 3,
+      "parse_state": "complete",
+      "path": "src/widget.jsx",
+      "source_sha256": "05996fa75fa3402c981bb8280becd5791747feca6e3deed8df0f101da67b7bcf",
+      "symbols": [
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 1,
+            "branches": 0,
+            "cyclomatic_complexity": 1,
+            "language": "javascript",
+            "logical_loc": 1,
+            "nesting_depth": 0,
+            "physical_loc": 3,
+            "raises": 0,
+            "returns": 1,
+            "weighted_score": 1
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "javascript",
+          "name": "Widget",
+          "parameters": [
+            "{ label }"
+          ],
+          "qualified_name": "Widget",
+          "returns": null,
+          "span": {
+            "end_column": 1,
+            "end_line": 3,
+            "language": "javascript",
+            "path": "src/widget.jsx",
+            "start_column": 7,
+            "start_line": 1
+          }
+        }
+      ],
+      "syntax_mode": "jsx"
+    }
+  ],
+  "owner_alternatives": [
+    {
+      "alternative_id": "owner-alternative-167ca041b796e999da58",
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-primitive",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-225431c559fbb5a24b0e",
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-27f45c9182fe1a2ef500",
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": false,
+      "logical_owner": "shared.js",
+      "owner_class": "new-owner",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-5a52767507033aa88a5f",
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-867fbc3274cbe4970f7d",
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "shared.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-8c9f3163a8faaef7589f",
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "shared.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-a6e0971b9d9864c402e2",
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": false,
+      "logical_owner": "main.js",
+      "owner_class": "new-owner",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-b526ad408d4b918041c5",
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-primitive",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-c042f23719b90ba7df97",
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-primitive",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-da0bb61a17520d70ac25",
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "shared.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-e060c6f54d602653b7d9",
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": true,
+      "logical_owner": "main.js",
+      "owner_class": "existing-domain-module",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": []
+    },
+    {
+      "alternative_id": "owner-alternative-eb3efd393ddbccb56058",
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "existing": false,
+      "logical_owner": "main.shared_4fd3236e",
+      "owner_class": "new-owner",
+      "rejection_reasons": [],
+      "viable": true,
+      "warnings": [
+        "generic-common-module"
+      ]
+    }
+  ],
+  "parser_provenance": [
+    {
+      "configuration_sha256": "7afa3b93e2628160b574abd75dfd183bc1b8f4e96ab0406ec24088f12d0e0e15",
+      "frontend_id": "javascript-tree-sitter",
+      "grammar_abi": 15,
+      "grammar_name": "tree-sitter-javascript",
+      "grammar_version": "0.25.0",
+      "language": "javascript",
+      "logical_path": "src/main.js",
+      "module_system": "esm",
+      "normalization_identity": "javascript-normalized-facts:v1",
+      "parser_name": "tree-sitter",
+      "parser_version": "0.25.2",
+      "source_sha256": "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea",
+      "syntax_mode": "javascript"
+    },
+    {
+      "configuration_sha256": "7afa3b93e2628160b574abd75dfd183bc1b8f4e96ab0406ec24088f12d0e0e15",
+      "frontend_id": "javascript-tree-sitter",
+      "grammar_abi": 15,
+      "grammar_name": "tree-sitter-javascript",
+      "grammar_version": "0.25.0",
+      "language": "javascript",
+      "logical_path": "src/shared.js",
+      "module_system": "esm",
+      "normalization_identity": "javascript-normalized-facts:v1",
+      "parser_name": "tree-sitter",
+      "parser_version": "0.25.2",
+      "source_sha256": "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+      "syntax_mode": "javascript"
+    },
+    {
+      "configuration_sha256": "7afa3b93e2628160b574abd75dfd183bc1b8f4e96ab0406ec24088f12d0e0e15",
+      "frontend_id": "javascript-tree-sitter",
+      "grammar_abi": 15,
+      "grammar_name": "tree-sitter-javascript",
+      "grammar_version": "0.25.0",
+      "language": "javascript",
+      "logical_path": "src/widget.jsx",
+      "module_system": "esm",
+      "normalization_identity": "javascript-normalized-facts:v1",
+      "parser_name": "tree-sitter",
+      "parser_version": "0.25.2",
+      "source_sha256": "05996fa75fa3402c981bb8280becd5791747feca6e3deed8df0f101da67b7bcf",
+      "syntax_mode": "jsx"
+    }
+  ],
+  "providers": [
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "module-index",
+        "symbol-index",
+        "complexity",
+        "import-graph"
+      ],
+      "provider_id": "native-ast",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "contract-declaration-inventory",
+        "contract-direct-aliases",
+        "contract-serialization-sites",
+        "contract-use-sites",
+        "normalized-type-expressions",
+        "schema-version-declarations"
+      ],
+      "provider_id": "native-contracts",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "dictionary-operations",
+        "dictionary-shapes",
+        "dictionary-flow",
+        "dictionary-lifecycle-transitions"
+      ],
+      "provider_id": "native-dictionary",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "structural-dictionary-validation"
+      ],
+      "provider_id": "native-validation",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "dictionary-topology",
+        "dictionary-lifecycle"
+      ],
+      "provider_id": "native-structures",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [],
+      "provider_id": "native-clones",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "mutable-state-resources",
+        "provenance-resolved-side-effects"
+      ],
+      "provider_id": "native-state-effects",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "function-feature-profiles",
+        "inverted-feature-candidates"
+      ],
+      "provider_id": "native-commonality",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python-extension",
+      "exit_code": null,
+      "observations": [
+        "javascript-module-inventory",
+        "javascript-symbol-inventory",
+        "javascript-import-export-graph",
+        "javascript-complexity",
+        "javascript-duplicate-functions"
+      ],
+      "provider_id": "javascript-tree-sitter",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "0.25.0"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": null,
+      "exit_code": null,
+      "observations": [
+        "javascript"
+      ],
+      "provider_id": "static-call-occurrences",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "0.1.0b1"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": null,
+      "exit_code": null,
+      "observations": [
+        "boundary-classification",
+        "producer-consumer-correlation",
+        "payload-variant-comparison"
+      ],
+      "provider_id": "native-interfaces",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "0.1.0b1"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "architecture-contract-suggestions",
+        "bounded-refactor-proposals",
+        "responsibility-clusters",
+        "simulated-module-graphs"
+      ],
+      "provider_id": "native-cohesion",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": null,
+      "exit_code": null,
+      "observations": [],
+      "provider_id": "native-test-impact",
+      "state": "unavailable",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": null
+    }
+  ],
+  "refactor_candidates": [
+    {
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "kind": "module-combination",
+      "languages": [
+        "javascript"
+      ],
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "kind": "responsibility-extraction",
+      "languages": [
+        "javascript"
+      ],
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    },
+    {
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "kind": "duplicate-functions",
+      "languages": [
+        "javascript"
+      ],
+      "participating_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ]
+    }
+  ],
+  "refactor_proposals": [
+    {
+      "affected_contract_ids": [],
+      "affected_modules": [
+        "main.js",
+        "shared.js"
+      ],
+      "affected_shape_ids": [],
+      "affected_structure_ids": [],
+      "affected_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ],
+      "affected_test_ids": [],
+      "allowed_paths": [
+        "src/main.js",
+        "src/shared.js"
+      ],
+      "architecture_estimate_id": "architecture-estimate-eb1d37c6f0cbddf92ee7",
+      "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
+      "candidate_observation_id": "candidate-observation-163ca7fbab77a73beb67",
+      "change_coupling_ids": [],
+      "clone_cluster_ids": [],
+      "compatibility_concerns": [
+        "Imports and public symbol locations may require compatibility review."
+      ],
+      "completeness": "partial",
+      "confidence": "inferred",
+      "consumer_identities": [],
+      "counter_evidence_ids": [],
+      "coverage_observation_ids": [],
+      "current_ownership": [
+        "main.js",
+        "shared.js"
+      ],
+      "data_contract_impact": [
+        "Recorded contract references must retain their defining and boundary semantics."
+      ],
+      "dependency_identities": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "gate_decisions": [
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-a1790d351d4d762dcf16",
+          "gate": "ownership",
+          "outcome": "passed",
+          "reason": "Threshold-qualified ownership dimensions support the responsibility boundary.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "main.js",
+            "shared.js"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-a1ccdd4237a8e66a99b4",
+          "gate": "domain-boundary",
+          "outcome": "failed",
+          "reason": "Affected modules cross top-level domains.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-5304366b508f22b3fcbd",
+          "gate": "contract-compatibility",
+          "outcome": "passed",
+          "reason": "No incompatible referenced contracts were evidenced.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-d104e9b36031d3f54b7e",
+          "gate": "mutable-state",
+          "outcome": "not-applicable",
+          "reason": "No mutable-state resource is attached to this cluster.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-6af2a417bead3f634e92",
+          "gate": "side-effects",
+          "outcome": "passed",
+          "reason": "No conflicting side-effect ownership was evidenced.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-eb1d37c6f0cbddf92ee7"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-eed8539d016d743ba2e9",
+          "gate": "graph-edge-reduction",
+          "outcome": "failed",
+          "reason": "The simulated graph does not reduce cross-boundary edges.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-eb1d37c6f0cbddf92ee7"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-5fdcf7ae16780c8942d3",
+          "gate": "scc",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add an SCC.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-eb1d37c6f0cbddf92ee7"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-d39d0d823e0a36cfd76f",
+          "gate": "cycle",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add a canonical cycle.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-eb1d37c6f0cbddf92ee7"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-6377705cc7a1ed127f8f",
+          "gate": "configured-layer",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add a configured layer violation.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "abstraction-cost-16470122ea17f6afe38a"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-3a6bb9d258c7732769b6",
+          "gate": "abstraction-cost",
+          "outcome": "failed",
+          "reason": "The lower net production LOC estimate is nonnegative.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-e7cbb4b563c3c887df2d",
+          "gate": "behavior-preservation",
+          "outcome": "passed",
+          "reason": "Supported exception and side-effect behavior has no evidenced incompatibility.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-b0d15c3ffb2e655fa8ef",
+          "gate": "test-impact",
+          "outcome": "unresolved",
+          "reason": "Affected-test evidence is missing, unresolved, or truncated.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-a33eb1180d2ffbcc360d",
+          "gate": "coverage-binding",
+          "outcome": "unresolved",
+          "reason": "Source-bound executed coverage is missing or incomplete.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-3225cb81fe6d372b1568",
+          "gate": "runtime-claim",
+          "outcome": "not-applicable",
+          "reason": "The proposal makes no runtime-performance claim.",
+          "supporting_catalog_ids": []
+        }
+      ],
+      "kind": "combine-modules",
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "primary_decision_reason": "Affected modules cross top-level domains.",
+      "problem_statement": "Dependency and responsibility evidence indicate overlapping logical ownership across coupled modules.",
+      "proposal_id": "refactor-proposal-65293725b72f5a7712bd",
+      "proposed_logical_ownership": "main.js",
+      "responsibility_id": "responsibility-3b8985fe52cd4fd3236e",
+      "rollback_criteria": [
+        "Retain current ownership if graph or Phase 4 validation contradicts the estimate."
+      ],
+      "side_effect_ids": [],
+      "state": "blocked-insufficient-evidence",
+      "state_resource_ids": [],
+      "unresolved_maintainer_decisions": [
+        "Confirm the proposed logical owner and public compatibility policy."
+      ],
+      "validation_needs": [
+        "Phase 4 test-impact mapping and focused behavioral tests."
+      ]
+    },
+    {
+      "affected_contract_ids": [],
+      "affected_modules": [
+        "main.js",
+        "shared.js"
+      ],
+      "affected_shape_ids": [],
+      "affected_structure_ids": [],
+      "affected_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ],
+      "affected_test_ids": [],
+      "allowed_paths": [
+        "src/main.js",
+        "src/shared.js"
+      ],
+      "architecture_estimate_id": "architecture-estimate-671421bde844b8f7bf2c",
+      "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
+      "candidate_observation_id": "candidate-observation-0c67aafc7c1e26341dc8",
+      "change_coupling_ids": [],
+      "clone_cluster_ids": [],
+      "compatibility_concerns": [
+        "Imports and public symbol locations may require compatibility review."
+      ],
+      "completeness": "partial",
+      "confidence": "inferred",
+      "consumer_identities": [
+        "main.js",
+        "shared.js"
+      ],
+      "counter_evidence_ids": [],
+      "coverage_observation_ids": [],
+      "current_ownership": [
+        "main.js",
+        "shared.js"
+      ],
+      "data_contract_impact": [
+        "Recorded contract references must retain their defining and boundary semantics."
+      ],
+      "dependency_identities": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "gate_decisions": [
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-03a1a171b990c6908541",
+          "gate": "ownership",
+          "outcome": "passed",
+          "reason": "Threshold-qualified ownership dimensions support the responsibility boundary.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "main.js",
+            "shared.js"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-e1b2d3451903b6b68529",
+          "gate": "domain-boundary",
+          "outcome": "failed",
+          "reason": "Affected modules cross top-level domains.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-ffa2d93817ad34f29d71",
+          "gate": "contract-compatibility",
+          "outcome": "passed",
+          "reason": "No incompatible referenced contracts were evidenced.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-39fdd5531e88508199cf",
+          "gate": "mutable-state",
+          "outcome": "not-applicable",
+          "reason": "No mutable-state resource is attached to this cluster.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-4fe21a2628dea8519c6b",
+          "gate": "side-effects",
+          "outcome": "passed",
+          "reason": "No conflicting side-effect ownership was evidenced.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-671421bde844b8f7bf2c"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-6bb2b4ed1c6b227afed9",
+          "gate": "graph-edge-reduction",
+          "outcome": "failed",
+          "reason": "The simulated graph does not reduce cross-boundary edges.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-671421bde844b8f7bf2c"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-e6d9dc9837298429be2c",
+          "gate": "scc",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add an SCC.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-671421bde844b8f7bf2c"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-1bc9afc91e49c6de5b3c",
+          "gate": "cycle",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add a canonical cycle.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "architecture-estimate-671421bde844b8f7bf2c"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-1074e32463d353483d5a",
+          "gate": "configured-layer",
+          "outcome": "passed",
+          "reason": "The simulated graph does not add a configured layer violation.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "abstraction-cost-cb376df6cbf5a64faafa"
+          ],
+          "blocking": true,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-db00152b227c1c42cf89",
+          "gate": "abstraction-cost",
+          "outcome": "failed",
+          "reason": "The lower net production LOC estimate is nonnegative.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-3a3e46e97021b553becc",
+          "gate": "behavior-preservation",
+          "outcome": "passed",
+          "reason": "Supported exception and side-effect behavior has no evidenced incompatibility.",
+          "supporting_catalog_ids": [
+            "evidence-1303915cd7d81ec2039c",
+            "evidence-4a88e063918c12328faf"
+          ]
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-179d5cc60fccc91d04de",
+          "gate": "test-impact",
+          "outcome": "unresolved",
+          "reason": "Affected-test evidence is missing, unresolved, or truncated.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [
+            "subject-8a8904dbf16de495a5e6",
+            "subject-ed2f62b844893bbb2fdd"
+          ],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-e26649f6b9ab5c83b79a",
+          "gate": "coverage-binding",
+          "outcome": "unresolved",
+          "reason": "Source-bound executed coverage is missing or incomplete.",
+          "supporting_catalog_ids": []
+        },
+        {
+          "affected_ids": [],
+          "blocking": false,
+          "counter_catalog_ids": [],
+          "decision_id": "proposal-gate-6a5ef186bbc30e25cc50",
+          "gate": "runtime-claim",
+          "outcome": "not-applicable",
+          "reason": "The proposal makes no runtime-performance claim.",
+          "supporting_catalog_ids": []
+        }
+      ],
+      "kind": "extract-responsibility",
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "primary_decision_reason": "Affected modules cross top-level domains.",
+      "problem_statement": "A threshold-qualified responsibility cluster repeats strong structural and dependency features across its members.",
+      "proposal_id": "refactor-proposal-a85e5d78fd1d1e3ce05c",
+      "proposed_logical_ownership": "main.shared_4fd3236e",
+      "responsibility_id": "responsibility-3b8985fe52cd4fd3236e",
+      "rollback_criteria": [
+        "Retain current ownership if graph or Phase 4 validation contradicts the estimate."
+      ],
+      "side_effect_ids": [],
+      "state": "blocked-insufficient-evidence",
+      "state_resource_ids": [],
+      "unresolved_maintainer_decisions": [
+        "Confirm the proposed logical owner and public compatibility policy."
+      ],
+      "validation_needs": [
+        "Phase 4 test-impact mapping and focused behavioral tests."
+      ]
+    }
+  ],
+  "responsibility_clusters": [
+    {
+      "clone_cluster_ids": [],
+      "completeness": "complete",
+      "confidence": "resolved",
+      "counter_evidence_ids": [],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "limitations": [
+        "Responsibility clusters are static review evidence, not ownership decisions."
+      ],
+      "member_subject_ids": [
+        "subject-8a8904dbf16de495a5e6",
+        "subject-ed2f62b844893bbb2fdd"
+      ],
+      "responsibility_id": "responsibility-3b8985fe52cd4fd3236e",
+      "shared_dimensions": [
+        "attributes-globals",
+        "callees",
+        "control-flow",
+        "dictionary-schema",
+        "exceptions"
+      ],
+      "side_effect_ids": [],
+      "state_resource_ids": []
+    }
+  ],
+  "run_identity_sha256": "9848c6124e1cb9c3a2854eff110670a1750d24caa6117edffa0b67c2e2633337",
+  "schema_name": "code-analysis-report",
+  "schema_version": "1.0.0",
+  "section_coverage": [
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript",
+        "python"
+      ],
+      "parsed": 3,
+      "required": true,
+      "section": "r1-static-analysis",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript"
+      ],
+      "parsed": 3,
+      "required": true,
+      "section": "static-call-occurrences",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "contracts",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "interfaces",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "dictionary-shapes",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "validation",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "data-structures",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript",
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "clones",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript",
+        "python"
+      ],
+      "parsed": 3,
+      "required": true,
+      "section": "function-commonality",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript",
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "state-side-effects",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "cohesion-refactoring",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "javascript"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "test-impact",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "coverage",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "git-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "generation-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    }
+  ],
+  "side_effects": [],
+  "signal_quality": {
+    "commonality_admission": {
+      "admitted_pairs": 1,
+      "candidate_bound_omissions": 0,
+      "candidate_bound_omissions_exact": true,
+      "clone_admissions": 1,
+      "coverage_rejections": 0,
+      "dimension_rejections": 0,
+      "index_dimension_rejections": 0,
+      "index_dimension_rejections_exact": true,
+      "postings_considered": 0,
+      "prevalent_feature_examples": [],
+      "prevalent_features_suppressed": 0,
+      "profile_count": 3,
+      "rejection_examples": [],
+      "unique_candidates": 1
+    },
+    "proposal_admission": {
+      "admitted_candidates": 2,
+      "call_only_rejections": 0,
+      "example_limit": 25,
+      "proposal_bound_omissions": 0,
+      "proposal_candidates_considered": 2,
+      "rejection_examples": [],
+      "responsibility_clusters_considered": 1,
+      "retained_proposals": 2,
+      "too_broad_rejections": 0
+    },
+    "proposal_decisions": {
+      "blocked_proposals": 2,
+      "failed_gates": 6,
+      "ready_for_maintainer_review_proposals": 0,
+      "reviewable_incomplete_proposals": 0,
+      "total_proposals": 2,
+      "unresolved_gates": 4
+    }
+  },
+  "source_bindings": [
+    {
+      "binding_id": "binding-05705f8903bb8a5d6551",
+      "language": "javascript",
+      "logical_path": "tests/main.test.js",
+      "source_sha256": "53d0b7db94a9a1a47205898e5783fc894dce3d42c7ef5f67db282ca6f1fbed6f"
+    },
+    {
+      "binding_id": "binding-07baddc7e1e9f623c630",
+      "language": "javascript",
+      "logical_path": "src/widget.jsx",
+      "source_sha256": "05996fa75fa3402c981bb8280becd5791747feca6e3deed8df0f101da67b7bcf"
+    },
+    {
+      "binding_id": "binding-a906682197289196c06d",
+      "language": "javascript",
+      "logical_path": "src/main.js",
+      "source_sha256": "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
+    },
+    {
+      "binding_id": "binding-c7c3eed66e053c818082",
+      "language": "javascript",
+      "logical_path": "src/shared.js",
+      "source_sha256": "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12"
+    }
+  ],
+  "source_files": [
+    {
+      "language": "javascript",
+      "logical_path": "src/shared.js",
+      "logical_root": ".",
+      "module_name": "shared.js",
+      "module_system": "esm",
+      "nonblank_loc": 12,
+      "parse_state": "complete",
+      "physical_loc": 12,
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "source_sha256": "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+      "syntax_mode": "javascript"
+    },
+    {
+      "language": "javascript",
+      "logical_path": "src/widget.jsx",
+      "logical_root": ".",
+      "module_name": "widget.jsx",
+      "module_system": "esm",
+      "nonblank_loc": 3,
+      "parse_state": "complete",
+      "physical_loc": 3,
+      "source_file_id": "source-file-daca6ef7c8b064800de4",
+      "source_sha256": "05996fa75fa3402c981bb8280becd5791747feca6e3deed8df0f101da67b7bcf",
+      "syntax_mode": "jsx"
+    },
+    {
+      "language": "javascript",
+      "logical_path": "src/main.js",
+      "logical_root": ".",
+      "module_name": "main.js",
+      "module_system": "esm",
+      "nonblank_loc": 13,
+      "parse_state": "complete",
+      "physical_loc": 14,
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "source_sha256": "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea",
+      "syntax_mode": "javascript"
+    }
+  ],
+  "state_resources": [],
+  "static_call_coverage": [
+    {
+      "language": "javascript",
+      "limitations": [],
+      "observed_count": 6,
+      "omitted_count": 0,
+      "retained_count": 6,
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "state": "complete"
+    },
+    {
+      "language": "javascript",
+      "limitations": [],
+      "observed_count": 0,
+      "omitted_count": 0,
+      "retained_count": 0,
+      "source_file_id": "source-file-daca6ef7c8b064800de4",
+      "state": "complete"
+    },
+    {
+      "language": "javascript",
+      "limitations": [],
+      "observed_count": 7,
+      "omitted_count": 0,
+      "retained_count": 7,
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "state": "complete"
+    }
+  ],
+  "static_call_occurrences": [
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "trimmed.toLowerCase",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-e939d8c689a0c4ea9e0e"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-0851faf069a702a6d11f",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "String",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-ea158a46021c681d9fda"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-226625478eb7e23afcae",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "JSON.stringify",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-4689a322a47795ce3d2e"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-2c2dc028fbf807995cc2",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "JSON.stringify",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-e005359eefc78d2d1664"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-41338fd295c866fc78a6",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "normalize",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-ff7e2b80cf54ce658659"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-84b663e7a3364cbcd8d5",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "trimmed.toLowerCase",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-d0f549f1f22760d4ef5d"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-9d211629bbf40b8d9e46",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "lowered.replaceAll",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-5521936c80279b7a9fb1"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-aca33fc88742ae2b010f",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "raw.trim",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-6dce88e8c11b917c7970"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-acd24c646711893a2831",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "Error",
+      "conditional": true,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-94a16ceb6afdd00b473a"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-b0eb456b350b316377b4",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "constructor"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "String",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-de8a12d26381ec91f0cb"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-b154bc6537a1338c5707",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "Error",
+      "conditional": true,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-35c4f26b94df98510c0a"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-b963a94174234395c397",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "constructor"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "raw.trim",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-7e5483b37635350f6ba6"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-db5546c39fc3571e23c9",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "255e1dd1b31401ac04e5b74b75a8189ea8bafa673194c4c4e2523cfa55d0f596",
+      "callee_spelling": "lowered.replaceAll",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-6cf22e1e8d3fccb99556"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-ee49b236d1fdedb2e265",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    }
+  ],
+  "strongly_connected_components": [],
+  "subjects": [
+    {
+      "evidence_ids": [
+        "evidence-e89436c02970d3fe7cef"
+      ],
+      "kind": "module",
+      "language": "javascript",
+      "logical_name": "main.js",
+      "module": "main.js",
+      "subject_id": "subject-0bf38044415363a918e1"
+    },
+    {
+      "evidence_ids": [
+        "evidence-99b7cf19320541ac5798"
+      ],
+      "kind": "module",
+      "language": "javascript",
+      "logical_name": "widget.jsx",
+      "module": "widget.jsx",
+      "subject_id": "subject-227cc8318bf2deff6798"
+    },
+    {
+      "evidence_ids": [
+        "evidence-a368e7ffee08154d2050"
+      ],
+      "kind": "symbol",
+      "language": "javascript",
+      "logical_name": "widget.jsx:Widget",
+      "module": "widget.jsx",
+      "subject_id": "subject-50c3c65575b0f5233f0a"
+    },
+    {
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf"
+      ],
+      "kind": "symbol",
+      "language": "javascript",
+      "logical_name": "main.js:transform",
+      "module": "main.js",
+      "subject_id": "subject-8a8904dbf16de495a5e6"
+    },
+    {
+      "evidence_ids": [
+        "evidence-c4d493a5c407102e943d"
+      ],
+      "kind": "module",
+      "language": "javascript",
+      "logical_name": "shared.js",
+      "module": "shared.js",
+      "subject_id": "subject-9300c1bdad6e6c3b40c3"
+    },
+    {
+      "evidence_ids": [
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "kind": "symbol",
+      "language": "javascript",
+      "logical_name": "shared.js:normalize",
+      "module": "shared.js",
+      "subject_id": "subject-ed2f62b844893bbb2fdd"
+    }
+  ],
+  "summary": {
+    "abstraction_cost_estimates": 3,
+    "architecture_contract_suggestions": 0,
+    "architecture_estimates": 2,
+    "behavior_differences": 1,
+    "behavioral_events": 10,
+    "behavioral_invariants": 9,
+    "behavioral_ordering_edges": 0,
+    "candidate_behavior_differences": 0,
+    "candidate_classifications": 0,
+    "candidate_observations": 3,
+    "candidate_qualification_requirements": 27,
+    "change_couplings": 0,
+    "classes": 0,
+    "clone_clusters": 0,
+    "clone_fragments": 0,
+    "contracts": 0,
+    "coverage_artifacts": 0,
+    "coverage_files": 0,
+    "coverage_observations": 0,
+    "cycles": 0,
+    "data_structures": 0,
+    "dictionary_observations": 0,
+    "dictionary_shapes": 0,
+    "discovered_files": 3,
+    "duplicate_functions": 1,
+    "failed_files": 0,
+    "findings": 2,
+    "flow_edges": 0,
+    "function_commonalities": 1,
+    "function_profiles": 3,
+    "functions": 3,
+    "generation_changes": 0,
+    "git_commits": 0,
+    "git_path_changes": 0,
+    "git_symbol_changes": 0,
+    "import_edges": 1,
+    "interface_correlations": 0,
+    "interface_endpoints": 0,
+    "interface_mismatches": 0,
+    "interface_payload_variants": 0,
+    "methods": 0,
+    "module_exports": 3,
+    "modules": 3,
+    "owner_alternatives": 12,
+    "parsed_files": 3,
+    "refactor_candidates": 3,
+    "refactor_proposals": 2,
+    "responsibility_clusters": 1,
+    "side_effects": 0,
+    "source_files": 3,
+    "state_resources": 0,
+    "static_call_occurrences": 13,
+    "static_calls_observed": 13,
+    "static_calls_omitted": 0,
+    "strongly_connected_components": 0,
+    "subjects": 6,
+    "test_cases": 0,
+    "test_fixtures": 0,
+    "test_modules": 1,
+    "test_relationships": 2,
+    "unresolved_edges": 0,
+    "validation_patterns": 0
+  },
+  "target": {
+    "languages": [
+      "javascript"
+    ],
+    "logical_root": ".",
+    "source_roots": [
+      "src"
+    ],
+    "target_kind": "directory"
+  },
+  "test_cases": [],
+  "test_fixtures": [],
+  "test_modules": [
+    {
+      "framework": "javascript-generic",
+      "language": "javascript",
+      "module": "tests/main.test.js",
+      "path": "tests/main.test.js",
+      "source_sha256": "53d0b7db94a9a1a47205898e5783fc894dce3d42c7ef5f67db282ca6f1fbed6f",
+      "test_module_id": "test-module-1b2ce6108ea5ad0cfac5"
+    }
+  ],
+  "test_relationships": [
+    {
+      "evidence_ids": [
+        "evidence-21da90c400e269c89ece"
+      ],
+      "kind": "module-import",
+      "limitations": [
+        "module-level import is likely test impact, not behavioral coverage"
+      ],
+      "relationship_id": "test-relationship-1537636568bf932e087f",
+      "resolved": false,
+      "source_test_id": null,
+      "source_test_module_id": "test-module-1b2ce6108ea5ad0cfac5",
+      "target_fixture_id": null,
+      "target_module": null,
+      "target_subject_id": null,
+      "target_text": "../src/main.js"
+    },
+    {
+      "evidence_ids": [
+        "evidence-a6441114c996e8f3ed41"
+      ],
+      "kind": "direct-symbol",
+      "limitations": [
+        "static direct reference indicates likely impact, not execution"
+      ],
+      "relationship_id": "test-relationship-71f20900b5bcdd6ea4a3",
+      "resolved": true,
+      "source_test_id": null,
+      "source_test_module_id": "test-module-1b2ce6108ea5ad0cfac5",
+      "target_fixture_id": null,
+      "target_module": null,
+      "target_subject_id": "subject-8a8904dbf16de495a5e6",
+      "target_text": null
+    }
+  ],
+  "tool_version": "0.1.0b1",
+  "unresolved_edges": [],
+  "validation_patterns": []
+}

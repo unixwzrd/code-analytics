@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CLI examples and artifacts</title><link rel="stylesheet" href="/help/styles.css"></head><body><main class="help-document"><h1 id="cli-examples-and-artifacts">CLI examples and artifacts</h1>
+<p>Use this guide for workflows; use the <a href="/help/cli-reference.html">CLI reference</a> for exact arguments, defaults and exit behavior, and the <a href="/help/user-guide.html">UI guide</a> for screen controls. Commands assume an installed <code>code-analysis</code>, the intended Python environment, and a project with a <code>src/</code> directory. Replace uppercase identities/paths with values from your own reports. <code>jq</code> and Graphviz are optional tools used by particular examples, not automatically installed dependencies.</p>
+<p>Examples are independent unless they explicitly reuse an earlier file. Choose fresh destinations when repeating a no-overwrite command. <strong>ENODATA can accompany useful partial artifacts.</strong> Inspect completeness and the command status; do not treat these examples as promises of an exit-zero report.</p>
+<h2 id="check-the-environment">Check the environment</h2>
+<pre><code class="language-bash">code-analysis doctor &gt; doctor.json
+code-analysis providers --json &gt; providers.json
+</code></pre>
+<p>Produces <code>doctor.json</code> with actual local interpreter/tool provenance and <code>providers.json</code> with provider availability. These are not analysis results. Doctor output may contain host paths; keep it local if publishing portable analytical evidence. Missing optional tools remain unavailable.</p>
+<h2 id="analyze-a-project-and-open-its-saved-result">Analyze a project and open its saved result</h2>
+<p>Run from the project root:</p>
+<pre><code class="language-bash">code-analysis scan . --quiet
+code-analysis workspace list . --json &gt; generations.json
+code-analysis ui
+</code></pre>
+<p>The scan creates/reuses an owned <code>.code-analysis/</code> and publishes an analysis generation. <code>ui</code> opens the saved result, not a second scan. It returns your prompt after the background server is ready and opens the browser on macOS; <code>ui --no-open</code> prints the session URL without opening it. Use <strong>Stop Code Analysis</strong> or <code>code-analysis ui-stop</code> to stop this project's single matching session. If several match, use the printed <code>--session ID</code>; active jobs require <code>--cancel-jobs</code>. Closing a browser tab leaves the server running. For terminal-controlled operation and Ctrl+C shutdown, use <code>code-analysis ui --foreground --no-open</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.code-analysis/workspace.json</code></td>
+<td>Local ownership marker</td>
+</tr>
+<tr>
+<td><code>.code-analysis/.gitignore</code></td>
+<td>Keeps workspace contents untracked</td>
+</tr>
+<tr>
+<td><code>.code-analysis/generations/analysis/GENERATION_ID/report.json</code></td>
+<td>Authoritative compact analysis JSON</td>
+</tr>
+<tr>
+<td>Same directory: <code>report.md</code></td>
+<td>Concise human summary</td>
+</tr>
+<tr>
+<td>Same directory: <code>run.json</code>, <code>manifest.json</code></td>
+<td>Local execution/storage provenance and artifact identities</td>
+</tr>
+<tr>
+<td><code>.code-analysis/generations/analysis/latest</code></td>
+<td>Owned relative alias to the latest generation</td>
+</tr>
+<tr>
+<td><code>generations.json</code></td>
+<td>Explicit inventory export from <code>workspace list</code></td>
+</tr>
+</tbody>
+</table>
+<p>The UI creates no replacement analysis report. Retention may later prune unpinned generations; pin a generation explicitly if it is a baseline you need to preserve.</p>
+<h2 id="source-only-analysis-without-test-discovery">Source-only analysis without test discovery</h2>
+<p>Create <code>source-only.toml</code> with:</p>
+<pre><code class="language-toml">[tool.code-analysis]
+strictness = &quot;normal&quot;
+portable = true
+test-roots = []
+</code></pre>
+<p>Then run:</p>
+<pre><code class="language-bash">mkdir -p analysis-artifacts
+code-analysis refactor src --config source-only.toml --no-workspace \
+  --json-compact --output analysis-artifacts/source-report.json
+code-analysis summary analysis-artifacts/source-report.json \
+  &gt; analysis-artifacts/source-summary.md
+</code></pre>
+<p>Produces one authoritative <code>source-report.json</code> and a separate concise summary. <code>--no-workspace</code> prevents project workspace/cache writes; the explicit output directory still receives these files. Omit that flag if you want retained generations as well. Add <code>--language python</code> for Python-only source. Selecting <code>src</code> alone would not disable configured test discovery. Missing test evidence remains unavailable, not a coverage claim.</p>
+<h2 id="derive-useful-views-without-rescanning">Derive useful views without rescanning</h2>
+<p>These commands reuse <code>analysis-artifacts/source-report.json</code>:</p>
+<pre><code class="language-bash">code-analysis candidates analysis-artifacts/source-report.json --format markdown \
+  --top 25 &gt; analysis-artifacts/candidates.md
+code-analysis export analysis-artifacts/source-report.json \
+  --projection subject-findings --format tsv \
+  --output analysis-artifacts/subject-findings.tsv
+code-analysis export analysis-artifacts/source-report.json \
+  --projection dependencies --format dot --max-nodes 60 --max-edges 120 \
+  --output analysis-artifacts/dependencies.dot
+code-analysis export analysis-artifacts/source-report.json \
+  --projection dependencies --format svg --max-nodes 60 --max-edges 120 \
+  --output analysis-artifacts/dependencies.svg
+code-analysis html analysis-artifacts/source-report.json \
+  --projection modules --projection dependencies --max-records 100 \
+  --output analysis-artifacts/overview.html
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>candidates.md</code></td>
+<td>Which bounded candidates warrant human review?</td>
+</tr>
+<tr>
+<td><code>subject-findings.tsv</code></td>
+<td>Which subjects have findings, by category/severity/rule?</td>
+</tr>
+<tr>
+<td><code>dependencies.dot</code></td>
+<td>What directed module relationships were retained?</td>
+</tr>
+<tr>
+<td><code>dependencies.svg</code></td>
+<td>The same bounded graph rendered by Graphviz</td>
+</tr>
+<tr>
+<td><code>overview.html</code></td>
+<td>A self-contained offline document with selected views</td>
+</tr>
+</tbody>
+</table>
+<p>The report's subjects—not filenames guessed from source—supply identities. Optional Graphviz failure must be handled explicitly. A graph exceeding the selected bounds is usable partial presentation, not a complete graph. HTML opens directly from disk; it does not launch a server or fetch source. Other projection names and format restrictions are in the <a href="/help/reports.html">catalog</a>.</p>
+<h2 id="compare-two-saved-analysis-runs">Compare two saved analysis runs</h2>
+<p>Keep a copy of the earlier JSON as <code>baseline.json</code>; generate <code>candidate.json</code> using the same target and analytical configuration after your change. Do not overwrite the baseline.</p>
+<pre><code class="language-bash">code-analysis diff baseline.json candidate.json --format json-compact \
+  --output changes.json
+code-analysis diff baseline.json candidate.json --format markdown \
+  --output changes.md
+code-analysis diff baseline.json candidate.json --include-unchanged \
+  --format tsv --output inventory-delta.tsv
+</code></pre>
+<p>Produces an authoritative comparison (<code>changes.json</code>), a readable changes-only view (<code>changes.md</code>) and a bounded full inventory (<code>inventory-delta.tsv</code>). Global counts remain distinct from retained rows. Identical reports produce zero records with <code>identical=true</code>, but source partiality remains. Incompatible target/configuration identities return <code>EINVAL</code>; matching filenames or dates do not make reports compatible. Comparison does not rescan either checkout.</p>
+<h2 id="prepare-an-indexed-terminal-view">Prepare an indexed terminal view</h2>
+<pre><code class="language-bash">mkdir -p analysis-artifacts
+code-analysis index analysis-artifacts/source-report.json \
+  --output analysis-artifacts/browse-index &gt; analysis-artifacts/index-receipt.json
+code-analysis tui analysis-artifacts/browse-index \
+  --report-sha256 &quot;$(jq -r .report_sha256 analysis-artifacts/index-receipt.json)&quot;
+</code></pre>
+<p>Produces <code>browse-index/index.sqlite3</code>, <code>browse-index/manifest.json</code> and the explicitly redirected <code>index-receipt.json</code>. The destination must be new; its parent must exist. The receipt binds the cache to the canonical report identity. The terminal requires the optional Textual dependency and a TTY. Browsing does not rescan source or recreate reports. Exports are generated only when you request them; see <a href="/help/user-guide.html#indexed-terminal-browsing">terminal controls</a>.</p>
+<h2 id="ingest-an-existing-profile-offline">Ingest an existing profile offline</h2>
+<p>To retain an import alongside existing project runs, use an already owned workspace:</p>
+<pre><code class="language-bash">code-analysis runtime ingest --profile capture.pstats \
+  --workspace .code-analysis &gt; imported-profile.json
+</code></pre>
+<p>This creates a dated <code>.code-analysis/generations/profile/GENERATION/</code> containing <code>profile.json</code>, available <code>portable-HASH.prof</code> artifacts and its local generation manifest. It also writes the explicitly redirected JSON copy. Existing retention/pins apply. The raw input is unchanged, target code is not executed, and the importing process identity does not fill gaps in the original capture. Partial evidence returns ENODATA even when these artifacts are successfully retained. Do not combine this mode with <code>--output</code>.</p>
+<p><code>capture.pstats</code> must already exist. This example does <strong>not</strong> run the profiled application:</p>
+<pre><code class="language-bash">code-analysis runtime ingest --profile capture.pstats \
+  --output analysis-artifacts/runtime-import --direction TB
+code-analysis runtime query analysis-artifacts/runtime-import \
+  --section hotspots --format tsv --max-records 100 \
+  &gt; analysis-artifacts/hotspots.tsv
+</code></pre>
+<p>The runtime destination must be new. It contains:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runtime-summary.json</code></td>
+<td>Authoritative normalized profile evidence</td>
+</tr>
+<tr>
+<td><code>runtime-summary.md</code></td>
+<td>Human-readable profile summary and limitations</td>
+</tr>
+<tr>
+<td><code>runtime-functions.tsv</code>, <code>runtime-callers.tsv</code>, <code>runtime-callees.tsv</code></td>
+<td>Frame and caller/callee tables</td>
+</tr>
+<tr>
+<td><code>runtime-identity.json</code>, <code>runtime-categories.json</code>, <code>runtime-diagnostics.json</code></td>
+<td>Identity, classification and diagnostic views</td>
+</tr>
+<tr>
+<td><code>runtime-callgraph.dot</code></td>
+<td>Directed graph source</td>
+</tr>
+<tr>
+<td><code>runtime-callgraph.svg</code>, <code>runtime-callgraph.png</code>, <code>runtime-static-overlay.svg</code></td>
+<td>Optional rendered graphs; inspect manifest availability</td>
+</tr>
+<tr>
+<td><code>runtime-hotspots.svg</code></td>
+<td>Hotspot visualization</td>
+</tr>
+<tr>
+<td><code>manifest.json</code></td>
+<td>Artifact hashes, availability, omissions and completeness</td>
+</tr>
+</tbody>
+</table>
+<p><code>hotspots.tsv</code> is the separate query output outside the bundle. Offline bundle publication does not copy raw pstats into it. Bare input usually remains unbound/partial and returns <code>ENODATA</code>. Stdlib integer callers retain exact counts and null unavailable timings. No graph constitutes a throughput baseline or whole-program coverage proof.</p>
+<h2 id="bind-an-external-profiler-declaration">Bind an external profiler declaration</h2>
+<p>If your collector actually recorded stdlib <code>profile.Profile</code>, compute the captured file hash:</p>
+<pre><code class="language-bash">python -c 'import hashlib,pathlib; print(hashlib.sha256(pathlib.Path(&quot;capture.pstats&quot;).read_bytes()).hexdigest())'
+</code></pre>
+<p>Place the resulting 64-character lowercase digest in <code>metadata.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;schema_name&quot;: &quot;code-analysis-runtime-metadata&quot;,
+  &quot;schema_version&quot;: &quot;1.0.0&quot;,
+  &quot;collection&quot;: {},
+  &quot;producer_bindings&quot;: [
+    {&quot;profile_sha256&quot;: &quot;REPLACE_WITH_CAPTURE_SHA256&quot;, &quot;producer&quot;: &quot;profile&quot;}
+  ]
+}
+</code></pre>
+<p>The placeholder is intentionally invalid until replaced. Use <code>cprofile</code> only when that is what the collector recorded. For multiple inputs, sort bindings by unique digest. Do not infer producer from a filename or caller representation.</p>
+<pre><code class="language-bash">code-analysis runtime ingest --profile capture.pstats --metadata metadata.json \
+  --output analysis-artifacts/runtime-bound
+</code></pre>
+<p>Produces the same bundle layout in a different fresh directory. Producer identification does not fill missing source/process/workload facts. Wrong hashes return <code>EBADMSG</code>; incomplete evidence still returns <code>ENODATA</code>. Never fabricate facts for an old capture to obtain exit zero.</p>
+<h2 id="render-and-compare-retained-runtime-evidence">Render and compare retained runtime evidence</h2>
+<pre><code class="language-bash">code-analysis runtime render analysis-artifacts/runtime-bound \
+  --output analysis-artifacts/runtime-small --max-nodes 40 --max-edges 80
+code-analysis runtime compare BASELINE_RUNTIME_JSON CANDIDATE_RUNTIME_JSON \
+  --diagnostic-only --markdown --output runtime-comparison.md
+</code></pre>
+<p><code>runtime-small/</code> is a newly rendered bundle from saved JSON, with bounded graph counts. <code>runtime-comparison.md</code> records comparison decisions and deltas; diagnostic-only mode is explicitly claim-ineligible. Neither command executes or rescans an application. Different producer/scope/workload identities and unavailable timings remain visible.</p>
+<h2 id="preserve-status-in-automation">Preserve status in automation</h2>
+<p>This shell pattern works with <code>set -e</code> because the command is inside an <code>if</code>. Use the same environment's Python to resolve errno symbols:</p>
+<pre><code class="language-bash">enodata=$(python -c 'import errno; print(errno.ENODATA)')
+if code-analysis scan . --no-workspace --json-compact \
+    --output report.json 2&gt; diagnostics.log; then
+  status=0
+else
+  status=$?
+fi
+
+case &quot;$status&quot; in
+  0) printf '%s\n' 'Operation completed under the selected policy' ;;
+  &quot;$enodata&quot;) printf '%s\n' 'Partial evidence: inspect report and diagnostics' &gt;&amp;2 ;;
+  *) printf 'Analysis failed with host status %s\n' &quot;$status&quot; &gt;&amp;2 ;;
+esac
+exit &quot;$status&quot;
+</code></pre>
+<p>Produces <code>report.json</code> when publication succeeds and <code>diagnostics.log</code> from stderr. A failed invocation may leave no report; don't read a stale pre-existing file as if it came from this run. Use a fresh output location per job. The script preserves the actual status rather than converting incomplete evidence into success. JSON output and diagnostics remain separate.</p>
+<h2 id="configure-an-evidenced-contract-boundary">Configure an evidenced contract boundary</h2>
+<p>For an exact declared contract and consumer site, add a rule to your project TOML:</p>
+<pre><code class="language-toml">[[tool.code-analysis.contract-boundaries]]
+contract-pattern = &quot;package.contracts.*&quot;
+site-pattern = &quot;package.api:*&quot;
+boundary-class = &quot;http-request&quot;
+</code></pre>
+<p>Patterns match portable logical identities, not host paths. Unmatched or conflicting cross-module uses remain unclassified/partial. For dictionary serialization sites, <code>contract-pattern</code> matches the owned dictionary identity (for example <code>package.store:save:payload</code>) and <code>site-pattern</code> can match <code>json.dump</code>. Only a uniquely configured <code>persisted-document</code> class establishes a persistence-boundary link; serialization syntax alone does not. These rules alter a subsequent analysis report and its configuration identity, not any source file or historical report.</p>
+<h2 id="execution-is-a-separate-explicit-step">Execution is a separate, explicit step</h2>
+<p>Coverage/profile collection requires a workload and <code>--allow-execution</code>; viewing existing evidence does not. Consult the <a href="/help/cli-reference.html#runtime-evidence">runtime reference</a> and <span class="help-unbundled-reference">run specification</span> before running an application. The examples above intentionally do not launch tests, profilers or consumer workloads. Do not use a model benchmark merely to test report rendering.</p>
+</main></body></html>

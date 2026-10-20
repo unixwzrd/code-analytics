@@ -1,0 +1,2 @@
+cycle-id	module-count	start-module	path	scc-id
+cycle-241707f128ea	2	alpha.a	alpha.a -> alpha.b -> alpha.a	scc-bf8f0b745324

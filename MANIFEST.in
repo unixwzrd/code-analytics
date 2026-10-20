@@ -1,0 +1,22 @@
+prune docs
+include tools/build_user_help.py
+include tools/test_ui.py
+include tests/ui_suite.py
+include docs/ui-testing.md
+include docs/ui-guide.md
+include docs/cli.md
+include docs/cli-examples.md
+include docs/report-and-diagram-catalog.md
+include docs/beta.md
+include SECURITY.md
+include tutorials/.gitignore
+include tutorials/README.md tutorials/UI-WALKTHROUGH.md tutorials/VALIDATION.md tutorials/BASELINES.md
+include tutorials/qualify.py tutorials/*/README.md
+include tutorials/*/*/README.md tutorials/*/*/HINTS.md tutorials/*/*/SOLUTIONS.md
+include tutorials/*/*/pyproject.toml
+include tutorials/*/*/evidence/actual-report.json tutorials/*/*/evidence/expected-evidence.json
+include tutorials/*/*/evidence/qualification.md tutorials/*/*/evidence/walkthrough.md
+include tutorials/python/*/src/*.py tutorials/python/*/tests/*.py
+include tutorials/javascript/*/src/*.mjs tutorials/javascript/*/tests/*.mjs
+include tutorials/ruby/*/lib/*.rb tutorials/ruby/*/test/*.rb
+recursive-include src/code_analysis/user_help *.html *.css *.json

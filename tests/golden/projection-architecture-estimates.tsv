@@ -1,0 +1,3 @@
+estimate-id	before-edges	after-edges	before-cross-boundary	after-cross-boundary	before-sccs	after-sccs	before-layer-violations	after-layer-violations
+architecture-estimate-819d4f229ae4770f9fd3	5	9	5	4	0	0	1	1
+architecture-estimate-b933c963eb57996e41ec	5	2	4	2	0	0	1	1

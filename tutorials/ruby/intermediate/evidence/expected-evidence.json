@@ -1,0 +1,140 @@
+{
+  "title": "The Booking Mix-Up",
+  "language": "ruby",
+  "level": "intermediate",
+  "scenario": "Ada reserves two standard rooms for one night; 1200 pennies per room, gold-tier discount, total 2160 pennies; room inventory 8 to 6; one disposable receipt.",
+  "commands": {
+    "demo": "ruby lib/demo.rb",
+    "tests": "ruby test/test_demo.rb"
+  },
+  "observations": [
+    {
+      "id": "RB-INT-01",
+      "label": "Basil has expanded the tariff rulebook",
+      "path": "lib/billing.rb",
+      "symbol": "Billing::quote_stay",
+      "expectation": "supported",
+      "view": "Modules / Browse code",
+      "check": {
+        "kind": "complexity",
+        "min_score": 15
+      },
+      "meaning": "The tariff routine nests guest tier, room representation, group rates, coupons and statement-delivery policy.",
+      "limitation": "LOC and weighted metrics are available; branch/depth/return counts are zero despite visible branching, and finding rows are absent."
+    },
+    {
+      "id": "RB-INT-02",
+      "label": "Manuel has supplied two calculators",
+      "path": "lib/reception.rb",
+      "symbol": "Totals::direct_booking_total",
+      "expectation": "deferred",
+      "view": "Clones",
+      "check": {
+        "kind": "clone_pair",
+        "symbols": [
+          "Totals::direct_booking_total",
+          "Totals::agency_booking_total"
+        ]
+      },
+      "meaning": "The direct and agency calculators duplicate validation and integer rate arithmetic.",
+      "limitation": "Ruby emits no clone records for this source; compare the source manually and defer detection."
+    },
+    {
+      "id": "RB-INT-03",
+      "label": "The desk sends the paperwork in a circle",
+      "path": "lib/billing.rb",
+      "symbol": "Billing::quote_stay",
+      "expectation": "supported",
+      "view": "Architecture",
+      "check": {
+        "kind": "cycle",
+        "modules": [
+          "rooms.rb",
+          "billing.rb",
+          "bookings.rb"
+        ]
+      },
+      "meaning": "There is a safe local import cycle, with imported values used after initialization.",
+      "limitation": "A cycle does not prove a startup failure."
+    },
+    {
+      "id": "RB-INT-04",
+      "label": "Basil keeps a process-wide notebook",
+      "path": "lib/bookings.rb",
+      "symbol": "Bookings::create",
+      "expectation": "deferred",
+      "view": "State / effects",
+      "check": {
+        "kind": "global",
+        "logical_name": "bookings.mjs:bookings"
+      },
+      "meaning": "Quoted totals or bookings remain in a shared process-global collection until explicitly cleared.",
+      "limitation": "Mutable Ruby arrays are visible in source, but no state-resource records are emitted."
+    },
+    {
+      "id": "RB-INT-05",
+      "label": "Basil and Polly disagree on the room form",
+      "path": "lib/rooms.rb",
+      "symbol": "Rooms::standard",
+      "expectation": "deferred",
+      "view": "Contracts / Dictionary shapes",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Standard room offers and annex offers represent the same domain with different keys.",
+      "limitation": "These object/hash shapes have no contract or dictionary-shape records in this provider."
+    },
+    {
+      "id": "RB-INT-06",
+      "label": "Polly adjusts the actual room notebook",
+      "path": "lib/rooms.rb",
+      "symbol": "Rooms::reserve",
+      "expectation": "heuristic",
+      "view": "Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Reservation decrements the caller-owned room mapping in place; behavior checks verify object identity and remaining rooms.",
+      "limitation": "The dynamic stock field has no dedicated argument-mutation finding; source and tests supply that evidence."
+    },
+    {
+      "id": "RB-INT-07",
+      "label": "Polly coordinates one successful booking",
+      "path": "lib/demo.rb",
+      "symbol": "run_demo",
+      "expectation": "negative_control",
+      "view": "Browse code",
+      "check": {
+        "kind": "negative_control"
+      },
+      "meaning": "The short demo legitimately coordinates a booking and disposable receipt persistence.",
+      "limitation": "Orchestration is intentional; no finding targets this coordinator. Absence of a finding is not proof of design quality."
+    },
+    {
+      "id": "RB-INT-08",
+      "label": "One desk owns billing and the filing cabinet",
+      "path": "lib/reception.rb",
+      "symbol": "ReceptionDesk",
+      "expectation": "heuristic",
+      "view": "Candidates / Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "One class owns guest-facing presentation, receipt state and persistence as well as billing coordination.",
+      "limitation": "No refactor proposal is emitted. Review ownership manually; the empty Candidates view is not approval."
+    },
+    {
+      "id": "RB-INT-09",
+      "label": "Manuel copied the guest checks too",
+      "path": "lib/bookings.rb",
+      "symbol": "Bookings::preview_guest",
+      "expectation": "heuristic",
+      "view": "Browse code",
+      "check": {
+        "kind": "symbol"
+      },
+      "meaning": "Booking creation and guest preview repeat name presence, type and blank checks.",
+      "limitation": "The repeated source is visible, but no validation-pattern record is promised."
+    }
+  ]
+}

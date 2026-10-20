@@ -1,0 +1,156 @@
+{
+  "completeness": "complete",
+  "diagnostics": [],
+  "expected_status": "SUCCESS",
+  "frames": [
+    {
+      "artifact_sha256": null,
+      "classification": "project",
+      "cumulative_per_primitive_call_seconds": null,
+      "cumulative_seconds": 0.375,
+      "frame_id": "profile-frame-11111111111111111111",
+      "function": "caller",
+      "line": 10,
+      "metrics_observed": true,
+      "path": "package/module.py",
+      "per_call_seconds": 0.0625,
+      "primitive_calls": 2,
+      "subject_id": null,
+      "total_calls": 2,
+      "total_seconds": 0.125
+    },
+    {
+      "artifact_sha256": null,
+      "classification": "project",
+      "cumulative_per_primitive_call_seconds": null,
+      "cumulative_seconds": 0.25,
+      "frame_id": "profile-frame-22222222222222222222",
+      "function": "callee",
+      "line": 20,
+      "metrics_observed": true,
+      "path": "package/module.py",
+      "per_call_seconds": 0.0625,
+      "primitive_calls": 4,
+      "subject_id": null,
+      "total_calls": 4,
+      "total_seconds": 0.25
+    }
+  ],
+  "limitations": [
+    "Runtime evidence describes only the supplied workload and is not exhaustive."
+  ],
+  "observed_statuses": [
+    0
+  ],
+  "producer": "unknown",
+  "producer_bindings": [],
+  "profile_identity_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "providers": [
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 500,
+      "executable": "python-current-interpreter",
+      "exit_code": null,
+      "observations": [
+        "callers",
+        "callees",
+        "cumulative-time",
+        "total-time"
+      ],
+      "provider_id": "stdlib-cprofile",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    }
+  ],
+  "repetitions": 1,
+  "resources": [
+    {
+      "maximum_owned_processes": 1,
+      "peak_rss_bytes": 1048576,
+      "read_bytes": null,
+      "read_count": null,
+      "repetition": 1,
+      "system_cpu_seconds": 0.05,
+      "user_cpu_seconds": 0.4,
+      "wall_seconds": 0.5,
+      "write_bytes": null,
+      "write_count": null
+    }
+  ],
+  "runtime": {
+    "artifacts": [],
+    "caller_only_frame_ids": [],
+    "categories": [],
+    "category_rules": [],
+    "collection": {
+      "collection_scope": null,
+      "dependencies_sha256": null,
+      "external_artifacts": [],
+      "interpreter_identity": null,
+      "platform_identity": null,
+      "profiler_configuration_sha256": null,
+      "semantic_argv": null,
+      "source_fingerprint_sha256": null,
+      "workload_sha256": null
+    },
+    "correlations": [],
+    "lifecycle": [],
+    "original_edge_count": 0,
+    "original_frame_count": 0,
+    "process": {
+      "parent_pid": null,
+      "profile_sha256": null,
+      "run_nonce": null,
+      "serialization_complete": null,
+      "start_identity": null,
+      "state": "unavailable",
+      "subject_pid": null
+    },
+    "source_binding": "unbound",
+    "source_hashes": [],
+    "steps": [],
+    "unobserved_subject_ids": []
+  },
+  "runtime_edges": [
+    {
+      "callee_frame_id": "profile-frame-22222222222222222222",
+      "caller_frame_id": "profile-frame-11111111111111111111",
+      "caller_representation": "cprofile-tuple",
+      "cumulative_seconds": 0.25,
+      "primitive_calls": 4,
+      "runtime_edge_id": "runtime-edge-11111111111111111111",
+      "total_calls": 4,
+      "total_seconds": 0.25
+    }
+  ],
+  "schema_name": "code-analysis-profile-report",
+  "schema_version": "1.0.0",
+  "source_report_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "statistics": [
+    {
+      "call_count_mean": 2.0,
+      "frame_id": "profile-frame-11111111111111111111",
+      "total_seconds_coefficient_of_variation": 0.0,
+      "total_seconds_maximum": 0.125,
+      "total_seconds_mean": 0.125,
+      "total_seconds_median": 0.125,
+      "total_seconds_minimum": 0.125,
+      "total_seconds_standard_deviation": 0.0
+    },
+    {
+      "call_count_mean": 4.0,
+      "frame_id": "profile-frame-22222222222222222222",
+      "total_seconds_coefficient_of_variation": 0.0,
+      "total_seconds_maximum": 0.25,
+      "total_seconds_mean": 0.25,
+      "total_seconds_median": 0.25,
+      "total_seconds_minimum": 0.25,
+      "total_seconds_standard_deviation": 0.0
+    }
+  ],
+  "tool_version": "0.1.0",
+  "workload_identity_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+}

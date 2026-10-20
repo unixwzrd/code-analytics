@@ -1,0 +1,5 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+}

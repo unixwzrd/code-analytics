@@ -1,0 +1,25 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+  "contract-130507ce8f169648f461" [label="package.contracts:Job\\nboundaries: 1\\nmembers: 2\\nschema versions: 0"];
+  "contract-32be8289d537a0c77321" [label="package.contracts:ArchivedJob\\nboundaries: 5\\nmembers: 2\\nschema versions: 0"];
+  "contract-340527cbdacaabcd3006" [label="package.contracts:Request\\nboundaries: 2\\nmembers: 3\\nschema versions: 0"];
+  "contract-a0e59398dcc4f370b0b4" [label="package.contracts:Response\\nboundaries: 13\\nmembers: 4\\nschema versions: 1"];
+  "subject-05bde8340d7473739b70" [label="package.base:ContractBase"];
+  "subject-16583fd9c1ccd9ee70df" [label="package.usage:serialize_response:parameter:response:package.contracts.Response"];
+  "subject-1b5c73513b4502131c12" [label="package.base:PayloadBase"];
+  "subject-2fad685b8aa7128e712b" [label="package.contracts:Request"];
+  "subject-3e514ae88eaafdec2f8d" [label="package.contracts:make_response:call@29:11"];
+  "subject-829b9c0e4de40ec5f486" [label="package.contracts:make_response:return:package.contracts.Response"];
+  "subject-bbe4440f9272f62ff9f1" [label="package.base:RecordBase"];
+  "subject-bcadd34c53772a0bbf41" [label="package.contracts:Job"];
+  "subject-c1507084ae22abf74b31" [label="package.contracts:Response"];
+  "subject-ee5b5fec6bf3b2fe6564" [label="package.contracts:ArchivedJob"];
+  "contract-a0e59398dcc4f370b0b4" -> "subject-829b9c0e4de40ec5f486" [label="producer: module-local", style="solid"];
+  "contract-130507ce8f169648f461" -> "subject-bcadd34c53772a0bbf41" [label="definition: module-local", style="solid"];
+  "contract-a0e59398dcc4f370b0b4" -> "subject-3e514ae88eaafdec2f8d" [label="producer: module-local", style="solid"];
+  "contract-32be8289d537a0c77321" -> "subject-ee5b5fec6bf3b2fe6564" [label="definition: module-local", style="solid"];
+  "contract-340527cbdacaabcd3006" -> "subject-2fad685b8aa7128e712b" [label="definition: module-local", style="solid"];
+  "contract-a0e59398dcc4f370b0b4" -> "subject-16583fd9c1ccd9ee70df" [label="consumer: cross-subsystem-internal", style="solid"];
+}

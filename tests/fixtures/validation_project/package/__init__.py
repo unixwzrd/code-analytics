@@ -1,0 +1,1 @@
+"""Synthetic validation-analysis package."""

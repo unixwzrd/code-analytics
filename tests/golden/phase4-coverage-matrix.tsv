@@ -1,0 +1,2 @@
+row-id	column-id	covered-lines	missing-arcs	missing-lines	evidence-ids
+subject-2aa6d1c4933e6304a71b	tests.test_module.test_calculate	2	0	0	coverage-observation-ff8a593cbcad7410f0d6

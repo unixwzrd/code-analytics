@@ -1,0 +1,10 @@
+contract	contract-id	contract-kind	module	member-count	producer-default-count	consumer-fallback-count	boundary-count	boundary-classes	directions	serialization-formats	schema-versions	unresolved-behavior	evidence-path	evidence-line
+package.base:RecordBase	contract-a5e15b5e42351683a5e6	dataclass	package.base	1	0	0	1	module-local	definition				package/base.py	16
+package.contracts:ArchivedJob	contract-32be8289d537a0c77321	dataclass	package.contracts	2	0	0	5	cross-subsystem-internal, module-local	consumer, definition, producer	mapping			package/contracts.py	24
+package.contracts:Job	contract-130507ce8f169648f461	dataclass	package.contracts	2	1	0	1	module-local	definition				package/contracts.py	8
+package.functional:Point	contract-d7d1079034c7decac849	named-tuple	package.functional	2	0	0	3	module-local	consumer, definition	mapping			package/functional.py	5
+package.base:ContractBase	contract-8bc30f46983e9029ce15	pydantic-model	package.base	1	0	0	1	module-local	definition				package/base.py	7
+package.contracts:Response	contract-a0e59398dcc4f370b0b4	pydantic-model	package.contracts	4	2	0	13	cross-subsystem-internal, module-local, test-qualification-evidence	consumer, definition, producer	json, mapping	v1		package/contracts.py	18
+package.base:PayloadBase	contract-05bc3b7204bd1a8765e6	typed-dict	package.base	1	0	0	1	module-local	definition				package/base.py	11
+package.contracts:Request	contract-340527cbdacaabcd3006	typed-dict	package.contracts	3	0	0	2	cross-subsystem-internal, module-local	consumer, definition				package/contracts.py	13
+package.functional:LoosePayload	contract-bd776b8b56af5bfe7b9a	typed-dict	package.functional	2	0	0	1	module-local	definition				package/functional.py	6

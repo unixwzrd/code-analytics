@@ -1,0 +1,726 @@
+{
+  "assets": [
+    {
+      "name": "cli-reference.html",
+      "sha256": "bfa92a81ad86dea914e0d9cbbe18e9ddf58a0725319e08b7e599807a34f54d69"
+    },
+    {
+      "name": "examples.html",
+      "sha256": "d94ff143c4da9c09ab16f1bed7a29c611854208d3989574eef72db54acd187cf"
+    },
+    {
+      "name": "getting-started.html",
+      "sha256": "1754a46227ceaf51087ae26be1a778ee4a76e699c9d3746ba52d5dd6301c6ceb"
+    },
+    {
+      "name": "reports.html",
+      "sha256": "bf562b42a69184cd11d21c62747f2d0a3bb473381946ddada1fd02e683eaa3c1"
+    },
+    {
+      "name": "styles.css",
+      "sha256": "1db255b648af85b2e1b822f8889b27593546071312225ebefafbacc7f6d9f3a5"
+    },
+    {
+      "name": "user-guide.html",
+      "sha256": "1f667676d328a8752c1c23db071518be12c6fccdef362109dd9e2a6fcd8d7791"
+    }
+  ],
+  "configuration": "commonmark;html=false;tables=true;highlight=false;links=closed-v1",
+  "documents": [
+    {
+      "category": "Start here",
+      "document_id": "getting-started",
+      "headings": [
+        {
+          "anchor": "getting-started",
+          "level": 1,
+          "title": "Getting started"
+        },
+        {
+          "anchor": "installation",
+          "level": 2,
+          "title": "Installation"
+        },
+        {
+          "anchor": "everyday-commands",
+          "level": 2,
+          "title": "Everyday commands"
+        }
+      ],
+      "title": "Getting started"
+    },
+    {
+      "category": "User guide",
+      "document_id": "user-guide",
+      "headings": [
+        {
+          "anchor": "web-and-terminal-usage",
+          "level": 1,
+          "title": "Web and terminal usage"
+        },
+        {
+          "anchor": "choose-a-workflow",
+          "level": 2,
+          "title": "Choose a workflow"
+        },
+        {
+          "anchor": "your-first-investigation",
+          "level": 3,
+          "title": "Your first investigation"
+        },
+        {
+          "anchor": "evidence-readiness",
+          "level": 3,
+          "title": "Evidence readiness"
+        },
+        {
+          "anchor": "review-findings",
+          "level": 2,
+          "title": "Review findings"
+        },
+        {
+          "anchor": "understand-state-and-effects",
+          "level": 2,
+          "title": "Understand state and effects"
+        },
+        {
+          "anchor": "contracts-and-dictionary-shapes",
+          "level": 2,
+          "title": "Contracts and dictionary shapes"
+        },
+        {
+          "anchor": "inspect-clones-and-commonality",
+          "level": 2,
+          "title": "Inspect clones and commonality"
+        },
+        {
+          "anchor": "understand-test-impact",
+          "level": 2,
+          "title": "Understand test impact"
+        },
+        {
+          "anchor": "review-refactoring-candidates",
+          "level": 2,
+          "title": "Review refactoring candidates"
+        },
+        {
+          "anchor": "compare-saved-runs",
+          "level": 2,
+          "title": "Compare saved runs"
+        },
+        {
+          "anchor": "check-evidence-health",
+          "level": 2,
+          "title": "Check evidence health"
+        },
+        {
+          "anchor": "recover-storage-with-today-s-tools",
+          "level": 3,
+          "title": "Recover storage with today's tools"
+        },
+        {
+          "anchor": "code-browsing-and-session-draft-editing",
+          "level": 3,
+          "title": "Code browsing and session draft editing"
+        },
+        {
+          "anchor": "shared-localops-controls",
+          "level": 3,
+          "title": "Shared LocalOps controls"
+        },
+        {
+          "anchor": "access-from-another-machine",
+          "level": 3,
+          "title": "Access from another machine"
+        },
+        {
+          "anchor": "read-and-navigate-a-graph",
+          "level": 3,
+          "title": "Read and navigate a graph"
+        },
+        {
+          "anchor": "focus-subject-level-finding-totals",
+          "level": 3,
+          "title": "Focus subject-level finding totals"
+        },
+        {
+          "anchor": "inspect-recorded-callee-relationships",
+          "level": 3,
+          "title": "Inspect recorded callee relationships"
+        },
+        {
+          "anchor": "inspect-individual-call-sites",
+          "level": 3,
+          "title": "Inspect individual call sites"
+        },
+        {
+          "anchor": "focus-the-candidate-worklist",
+          "level": 3,
+          "title": "Focus the candidate worklist"
+        },
+        {
+          "anchor": "browse-package-and-module-hierarchy",
+          "level": 3,
+          "title": "Browse package and module hierarchy"
+        },
+        {
+          "anchor": "inspect-saved-coverage-in-the-terminal",
+          "level": 3,
+          "title": "Inspect saved coverage in the terminal"
+        },
+        {
+          "anchor": "inspect-lifecycle-roles-and-conversion-sites",
+          "level": 3,
+          "title": "Inspect lifecycle roles and conversion sites"
+        },
+        {
+          "anchor": "inspect-complexity-and-ownership-role-heatmaps",
+          "level": 3,
+          "title": "Inspect complexity and ownership-role heatmaps"
+        },
+        {
+          "anchor": "follow-graph-nodes-to-recorded-evidence",
+          "level": 3,
+          "title": "Follow graph nodes to recorded evidence"
+        },
+        {
+          "anchor": "inspect-prepared-static-reports-in-the-terminal",
+          "level": 3,
+          "title": "Inspect prepared static reports in the terminal"
+        },
+        {
+          "anchor": "shared-evidence-filters",
+          "level": 2,
+          "title": "Shared evidence filters"
+        },
+        {
+          "anchor": "dependency-investigation",
+          "level": 2,
+          "title": "Dependency investigation"
+        },
+        {
+          "anchor": "finding-acceptance-annotations",
+          "level": 2,
+          "title": "Finding acceptance annotations"
+        },
+        {
+          "anchor": "terminal-handoff-to-the-web-ui",
+          "level": 2,
+          "title": "Terminal handoff to the Web UI"
+        },
+        {
+          "anchor": "collection-command-planning",
+          "level": 2,
+          "title": "Collection command planning"
+        },
+        {
+          "anchor": "browser-and-viewer-preferences",
+          "level": 3,
+          "title": "Browser and viewer preferences"
+        },
+        {
+          "anchor": "choose-collection-inputs",
+          "level": 3,
+          "title": "Choose collection inputs"
+        },
+        {
+          "anchor": "run-and-monitor-a-collection",
+          "level": 3,
+          "title": "Run and monitor a collection"
+        },
+        {
+          "anchor": "indexed-terminal-browsing",
+          "level": 2,
+          "title": "Indexed terminal browsing"
+        },
+        {
+          "anchor": "terminal-collection-planning",
+          "level": 3,
+          "title": "Terminal collection planning"
+        },
+        {
+          "anchor": "preparing-a-bounded-browsing-index",
+          "level": 2,
+          "title": "Preparing a bounded browsing index"
+        },
+        {
+          "anchor": "refreshing-retained-analysis-runs",
+          "level": 2,
+          "title": "Refreshing retained analysis runs"
+        },
+        {
+          "anchor": "saved-runtime-evidence-in-the-ui",
+          "level": 2,
+          "title": "Saved runtime evidence in the UI"
+        },
+        {
+          "anchor": "read-only-source-previews",
+          "level": 2,
+          "title": "Read-only source previews"
+        },
+        {
+          "anchor": "offline-html",
+          "level": 2,
+          "title": "Offline HTML"
+        },
+        {
+          "anchor": "explore-saved-evidence",
+          "level": 2,
+          "title": "Explore saved evidence"
+        }
+      ],
+      "title": "Web and terminal usage"
+    },
+    {
+      "category": "Reference",
+      "document_id": "cli-reference",
+      "headings": [
+        {
+          "anchor": "cli-reference",
+          "level": 1,
+          "title": "CLI reference"
+        },
+        {
+          "anchor": "contents",
+          "level": 2,
+          "title": "Contents"
+        },
+        {
+          "anchor": "invocation",
+          "level": 2,
+          "title": "Invocation"
+        },
+        {
+          "anchor": "command-families",
+          "level": 2,
+          "title": "Command families"
+        },
+        {
+          "anchor": "static-analysis",
+          "level": 2,
+          "title": "Static analysis"
+        },
+        {
+          "anchor": "saved-evidence",
+          "level": 2,
+          "title": "Saved evidence"
+        },
+        {
+          "anchor": "project-workspace",
+          "level": 2,
+          "title": "Project workspace"
+        },
+        {
+          "anchor": "indexed-terminal-browsing",
+          "level": 3,
+          "title": "Indexed terminal browsing"
+        },
+        {
+          "anchor": "runtime-evidence",
+          "level": 2,
+          "title": "Runtime evidence"
+        },
+        {
+          "anchor": "configuration",
+          "level": 2,
+          "title": "Configuration"
+        },
+        {
+          "anchor": "output-streams",
+          "level": 2,
+          "title": "Output streams"
+        },
+        {
+          "anchor": "posix-errno-based-exit-statuses",
+          "level": 2,
+          "title": "POSIX errno-based exit statuses"
+        },
+        {
+          "anchor": "detailed-command-syntax",
+          "level": 2,
+          "title": "Detailed command syntax"
+        },
+        {
+          "anchor": "command-doctor",
+          "level": 3,
+          "title": "code-analysis doctor"
+        },
+        {
+          "anchor": "command-providers",
+          "level": 3,
+          "title": "code-analysis providers"
+        },
+        {
+          "anchor": "command-scan",
+          "level": 3,
+          "title": "code-analysis scan"
+        },
+        {
+          "anchor": "command-clones",
+          "level": 3,
+          "title": "code-analysis clones"
+        },
+        {
+          "anchor": "command-refactor",
+          "level": 3,
+          "title": "code-analysis refactor"
+        },
+        {
+          "anchor": "command-contracts",
+          "level": 3,
+          "title": "code-analysis contracts"
+        },
+        {
+          "anchor": "command-dict-shapes",
+          "level": 3,
+          "title": "code-analysis dict-shapes"
+        },
+        {
+          "anchor": "command-summary",
+          "level": 3,
+          "title": "code-analysis summary"
+        },
+        {
+          "anchor": "command-index",
+          "level": 3,
+          "title": "code-analysis index"
+        },
+        {
+          "anchor": "command-tui",
+          "level": 3,
+          "title": "code-analysis tui"
+        },
+        {
+          "anchor": "command-html",
+          "level": 3,
+          "title": "code-analysis html"
+        },
+        {
+          "anchor": "command-web",
+          "level": 3,
+          "title": "code-analysis web"
+        },
+        {
+          "anchor": "command-ui",
+          "level": 3,
+          "title": "code-analysis ui"
+        },
+        {
+          "anchor": "command-ui-stop",
+          "level": 3,
+          "title": "code-analysis ui-stop"
+        },
+        {
+          "anchor": "command-candidates",
+          "level": 3,
+          "title": "code-analysis candidates"
+        },
+        {
+          "anchor": "command-decisions-list",
+          "level": 3,
+          "title": "code-analysis decisions list"
+        },
+        {
+          "anchor": "command-decisions-set",
+          "level": 3,
+          "title": "code-analysis decisions set"
+        },
+        {
+          "anchor": "command-decisions-export",
+          "level": 3,
+          "title": "code-analysis decisions export"
+        },
+        {
+          "anchor": "command-decisions-import",
+          "level": 3,
+          "title": "code-analysis decisions import"
+        },
+        {
+          "anchor": "command-query",
+          "level": 3,
+          "title": "code-analysis query"
+        },
+        {
+          "anchor": "command-diff",
+          "level": 3,
+          "title": "code-analysis diff"
+        },
+        {
+          "anchor": "command-regress",
+          "level": 3,
+          "title": "code-analysis regress"
+        },
+        {
+          "anchor": "command-semantic-nominate",
+          "level": 3,
+          "title": "code-analysis semantic-nominate"
+        },
+        {
+          "anchor": "command-export",
+          "level": 3,
+          "title": "code-analysis export"
+        },
+        {
+          "anchor": "command-workspace-list",
+          "level": 3,
+          "title": "code-analysis workspace list"
+        },
+        {
+          "anchor": "command-workspace-pin",
+          "level": 3,
+          "title": "code-analysis workspace pin"
+        },
+        {
+          "anchor": "command-workspace-unpin",
+          "level": 3,
+          "title": "code-analysis workspace unpin"
+        },
+        {
+          "anchor": "command-workspace-prune",
+          "level": 3,
+          "title": "code-analysis workspace prune"
+        },
+        {
+          "anchor": "command-history",
+          "level": 3,
+          "title": "code-analysis history"
+        },
+        {
+          "anchor": "command-coverage-import",
+          "level": 3,
+          "title": "code-analysis coverage-import"
+        },
+        {
+          "anchor": "command-coverage-run",
+          "level": 3,
+          "title": "code-analysis coverage-run"
+        },
+        {
+          "anchor": "command-profile",
+          "level": 3,
+          "title": "code-analysis profile"
+        },
+        {
+          "anchor": "command-profile-report",
+          "level": 3,
+          "title": "code-analysis profile-report"
+        },
+        {
+          "anchor": "command-profile-diff",
+          "level": 3,
+          "title": "code-analysis profile-diff"
+        },
+        {
+          "anchor": "command-runtime-ingest",
+          "level": 3,
+          "title": "code-analysis runtime ingest"
+        },
+        {
+          "anchor": "command-runtime-render",
+          "level": 3,
+          "title": "code-analysis runtime render"
+        },
+        {
+          "anchor": "command-runtime-compare",
+          "level": 3,
+          "title": "code-analysis runtime compare"
+        },
+        {
+          "anchor": "command-runtime-run",
+          "level": 3,
+          "title": "code-analysis runtime run"
+        },
+        {
+          "anchor": "command-runtime-query",
+          "level": 3,
+          "title": "code-analysis runtime query"
+        }
+      ],
+      "title": "CLI reference"
+    },
+    {
+      "category": "Examples",
+      "document_id": "examples",
+      "headings": [
+        {
+          "anchor": "cli-examples-and-artifacts",
+          "level": 1,
+          "title": "CLI examples and artifacts"
+        },
+        {
+          "anchor": "check-the-environment",
+          "level": 2,
+          "title": "Check the environment"
+        },
+        {
+          "anchor": "analyze-a-project-and-open-its-saved-result",
+          "level": 2,
+          "title": "Analyze a project and open its saved result"
+        },
+        {
+          "anchor": "source-only-analysis-without-test-discovery",
+          "level": 2,
+          "title": "Source-only analysis without test discovery"
+        },
+        {
+          "anchor": "derive-useful-views-without-rescanning",
+          "level": 2,
+          "title": "Derive useful views without rescanning"
+        },
+        {
+          "anchor": "compare-two-saved-analysis-runs",
+          "level": 2,
+          "title": "Compare two saved analysis runs"
+        },
+        {
+          "anchor": "prepare-an-indexed-terminal-view",
+          "level": 2,
+          "title": "Prepare an indexed terminal view"
+        },
+        {
+          "anchor": "ingest-an-existing-profile-offline",
+          "level": 2,
+          "title": "Ingest an existing profile offline"
+        },
+        {
+          "anchor": "bind-an-external-profiler-declaration",
+          "level": 2,
+          "title": "Bind an external profiler declaration"
+        },
+        {
+          "anchor": "render-and-compare-retained-runtime-evidence",
+          "level": 2,
+          "title": "Render and compare retained runtime evidence"
+        },
+        {
+          "anchor": "preserve-status-in-automation",
+          "level": 2,
+          "title": "Preserve status in automation"
+        },
+        {
+          "anchor": "configure-an-evidenced-contract-boundary",
+          "level": 2,
+          "title": "Configure an evidenced contract boundary"
+        },
+        {
+          "anchor": "execution-is-a-separate-explicit-step",
+          "level": 2,
+          "title": "Execution is a separate, explicit step"
+        }
+      ],
+      "title": "CLI examples and artifacts"
+    },
+    {
+      "category": "Reference",
+      "document_id": "reports",
+      "headings": [
+        {
+          "anchor": "report-and-diagram-catalog",
+          "level": 1,
+          "title": "Report and diagram catalog"
+        },
+        {
+          "anchor": "synchronized-code-browser",
+          "level": 2,
+          "title": "Synchronized code browser"
+        },
+        {
+          "anchor": "design-rules",
+          "level": 2,
+          "title": "Design rules"
+        },
+        {
+          "anchor": "projection-families",
+          "level": 2,
+          "title": "Projection families"
+        },
+        {
+          "anchor": "foundation-and-architecture-views",
+          "level": 2,
+          "title": "Foundation and architecture views"
+        },
+        {
+          "anchor": "data-contract-and-data-structure-views",
+          "level": 2,
+          "title": "Data-contract and data-structure views"
+        },
+        {
+          "anchor": "refactoring-and-change-views",
+          "level": 2,
+          "title": "Refactoring and change views"
+        },
+        {
+          "anchor": "javascript-duplicate-behavior-views",
+          "level": 2,
+          "title": "JavaScript duplicate-behavior views"
+        },
+        {
+          "anchor": "runtime-and-performance-views",
+          "level": 2,
+          "title": "Runtime and performance views"
+        },
+        {
+          "anchor": "documentation-artifacts",
+          "level": 2,
+          "title": "Documentation artifacts"
+        },
+        {
+          "anchor": "recommended-report-bundles",
+          "level": 2,
+          "title": "Recommended report bundles"
+        },
+        {
+          "anchor": "quick-architecture-review",
+          "level": 3,
+          "title": "Quick architecture review"
+        },
+        {
+          "anchor": "data-contract-review",
+          "level": 3,
+          "title": "Data-contract review"
+        },
+        {
+          "anchor": "refactoring-review-packet",
+          "level": 3,
+          "title": "Refactoring review packet"
+        },
+        {
+          "anchor": "documentation-bundle",
+          "level": 3,
+          "title": "Documentation bundle"
+        },
+        {
+          "anchor": "delivery-order",
+          "level": 2,
+          "title": "Delivery order"
+        }
+      ],
+      "title": "Report and diagram catalog"
+    }
+  ],
+  "generator_sha256": "b510a73cccec1a0072e416fc908af0cc0ae313521282d38833f4b0594c112540",
+  "renderer": "markdown-it-py==4.0.0",
+  "schema_version": 1,
+  "sources": [
+    {
+      "name": "README.md",
+      "sha256": "65a5ce7c6755acff4a4cec54236ca13cb57969cebac4eb1121a2e099f98a9d5e"
+    },
+    {
+      "name": "docs/cli-examples.md",
+      "sha256": "9609a58c74423d13dccf6c5a5e4b0e66ab88e2810261f7a3ceca881db77e1085"
+    },
+    {
+      "name": "docs/cli.md",
+      "sha256": "91f2a1921d7a6842beb375eec24b9705a45875ddb6318ac28718fe79159a20fb"
+    },
+    {
+      "name": "docs/report-and-diagram-catalog.md",
+      "sha256": "ccad4cd3e14634faec1741509543a16082f1fa503ce2654eb53b1029846cf827"
+    },
+    {
+      "name": "docs/ui-guide.md",
+      "sha256": "ff0b1bc7951bd08c7881847acded0d28fb33c514864765645e8a221c2642f320"
+    }
+  ]
+}

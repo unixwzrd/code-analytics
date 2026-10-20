@@ -1,0 +1,132 @@
+# Python bytecode and native build products
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+
+# Virtual environments and local package roots
+.direnv/
+.venv/
+venv/
+ENV/
+env/
+__pypackages__/
+
+# Packaging and build output
+.eggs/
+*.egg
+*.egg-info/
+build/
+dist/
+wheelhouse/
+pip-wheel-metadata/
+MANIFEST
+
+# Tests, coverage, benchmarks, and reports
+.benchmarks/
+.coverage
+.coverage.*
+.hypothesis/
+.nox/
+.pytest_cache/
+.tox/
+coverage.xml
+htmlcov/
+pytestdebug.log
+/test-reports/
+/reports/
+/output/
+.playwright-cli/
+*.cover
+*.prof
+
+# Linters, formatters, type checkers, and analysis caches
+.code-analysis/
+.cache/
+.dmypy.json
+.mypy_cache/
+.pyre/
+.pyright/
+.pytype/
+.ruff_cache/
+dmypy.json
+
+# JavaScript and Ruby dependency trees and generated caches (not source/lockfiles)
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.parcel-cache/
+.nyc_output/
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+.turbo/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.bundle/
+**/vendor/bundle/
+.ruby-lsp/
+.byebug_history
+
+# Local process state, scratch output, databases and recovery files
+*.log
+*.log.*
+*.pid
+*.pid.lock
+*.sock
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.sqlite
+*.sqlite3
+*.db
+
+# Notebooks and documentation build output
+.ipynb_checkpoints/
+docs/_build/
+/site/
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Local environment and secret files
+.env
+.env.*
+!.env.example
+.netrc
+.pypirc
+.aws/
+.ssh/
+credentials.json
+secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.kdbx
+id_rsa*
+id_ed25519*
+
+# Operating-system metadata
+.AppleDouble
+.DS_Store
+.LSOverride
+._*
+Thumbs.db
+
+# Internal-only documents and local operator notes
+/private/**
+!/private/README.md

@@ -1,0 +1,3 @@
+[tool.code-analysis]
+source-roots = ["src"]
+test-roots = ["tests"]

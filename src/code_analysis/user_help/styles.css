@@ -1,0 +1,16 @@
+/* Compiled local user help. No external fonts, scripts or imports. */
+.help-document { color: inherit; font: inherit; line-height: 1.6; overflow-wrap: anywhere; }
+.help-document h1,.help-document h2,.help-document h3 {
+  line-height: 1.25; scroll-margin-top: 1rem;
+}
+.help-document pre {
+  padding: .8rem; overflow: auto; background: color-mix(in srgb, currentColor 7%, transparent);
+}
+.help-document code { font-family: ui-monospace, monospace; }
+.help-document table { border-collapse: collapse; display: block; overflow: auto; max-width: 100%; }
+.help-document th,.help-document td {
+  border: 1px solid currentColor; padding: .35rem .6rem; text-align: left;
+}
+.help-document th { overflow-wrap: normal; word-break: normal; }
+.help-document a { color: inherit; text-decoration: underline; }
+.help-document a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

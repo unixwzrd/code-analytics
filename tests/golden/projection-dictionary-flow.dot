@@ -1,0 +1,13 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+  "subject-5f876cd2eaccd1907c68" [label="package.producer:advance:payload"];
+  "subject-8ceae1ab6bf911f5041f" [label="package.producer:advance:return"];
+  "subject-97b3d9ce5b3a6e698725" [label="package.consumer:consume:value"];
+  "subject-aa7d2010e6571970b71b" [label="package.producer:build:return"];
+  "subject-bc2f366f4dab190ba0d8" [label="package.producer:build:payload"];
+  "subject-5f876cd2eaccd1907c68" -> "subject-8ceae1ab6bf911f5041f" [label="return: return", style="solid"];
+  "subject-bc2f366f4dab190ba0d8" -> "subject-97b3d9ce5b3a6e698725" [label="argument: argument", style="solid"];
+  "subject-bc2f366f4dab190ba0d8" -> "subject-aa7d2010e6571970b71b" [label="return: return", style="solid"];
+}

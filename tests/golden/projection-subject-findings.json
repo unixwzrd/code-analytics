@@ -1,0 +1,796 @@
+{
+  "columns": [
+    {
+      "alignment": "left",
+      "column_id": "subject-id",
+      "label": "Subject ID",
+      "position": 0,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "kind",
+      "label": "Kind",
+      "position": 1,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "module",
+      "label": "Module",
+      "position": 2,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "logical-name",
+      "label": "Logical name",
+      "position": 3,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "right",
+      "column_id": "finding-count",
+      "label": "Findings",
+      "position": 4,
+      "value_kind": "integer"
+    },
+    {
+      "alignment": "right",
+      "column_id": "errors",
+      "label": "Errors",
+      "position": 5,
+      "value_kind": "integer"
+    },
+    {
+      "alignment": "right",
+      "column_id": "warnings",
+      "label": "Warnings",
+      "position": 6,
+      "value_kind": "integer"
+    },
+    {
+      "alignment": "right",
+      "column_id": "info",
+      "label": "Info",
+      "position": 7,
+      "value_kind": "integer"
+    },
+    {
+      "alignment": "left",
+      "column_id": "category-counts",
+      "label": "Category counts",
+      "position": 8,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "left",
+      "column_id": "rule-counts",
+      "label": "Rule counts",
+      "position": 9,
+      "value_kind": "string"
+    },
+    {
+      "alignment": "right",
+      "column_id": "evidence-count",
+      "label": "Unique evidence",
+      "position": 10,
+      "value_kind": "integer"
+    },
+    {
+      "alignment": "right",
+      "column_id": "affected-proposals",
+      "label": "Affected proposals",
+      "position": 11,
+      "value_kind": "integer"
+    }
+  ],
+  "completeness": "complete",
+  "inputs": [
+    {
+      "report_schema_name": "code-analysis-report",
+      "report_schema_version": "1.0.0",
+      "report_sha256": "b8ebc53ad6856bc08ed333b41882e08d2d3baccb3a0e95968179c3032d0dccaf",
+      "role": "source",
+      "run_identity_sha256": "1eed57a4144018bdd4b4cbb40cb99c9d4e1c163f020be2145350685deb36e53b"
+    }
+  ],
+  "limitations": [
+    "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+    "Clone evidence is syntax-only; semantic equivalence and runtime behavior are unmeasured.",
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Data-structure topology is syntax-only and limited to evidenced dictionary operations and declarations.",
+    "Dictionary analysis is syntax-only and bounded; dynamic calls and keys remain unresolved.",
+    "Dictionary evidence is descriptive and does not authorize a representation change.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Feature profiles describe syntax and do not establish runtime behavior or common ownership.",
+    "Growth indicators are measurement prompts, not performance findings.",
+    "Interface evidence is static and does not transfer authorization or domain semantics.",
+    "Mutable-state and side-effect evidence is syntax-only; runtime ownership and outcomes are unmeasured.",
+    "Names and literals remain significant for token clones and are categorical in AST clones.",
+    "Operational filesystem, path, symlink, authorization, security, and runtime-state validation is excluded.",
+    "Phase 4 test-impact evidence is unavailable.",
+    "Runtime ownership, lock behavior and coverage, persistence success, cleanup effectiveness, and growth remain unmeasured.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved.",
+    "Shadowing, dynamic dispatch, cleanup effectiveness, and arbitrary receiver provenance remain unresolved.",
+    "Static graph simulation does not establish runtime behavior or authorize source changes.",
+    "Structural validation currently covers proven dictionary membership, truthiness, and coercion checks.",
+    "Validation-relative mutation timing and data-structure ownership remain unavailable.",
+    "runtime-binding-is-not-established-by-static-call-evidence",
+    "static-call-evidence-is-syntactic-and-does-not-establish-runtime-dispatch"
+  ],
+  "projection_id": "projection-6e4bd401a783af573283",
+  "projection_kind": "table",
+  "record_count": 6,
+  "rows": [
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-dc537fbe8077aaa3b39a"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.combine_a"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.combine_a:transform"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 3,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication=1, extraction-candidate=1, module-combination=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-1bd56328db5dfa959996",
+        "evidence-1f78d905c38d5bf1a000",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-430027e6cd4235c3453b",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-8ef6af1b23bba7a7545d",
+        "evidence-9713709d429c7e5a67fd",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-a30857670b19406113c8",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-c1141540d505dc9b7ac9",
+        "evidence-cbead57b996311ea766d"
+      ],
+      "row_id": "subject-dc537fbe8077aaa3b39a"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-b7e780419d3c0149f3aa"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.combine_b"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.combine_b:transform"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 3,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication=1, extraction-candidate=1, module-combination=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-1bd56328db5dfa959996",
+        "evidence-1f78d905c38d5bf1a000",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-430027e6cd4235c3453b",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-8ef6af1b23bba7a7545d",
+        "evidence-9713709d429c7e5a67fd",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-a30857670b19406113c8",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-c1141540d505dc9b7ac9",
+        "evidence-cbead57b996311ea766d"
+      ],
+      "row_id": "subject-b7e780419d3c0149f3aa"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-6e6c378abe407b0f54a7"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work:first"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 3,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication=1, extraction-candidate=1, module-combination=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-1bd56328db5dfa959996",
+        "evidence-1f78d905c38d5bf1a000",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-430027e6cd4235c3453b",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-8ef6af1b23bba7a7545d",
+        "evidence-9713709d429c7e5a67fd",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-a30857670b19406113c8",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-c1141540d505dc9b7ac9",
+        "evidence-cbead57b996311ea766d"
+      ],
+      "row_id": "subject-6e6c378abe407b0f54a7"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-7f565e090115d3911cc8"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work:second"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 3,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication=1, extraction-candidate=1, module-combination=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-1bd56328db5dfa959996",
+        "evidence-1f78d905c38d5bf1a000",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-430027e6cd4235c3453b",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-8ef6af1b23bba7a7545d",
+        "evidence-9713709d429c7e5a67fd",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-a30857670b19406113c8",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-c1141540d505dc9b7ac9",
+        "evidence-cbead57b996311ea766d"
+      ],
+      "row_id": "subject-7f565e090115d3911cc8"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-8c8c85262b5b8d5aa3c4"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.work:third"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 3,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication=1, extraction-candidate=1, module-combination=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "duplication.normalized-ast=1, extraction-candidate=1, module-combination-candidate=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 13,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 2,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-1bd56328db5dfa959996",
+        "evidence-1f78d905c38d5bf1a000",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-430027e6cd4235c3453b",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-8ef6af1b23bba7a7545d",
+        "evidence-9713709d429c7e5a67fd",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-a30857670b19406113c8",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-c1141540d505dc9b7ac9",
+        "evidence-cbead57b996311ea766d"
+      ],
+      "row_id": "subject-8c8c85262b5b8d5aa3c4"
+    },
+    {
+      "cells": [
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "subject-f7326b273e0da8dcf15e"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "symbol"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.domain_bad"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "package.domain_bad:violates_direction"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "architecture-contract=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": null,
+          "kind": "string",
+          "number_value": null,
+          "string_value": "configured-layer-direction=1"
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 1,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        },
+        {
+          "boolean_value": null,
+          "integer_value": 0,
+          "kind": "integer",
+          "number_value": null,
+          "string_value": null
+        }
+      ],
+      "evidence_ids": [
+        "evidence-5a0b4fc3c76f918148c9"
+      ],
+      "row_id": "subject-f7326b273e0da8dcf15e"
+    }
+  ],
+  "schema_name": "code-analysis-projection",
+  "schema_version": "1.0.0",
+  "selection": {
+    "after_id": null,
+    "candidate_decisions": [],
+    "candidate_exclude_patterns": [],
+    "candidate_kinds": [],
+    "candidate_module_patterns": [],
+    "candidate_states": [],
+    "collapse": "none",
+    "cross_module_only": false,
+    "depth": null,
+    "edge_kinds": [],
+    "finding_categories": [],
+    "finding_rule_ids": [],
+    "finding_severities": [],
+    "languages": [],
+    "max_edges": 250,
+    "max_nodes": 100,
+    "max_records": 500,
+    "min_shared_dimensions": 0,
+    "module_prefixes": [],
+    "prefer_existing_owner": false,
+    "production_only": false,
+    "selected_ids": []
+  },
+  "sort": [
+    {
+      "column_id": "finding-count",
+      "direction": "descending"
+    },
+    {
+      "column_id": "errors",
+      "direction": "descending"
+    },
+    {
+      "column_id": "warnings",
+      "direction": "descending"
+    },
+    {
+      "column_id": "module",
+      "direction": "ascending"
+    },
+    {
+      "column_id": "logical-name",
+      "direction": "ascending"
+    },
+    {
+      "column_id": "subject-id",
+      "direction": "ascending"
+    }
+  ],
+  "title": "Findings grouped by analysis subject",
+  "truncated": false,
+  "truncation_reason": null
+}

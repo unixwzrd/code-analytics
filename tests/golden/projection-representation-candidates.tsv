@@ -1,0 +1,3 @@
+candidate-id	subject	classification	confidence	supporting-sites	counter-sites	limitations	evidence-path	evidence-line
+candidate-625f5cd73739afbac8f4	package.producer:advance:payload	typed-dict	resolved	2	0	Resolved call flow does not establish that all producers and consumers agree.; The classification is review evidence, not a migration instruction.	package/producer.py	14
+candidate-1695c65f1f2754515a6c	package.producer:build:payload	typed-dict	resolved	4	0	Resolved call flow does not establish that all producers and consumers agree.; The classification is review evidence, not a migration instruction.	package/producer.py	6

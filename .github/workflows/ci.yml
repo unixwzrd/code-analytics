@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  base-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip wheel --no-deps . --wheel-dir wheelhouse
+      - run: python -m venv base-env
+      - run: base-env/bin/python -m pip install wheelhouse/code_analysis_suite-*.whl
+      - name: Qualify installed base package without optional providers
+        run: base-env/bin/python -m unittest discover -s tests -p test_base_install.py -v
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+      - run: gem install prism --version 1.9.0 --no-document
+      - run: python -m pip install -e '.[dev,docs,javascript,runtime,tui]'
+      - name: Verify required qualification providers
+        run: |
+          python -c 'import coverage, psutil, tree_sitter, tree_sitter_javascript'
+          ruby -rprism -e 'abort "unexpected Prism" unless Prism::VERSION == "1.9.0"'
+      - name: Reject tracked private documents
+        run: git ls-files private | awk '$0 != "private/README.md" { exit 1 }'
+      - run: black --check src tests
+      - run: ruff check src tests
+      - run: mypy src/code_analysis
+      - run: pytest
+      - run: python -m build
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+      - run: gem install prism --version 1.9.0 --no-document
+      - run: python -m pip install -e '.[dev,docs,browser,runtime,javascript,tui]'
+      - run: python -m playwright install --with-deps chromium webkit
+      - name: Run shared full UI qualification gate
+        run: python tools/test_ui.py
+      - name: Retain UI results and captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-qualification
+          path: |
+            output/ui-tests/

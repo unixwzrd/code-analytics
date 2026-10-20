@@ -1,0 +1,50 @@
+{
+  "files": {
+    "src/sample/core.py": {
+      "classes": {},
+      "contexts": {
+        "1": ["tests.test_core.test_calculate"],
+        "2": ["tests.test_core.test_calculate"],
+        "5": ["tests.test_core.test_calculate"],
+        "6": ["tests.test_core.test_calculate"]
+      },
+      "excluded_lines": [],
+      "executed_branches": [[5, 6]],
+      "executed_lines": [1, 2, 5, 6],
+      "functions": {},
+      "missing_branches": [],
+      "missing_lines": [],
+      "summary": {
+        "covered_branches": 1,
+        "covered_lines": 4,
+        "excluded_lines": 0,
+        "missing_branches": 0,
+        "missing_lines": 0,
+        "num_branches": 1,
+        "num_partial_branches": 0,
+        "num_statements": 4,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100"
+      }
+    }
+  },
+  "meta": {
+    "branch_coverage": true,
+    "format": 3,
+    "show_contexts": true,
+    "timestamp": "2026-08-24T12:00:00Z",
+    "version": "7.14.0"
+  },
+  "totals": {
+    "covered_branches": 1,
+    "covered_lines": 4,
+    "excluded_lines": 0,
+    "missing_branches": 0,
+    "missing_lines": 0,
+    "num_branches": 1,
+    "num_partial_branches": 0,
+    "num_statements": 4,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100"
+  }
+}

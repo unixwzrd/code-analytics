@@ -1,0 +1,4 @@
+[[tool.code-analysis.contract-boundaries]]
+contract-pattern = "package.store:save:payload"
+site-pattern = "json.dump"
+boundary-class = "persisted-document"

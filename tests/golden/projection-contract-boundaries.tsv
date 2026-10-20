@@ -1,0 +1,6 @@
+contract	contract-id	contract-kind	boundary-class	direction	site	site-module	confidence	serialization-formats	schema-versions	evidence-path	evidence-line
+package.base:ContractBase	contract-8bc30f46983e9029ce15	pydantic-model	module-local	definition	package.base:ContractBase	package.base	exact			package/base.py	7
+package.base:PayloadBase	contract-05bc3b7204bd1a8765e6	typed-dict	module-local	definition	package.base:PayloadBase	package.base	exact			package/base.py	11
+package.base:RecordBase	contract-a5e15b5e42351683a5e6	dataclass	module-local	definition	package.base:RecordBase	package.base	exact			package/base.py	16
+package.contracts:ArchivedJob	contract-32be8289d537a0c77321	dataclass	cross-subsystem-internal	consumer	package.usage:archive:parameter:record:package.contracts.ArchivedJob	package.usage	resolved	mapping		package/usage.py	11
+package.contracts:ArchivedJob	contract-32be8289d537a0c77321	dataclass	cross-subsystem-internal	consumer	package.usage:archive_mapping:call@24:11	package.usage	resolved	mapping		package/usage.py	24

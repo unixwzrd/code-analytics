@@ -1,0 +1,1 @@
+"""Synthetic representation-candidate package."""

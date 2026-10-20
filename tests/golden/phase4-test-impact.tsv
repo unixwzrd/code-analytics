@@ -1,0 +1,21 @@
+test	relationship	target	module	resolution	path	line
+tests.test_core:test_calculate	fixture-use	monkeypatch		unresolved	tests/test_core.py	10
+tests.conftest:client	direct-symbol	pytest:fixture	pytest	unresolved	tests/conftest.py	9
+tests.test_core:test_calculate	direct-symbol	pytest:mark.parametrize	pytest	unresolved	tests/test_core.py	9
+tests.conftest:configuration	direct-symbol	pytest:fixture	pytest	unresolved	tests/conftest.py	4
+tests.test_core:test_qualification_path	fixture-use	tests.conftest:client		resolved	tests/test_core.py	16
+tests.test_core:test_calculate	patch	sample.core:helper	sample.core	resolved	tests/test_core.py	11
+tests.test_core:test_calculate	fixture-use	value		unresolved	tests/test_core.py	10
+tests.test_core:test_calculate	direct-symbol	unittest.mock:patch	unittest.mock	unresolved	tests/test_core.py	12
+tests.test_core:test_dynamic_patch	direct-symbol	unittest.mock:patch	unittest.mock	unresolved	tests/test_core.py	21
+tests.test_core:test_calculate	fixture-use	expected		unresolved	tests/test_core.py	10
+tests.test_core:test_qualification_path	module-import	sample.core	sample.core	resolved	tests/test_core.py	16
+tests.test_core:test_calculate	fixture-use	tests.conftest:client		resolved	tests/test_core.py	10
+tests.test_core:test_calculate	patch	sample.core:helper	sample.core	resolved	tests/test_core.py	12
+tests.test_core:test_dynamic_patch	fixture-use	target_name		unresolved	tests/test_core.py	20
+tests.test_core:test_calculate	module-import	sample.core	sample.core	resolved	tests/test_core.py	10
+tests.test_core:test_dynamic_patch	module-import	sample.core	sample.core	resolved	tests/test_core.py	20
+tests.test_core:test_calculate	direct-symbol	sample.core:calculate	sample.core	resolved	tests/test_core.py	13
+tests.test_core:test_calculate	direct-symbol	pytest:mark	pytest	unresolved	tests/test_core.py	9
+tests.test_core:test_dynamic_patch	patch	target_name		unresolved	tests/test_core.py	21
+tests.conftest:client	fixture-use	tests.conftest:configuration		resolved	tests/conftest.py	10

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="146" viewBox="0 0 1200 146">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="sans-serif" font-size="13" fill="#172033">
+<text x="20" y="25">Runtime hotspots — self seconds (not cumulative or unprofiled elapsed time)</text>
+<text x="20" y="48">1 / 1 frames shown; partial; unknown timings excluded</text>
+<text x="20" y="85">unresolved/ff561f757134c8f1c31c2717:1:work</text><rect x="730" y="73" width="350.000" height="16" fill="#357abd"/><text x="1090" y="85">0.125000</text>
+</g></svg>

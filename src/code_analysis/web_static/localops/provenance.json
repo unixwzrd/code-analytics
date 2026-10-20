@@ -1,0 +1,28 @@
+{
+  "assets_sha256": {
+    "chart.js": "c3ce3ddfc1c3fb9fa9a101a6c6b10ebbb5f33a19c0a10bb3fdfe2f13a004d0cb",
+    "code-editor.js": "8268a40d5ccdf531ef33b0bc97b6cf07478f8884f53985a68e56fa8ec28d4db4",
+    "content-panel.js": "bb0650341def9839d3ce23ca529a4dde9f2b813ce36ab08abdbfeaa021030fd4",
+    "contracts.js": "679079ee5a8bcd74eba5b9180e6a675dd208f9fb97ebe726f30a523cc9607a39",
+    "data-table.js": "2cec0ea088b58ce189e22e72037db6fc07a1e6c5fc720e254b1d570c1dfc6ecb",
+    "dialogs.js": "07c36a06b29ef7ad0495f513a78f9437fc1ee58363c5dcef193303449077b767",
+    "dom.js": "3cac4ac803d8ca8b60c7ec3fb95c1f05bdfb37534fa11ab16b094838dc919403",
+    "format.js": "00258de857736c450272a861d90266502621916f43d7d3402269bbf7304add64",
+    "forms.js": "dd9acccff42c1f6fa08c67269a1927058c3e2a6d522995a60d16f868d40dcb41",
+    "index.js": "bd546a2b6de1d2b3374721398f8613c05901186c7d4d5e776a7926d89d8c484e",
+    "manifest-validation.js": "12cfdeaefb29c596502c5042b78a35102acaef557c591e9e06fc09fec072be0c",
+    "manifest.js": "269b4fe2e66abf51fff1fc9c45ea97ec6966950be7b8bd8ee54c53a76f4ccf38",
+    "navigation.js": "f6c747d55b3c86544e04c5cdce60211072aca4226d41472d6a852ee013d47ccb",
+    "primitives.js": "d5464501b954b0bc9eae8de696a781d393a9e010d988c94bd0d218ca6ead459e",
+    "result-reader.js": "818c47b2c9212131571e29a8e90c24ffcd0eac643e1f9aa58380e6f8a4ce08b0",
+    "shell.js": "4f6cc0214786cc3d43e1658a2c5b70322efc73cf8b4acaa46f25213ae8739337",
+    "styles.css": "60b7cf9b92777b753af1a1080cf84401277e47c16dcabd0a12e401d885bdb412",
+    "task-monitor.js": "d730a1aee3775a5bbe33551b5a261ca25b5ff5365712658256755e19eabf1949"
+  },
+  "license": "MIT",
+  "name": "LocalOps UI Kit",
+  "policy": "Unmodified browser assets from the reviewed wheel; changes belong upstream.",
+  "upstream_assets": "packages/web/static/",
+  "version": "0.1.5",
+  "wheel_sha256": "89800189b2c3177eefff40d4bc518c3eb0060ca68f97d375be76fb9d94f20929"
+}

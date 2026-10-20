@@ -1,0 +1,13 @@
+digraph projection {
+  graph [rankdir="LR", bgcolor="transparent", overlap="false", splines="true"];
+  node [shape="box", style="rounded,filled", fillcolor="#eef4ff", color="#315a9b", fontname="Helvetica"];
+  edge [color="#718096", fontname="Helvetica", fontsize="9"];
+  subgraph "cluster:scc-bf8f0b745324" {
+    label="Strongly connected component";
+    color="#b42318";
+    "alpha.a" [label="alpha.a\\nfan-in: 1\\nfan-out: 1\\nfindings: 1\\nline-count: 23"];
+    "alpha.b" [label="alpha.b\\nfan-in: 1\\nfan-out: 1\\nfindings: 0\\nline-count: 7"];
+  }
+  "alpha.b" -> "alpha.a" [label="runtime", style="solid"];
+  "alpha.a" -> "alpha.b" [label="runtime", style="solid"];
+}

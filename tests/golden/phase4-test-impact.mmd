@@ -1,0 +1,37 @@
+flowchart LR
+  n_38bfa663b27da6cf["sample.core:calculate"]
+  n_846e6a168bcc51b3["sample.core:helper"]
+  n_d5ddef632e865614["tests.test_core:test_qualification_path"]
+  n_f30d7ea53905826a["tests.test_core:test_calculate"]
+  n_21b1268c1df786a4["tests.test_core:test_dynamic_patch"]
+  n_1993969a39c2a93d["tests.conftest:client"]
+  n_0d4290ed5e099c43["tests.conftest:configuration"]
+  n_bdfb8c73e3522614["target_name"]
+  n_fd2ddecbb0a4b514["monkeypatch"]
+  n_04baeb41a792cbc2["sample.core"]
+  n_ef8e2fba5a1ee8e8["unittest.mock:patch"]
+  n_8ab7b93c1d128740["pytest:mark"]
+  n_24f951a062fff1e7["pytest:mark.parametrize"]
+  n_79295a634c8255a5["value"]
+  n_e3a4c49cee81b896["expected"]
+  n_4ab4d92353370bb9["pytest:fixture"]
+  n_f30d7ea53905826a -->|fixture-use: fixture-use| n_fd2ddecbb0a4b514
+  n_1993969a39c2a93d -->|direct-symbol: direct-symbol| n_4ab4d92353370bb9
+  n_f30d7ea53905826a -->|direct-symbol: direct-symbol| n_24f951a062fff1e7
+  n_0d4290ed5e099c43 -->|direct-symbol: direct-symbol| n_4ab4d92353370bb9
+  n_d5ddef632e865614 -->|fixture-use: fixture-use| n_1993969a39c2a93d
+  n_f30d7ea53905826a -->|patch: patch| n_846e6a168bcc51b3
+  n_f30d7ea53905826a -->|fixture-use: fixture-use| n_79295a634c8255a5
+  n_f30d7ea53905826a -->|direct-symbol: direct-symbol| n_ef8e2fba5a1ee8e8
+  n_21b1268c1df786a4 -->|direct-symbol: direct-symbol| n_ef8e2fba5a1ee8e8
+  n_f30d7ea53905826a -->|fixture-use: fixture-use| n_e3a4c49cee81b896
+  n_d5ddef632e865614 -->|module-import: module-import| n_04baeb41a792cbc2
+  n_f30d7ea53905826a -->|fixture-use: fixture-use| n_1993969a39c2a93d
+  n_f30d7ea53905826a -->|patch: patch| n_846e6a168bcc51b3
+  n_21b1268c1df786a4 -->|fixture-use: fixture-use| n_bdfb8c73e3522614
+  n_f30d7ea53905826a -->|module-import: module-import| n_04baeb41a792cbc2
+  n_21b1268c1df786a4 -->|module-import: module-import| n_04baeb41a792cbc2
+  n_f30d7ea53905826a -->|direct-symbol: direct-symbol| n_38bfa663b27da6cf
+  n_f30d7ea53905826a -->|direct-symbol: direct-symbol| n_8ab7b93c1d128740
+  n_21b1268c1df786a4 -->|patch: patch| n_bdfb8c73e3522614
+  n_1993969a39c2a93d -->|fixture-use: fixture-use| n_0d4290ed5e099c43

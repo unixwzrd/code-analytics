@@ -1,0 +1,1030 @@
+{
+  "abstraction_cost_estimates": [],
+  "architecture_contract_suggestions": [],
+  "architecture_estimates": [],
+  "behavior_differences": [],
+  "behavioral_events": [],
+  "behavioral_invariants": [],
+  "behavioral_ordering_edges": [],
+  "candidate_behavior_differences": [],
+  "candidate_classifications": [],
+  "candidate_observations": [],
+  "candidate_qualification_requirements": [],
+  "change_couplings": [],
+  "clone_clusters": [],
+  "clone_fragments": [],
+  "command": {
+    "arguments": [
+      ".",
+      "--strictness",
+      "normal",
+      "--only-local-imports"
+    ],
+    "name": "scan"
+  },
+  "completeness": "complete",
+  "complexity_observations": [
+    {
+      "argument_count": 1,
+      "branches": 0,
+      "cyclomatic_complexity": 1,
+      "language": "python",
+      "logical_loc": 1,
+      "nesting_depth": 0,
+      "physical_loc": 2,
+      "raises": 0,
+      "returns": 1,
+      "weighted_score": 1
+    }
+  ],
+  "configuration": {
+    "digest_sha256": "26c15f298f27f85d4fc07ef5cbcbd766c16f114095cf323d72cfd107ae8dcd82",
+    "max_findings": null,
+    "only_local_imports": true,
+    "strictness": "normal",
+    "symbol_filter": null,
+    "thresholds": {
+      "arguments": 7,
+      "branches": 12,
+      "function_loc": 75,
+      "nesting": 4,
+      "weighted_score": 15
+    }
+  },
+  "contracts": [],
+  "coverage_artifacts": [
+    {
+      "artifact_sha256": "40ebe50ce7c36e0d361902fe5861c1e313d98fe9b7f6dd8d59b96ac3317b9305",
+      "binding": "bound",
+      "completeness": "complete",
+      "contexts": [
+        "tests.test_module.test_calculate"
+      ],
+      "coverage_id": "coverage-4ec45805941b934b50fd",
+      "limitations": [],
+      "source_report_sha256": "cdd7206d556ca325f40c9e1313d4b563d4399fedf0fed509e48f41be6005514e",
+      "workload_identity_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ],
+  "coverage_files": [
+    {
+      "arcs": [
+        [
+          1,
+          2
+        ]
+      ],
+      "binding": "bound",
+      "contexts": [
+        "tests.test_module.test_calculate"
+      ],
+      "coverage_file_id": "coverage-file-72f30743e5d6c251a0b3",
+      "coverage_id": "coverage-4ec45805941b934b50fd",
+      "covered_lines": [
+        1,
+        2
+      ],
+      "limitations": [],
+      "missing_arcs": [],
+      "missing_lines": [],
+      "path": "module.py",
+      "source_sha256": "84534baf74f74ae14c6a45baaad5b4fdefcc9a18aa6af5c2f516eda9cb4b8349"
+    }
+  ],
+  "coverage_observations": [
+    {
+      "contexts": [
+        "tests.test_module.test_calculate"
+      ],
+      "coverage_id": "coverage-4ec45805941b934b50fd",
+      "coverage_observation_id": "coverage-observation-ff8a593cbcad7410f0d6",
+      "covered_lines": [
+        1,
+        2
+      ],
+      "missing_arcs": [],
+      "missing_lines": [],
+      "subject_id": "subject-2aa6d1c4933e6304a71b"
+    }
+  ],
+  "cycles": [],
+  "data_structures": [],
+  "diagnostics": [],
+  "dictionary_observations": [],
+  "dictionary_shapes": [],
+  "duplicate_functions": [],
+  "environment": {
+    "executable_identity": "python",
+    "python_implementation": "cpython",
+    "python_version": "3.12.13"
+  },
+  "evidence_catalog": [
+    {
+      "binding_id": "binding-55aab5936da9ab13070f",
+      "confidence": "exact",
+      "end_column": 20,
+      "end_line": 2,
+      "evidence_id": "evidence-0fa1834ea4f1dc462fd0",
+      "observation": "transparent function feature profile",
+      "provider": "native-commonality",
+      "start_column": 0,
+      "start_line": 1
+    },
+    {
+      "binding_id": "binding-55aab5936da9ab13070f",
+      "confidence": "exact",
+      "end_column": 20,
+      "end_line": 2,
+      "evidence_id": "evidence-c964476ef180acfd5736",
+      "observation": "function declaration",
+      "provider": "native-commonality",
+      "start_column": 0,
+      "start_line": 1
+    }
+  ],
+  "finding_suppression_evaluation": null,
+  "findings": [],
+  "flow_edges": [],
+  "function_commonalities": [],
+  "function_profiles": [
+    {
+      "attributes_globals": [],
+      "callees": [],
+      "contract_ids": [],
+      "control_flow": [],
+      "dictionary_schema_operations": [],
+      "evidence_ids": [
+        "evidence-0fa1834ea4f1dc462fd0"
+      ],
+      "exceptions": [],
+      "language": "python",
+      "limitations": [
+        "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+        "Feature profiles describe syntax and do not establish runtime behavior or common ownership."
+      ],
+      "profile_id": "function-profile-b4cb5a2f58a89ffe2079",
+      "side_effects": [],
+      "signature_shapes": [
+        "arity:1",
+        "parameter:unannotated",
+        "return:unannotated"
+      ],
+      "subject_id": "subject-2aa6d1c4933e6304a71b",
+      "unresolved_call_count": 0,
+      "weak_semantic_signals": [
+        "name:calculate"
+      ]
+    }
+  ],
+  "generation_changes": [],
+  "git_commits": [],
+  "git_path_changes": [],
+  "git_repository": null,
+  "git_symbol_changes": [],
+  "import_edges": [],
+  "interface_correlations": [],
+  "interface_endpoints": [],
+  "interface_mismatches": [],
+  "interface_payload_variants": [],
+  "language_frontends": [
+    {
+      "assembly_failures": [],
+      "capabilities": [
+        {
+          "capability": "parsing-provenance",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "source-spans",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "module-identity",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "symbols",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "dependencies",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "calls",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "control-flow",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "data-flow",
+          "limitations": [
+            "Dynamic JavaScript data flow remains unresolved."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "exceptions",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "side-effects",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "contracts-shapes",
+          "limitations": [
+            "Only syntax-evidenced JSON and object-shape operations are retained."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "clone-normalization",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "test-discovery",
+          "limitations": [
+            "Only generic test-module imports and direct references are retained."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "coverage-binding",
+          "limitations": [
+            "JavaScript runtime coverage binding is not implemented."
+          ],
+          "state": "unsupported"
+        }
+      ],
+      "complete": 0,
+      "diagnostic_codes": [],
+      "discovered": 0,
+      "failed": 0,
+      "frontend_id": "javascript-tree-sitter",
+      "language": "javascript",
+      "partial": 0,
+      "state": "complete",
+      "unavailable": 0
+    },
+    {
+      "assembly_failures": [],
+      "capabilities": [
+        {
+          "capability": "parsing-provenance",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "source-spans",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "module-identity",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "symbols",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "dependencies",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "calls",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "control-flow",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "data-flow",
+          "limitations": [
+            "Bounded data flow is completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "exceptions",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "side-effects",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "contracts-shapes",
+          "limitations": [
+            "Contracts and dictionary shapes are completed by Python-owned analyzers."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "clone-normalization",
+          "limitations": [],
+          "state": "supported"
+        },
+        {
+          "capability": "test-discovery",
+          "limitations": [
+            "Framework discovery and dynamic tests remain unresolved."
+          ],
+          "state": "partial"
+        },
+        {
+          "capability": "coverage-binding",
+          "limitations": [
+            "Coverage binding requires separately imported or executed coverage evidence."
+          ],
+          "state": "partial"
+        }
+      ],
+      "complete": 1,
+      "diagnostic_codes": [],
+      "discovered": 1,
+      "failed": 0,
+      "frontend_id": "python-ast",
+      "language": "python",
+      "partial": 0,
+      "state": "complete",
+      "unavailable": 0
+    }
+  ],
+  "limitations": [
+    "Call resolution is bounded to direct local and imported syntax; dynamic dispatch is unresolved.",
+    "Clone evidence is syntax-only; semantic equivalence and runtime behavior are unmeasured.",
+    "Complexity and orchestration classifications are threshold heuristics, not refactor approval.",
+    "Contract inventory is syntax-only and does not resolve producer/consumer call flow.",
+    "Coverage proves only that the supplied workload traversed a line or branch.",
+    "Data-structure topology is syntax-only and limited to evidenced dictionary operations and declarations.",
+    "Dictionary analysis is syntax-only and bounded; dynamic calls and keys remain unresolved.",
+    "Dictionary evidence is descriptive and does not authorize a representation change.",
+    "Dynamic imports, reflection, generated modules, and runtime-only edges are unresolved.",
+    "External graph providers are inventoried separately and are not reconciled in Phase 1 scans.",
+    "Feature profiles describe syntax and do not establish runtime behavior or common ownership.",
+    "Growth indicators are measurement prompts, not performance findings.",
+    "Interface evidence is static and does not transfer authorization or domain semantics.",
+    "Mutable-state and side-effect evidence is syntax-only; runtime ownership and outcomes are unmeasured.",
+    "Names and literals remain significant for token clones and are categorical in AST clones.",
+    "Operational filesystem, path, symlink, authorization, security, and runtime-state validation is excluded.",
+    "Phase 4 test-impact evidence is unavailable.",
+    "Runtime ownership, lock behavior and coverage, persistence success, cleanup effectiveness, and growth remain unmeasured.",
+    "Serialization evidence resolves exact declaration kinds, local annotations, and direct straight-line aliases; control-flow aliases and runtime types remain unresolved.",
+    "Shadowing, dynamic dispatch, cleanup effectiveness, and arbitrary receiver provenance remain unresolved.",
+    "Static graph simulation does not establish runtime behavior or authorize source changes.",
+    "Structural validation currently covers proven dictionary membership, truthiness, and coercion checks.",
+    "Threads, subprocesses, native extensions, and unobserved code may be absent.",
+    "Validation-relative mutation timing and data-structure ownership remain unavailable."
+  ],
+  "module_exports": [],
+  "modules": [
+    {
+      "fan_in": 0,
+      "fan_out": 0,
+      "language": "python",
+      "line_count": 2,
+      "module_system": null,
+      "name": "module",
+      "nonblank_line_count": 2,
+      "parse_state": "complete",
+      "path": "module.py",
+      "source_sha256": "84534baf74f74ae14c6a45baaad5b4fdefcc9a18aa6af5c2f516eda9cb4b8349",
+      "symbols": [
+        {
+          "async_": false,
+          "complexity": {
+            "argument_count": 1,
+            "branches": 0,
+            "cyclomatic_complexity": 1,
+            "language": "python",
+            "logical_loc": 1,
+            "nesting_depth": 0,
+            "physical_loc": 2,
+            "raises": 0,
+            "returns": 1,
+            "weighted_score": 1
+          },
+          "decorators": [],
+          "generator": false,
+          "kind": "function",
+          "language": "python",
+          "name": "calculate",
+          "parameters": [
+            "value"
+          ],
+          "qualified_name": "calculate",
+          "returns": null,
+          "span": {
+            "end_column": 20,
+            "end_line": 2,
+            "language": "python",
+            "path": "module.py",
+            "start_column": 0,
+            "start_line": 1
+          }
+        }
+      ],
+      "syntax_mode": null
+    }
+  ],
+  "owner_alternatives": [],
+  "parser_provenance": [],
+  "providers": [
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "module-index",
+        "symbol-index",
+        "complexity",
+        "import-graph"
+      ],
+      "provider_id": "native-ast",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "contract-declaration-inventory",
+        "contract-direct-aliases",
+        "contract-serialization-sites",
+        "contract-use-sites",
+        "normalized-type-expressions",
+        "schema-version-declarations"
+      ],
+      "provider_id": "native-contracts",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "dictionary-operations",
+        "dictionary-shapes",
+        "dictionary-flow",
+        "dictionary-lifecycle-transitions"
+      ],
+      "provider_id": "native-dictionary",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "structural-dictionary-validation"
+      ],
+      "provider_id": "native-validation",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "dictionary-topology",
+        "dictionary-lifecycle"
+      ],
+      "provider_id": "native-structures",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [],
+      "provider_id": "native-clones",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "mutable-state-resources",
+        "provenance-resolved-side-effects"
+      ],
+      "provider_id": "native-state-effects",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "function-feature-profiles",
+        "inverted-feature-candidates"
+      ],
+      "provider_id": "native-commonality",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": null,
+      "exit_code": null,
+      "observations": [
+        "boundary-classification",
+        "producer-consumer-correlation",
+        "payload-variant-comparison"
+      ],
+      "provider_id": "native-interfaces",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "0.1.0"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "python",
+      "exit_code": null,
+      "observations": [
+        "architecture-contract-suggestions",
+        "bounded-refactor-proposals",
+        "responsibility-clusters",
+        "simulated-module-graphs"
+      ],
+      "provider_id": "native-cohesion",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "3.12.13"
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": null,
+      "exit_code": null,
+      "observations": [],
+      "provider_id": "native-test-impact",
+      "state": "unavailable",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": null
+    },
+    {
+      "completeness": "complete",
+      "diagnostics": [],
+      "duration_ms": 0,
+      "executable": "coverage.py",
+      "exit_code": null,
+      "observations": [
+        "branches",
+        "contexts",
+        "lines",
+        "source-hash-binding"
+      ],
+      "provider_id": "coverage-import",
+      "state": "success",
+      "stderr_sha256": null,
+      "stdout_sha256": null,
+      "version": "7.14.0"
+    }
+  ],
+  "refactor_candidates": [],
+  "refactor_proposals": [],
+  "responsibility_clusters": [],
+  "run_identity_sha256": "1f265ef032b0b26d80261adfbf38ee5d66f4f52f047ac034b6154c0ab9d36472",
+  "schema_name": "code-analysis-report",
+  "schema_version": "1.0.0",
+  "section_coverage": [
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "r1-static-analysis",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "static-call-occurrences",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "contracts",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "interfaces",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "dictionary-shapes",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "validation",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "data-structures",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "clones",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "function-commonality",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "state-side-effects",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": true,
+      "section": "cohesion-refactoring",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "test-impact",
+      "skipped": 0,
+      "state": "unavailable",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 1,
+      "required": true,
+      "section": "coverage",
+      "skipped": 0,
+      "state": "complete",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "git-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    },
+    {
+      "diagnostic_codes": [],
+      "failed": 0,
+      "languages": [
+        "python"
+      ],
+      "parsed": 0,
+      "required": false,
+      "section": "generation-history",
+      "skipped": 0,
+      "state": "disabled",
+      "truncated": 0,
+      "unresolved": 0
+    }
+  ],
+  "side_effects": [],
+  "signal_quality": {
+    "commonality_admission": {
+      "admitted_pairs": 0,
+      "candidate_bound_omissions": 0,
+      "candidate_bound_omissions_exact": true,
+      "clone_admissions": 0,
+      "coverage_rejections": 0,
+      "dimension_rejections": 0,
+      "index_dimension_rejections": 0,
+      "index_dimension_rejections_exact": true,
+      "postings_considered": 0,
+      "prevalent_feature_examples": [],
+      "prevalent_features_suppressed": 0,
+      "profile_count": 1,
+      "rejection_examples": [],
+      "unique_candidates": 0
+    },
+    "proposal_admission": {
+      "admitted_candidates": 0,
+      "call_only_rejections": 0,
+      "example_limit": 25,
+      "proposal_bound_omissions": 0,
+      "proposal_candidates_considered": 0,
+      "rejection_examples": [],
+      "responsibility_clusters_considered": 0,
+      "retained_proposals": 0,
+      "too_broad_rejections": 0
+    },
+    "proposal_decisions": {
+      "blocked_proposals": 0,
+      "failed_gates": 0,
+      "ready_for_maintainer_review_proposals": 0,
+      "reviewable_incomplete_proposals": 0,
+      "total_proposals": 0,
+      "unresolved_gates": 0
+    }
+  },
+  "source_bindings": [
+    {
+      "binding_id": "binding-55aab5936da9ab13070f",
+      "language": "python",
+      "logical_path": "module.py",
+      "source_sha256": "84534baf74f74ae14c6a45baaad5b4fdefcc9a18aa6af5c2f516eda9cb4b8349"
+    }
+  ],
+  "source_files": [
+    {
+      "language": "python",
+      "logical_path": "module.py",
+      "logical_root": ".",
+      "module_name": "module",
+      "module_system": null,
+      "nonblank_loc": 2,
+      "parse_state": "complete",
+      "physical_loc": 2,
+      "source_file_id": "source-file-d3c95d5690abee03dbb5",
+      "source_sha256": "84534baf74f74ae14c6a45baaad5b4fdefcc9a18aa6af5c2f516eda9cb4b8349",
+      "syntax_mode": null
+    }
+  ],
+  "state_resources": [],
+  "static_call_coverage": [],
+  "static_call_occurrences": [],
+  "strongly_connected_components": [],
+  "subjects": [
+    {
+      "evidence_ids": [
+        "evidence-c964476ef180acfd5736"
+      ],
+      "kind": "symbol",
+      "language": "python",
+      "logical_name": "module:calculate",
+      "module": "module",
+      "subject_id": "subject-2aa6d1c4933e6304a71b"
+    }
+  ],
+  "summary": {
+    "abstraction_cost_estimates": 0,
+    "architecture_contract_suggestions": 0,
+    "architecture_estimates": 0,
+    "behavior_differences": 0,
+    "behavioral_events": 0,
+    "behavioral_invariants": 0,
+    "behavioral_ordering_edges": 0,
+    "candidate_behavior_differences": 0,
+    "candidate_classifications": 0,
+    "candidate_observations": 0,
+    "candidate_qualification_requirements": 0,
+    "change_couplings": 0,
+    "classes": 0,
+    "clone_clusters": 0,
+    "clone_fragments": 0,
+    "contracts": 0,
+    "coverage_artifacts": 1,
+    "coverage_files": 1,
+    "coverage_observations": 1,
+    "cycles": 0,
+    "data_structures": 0,
+    "dictionary_observations": 0,
+    "dictionary_shapes": 0,
+    "discovered_files": 1,
+    "duplicate_functions": 0,
+    "failed_files": 0,
+    "findings": 0,
+    "flow_edges": 0,
+    "function_commonalities": 0,
+    "function_profiles": 1,
+    "functions": 1,
+    "generation_changes": 0,
+    "git_commits": 0,
+    "git_path_changes": 0,
+    "git_symbol_changes": 0,
+    "import_edges": 0,
+    "interface_correlations": 0,
+    "interface_endpoints": 0,
+    "interface_mismatches": 0,
+    "interface_payload_variants": 0,
+    "methods": 0,
+    "module_exports": 0,
+    "modules": 1,
+    "owner_alternatives": 0,
+    "parsed_files": 1,
+    "refactor_candidates": 0,
+    "refactor_proposals": 0,
+    "responsibility_clusters": 0,
+    "side_effects": 0,
+    "source_files": 1,
+    "state_resources": 0,
+    "static_call_occurrences": 0,
+    "static_calls_observed": 0,
+    "static_calls_omitted": 0,
+    "strongly_connected_components": 0,
+    "subjects": 1,
+    "test_cases": 0,
+    "test_fixtures": 0,
+    "test_modules": 0,
+    "test_relationships": 0,
+    "unresolved_edges": 0,
+    "validation_patterns": 0
+  },
+  "target": {
+    "languages": [
+      "python"
+    ],
+    "logical_root": ".",
+    "source_roots": [
+      "."
+    ],
+    "target_kind": "directory"
+  },
+  "test_cases": [],
+  "test_fixtures": [],
+  "test_modules": [],
+  "test_relationships": [],
+  "tool_version": "0.1.0",
+  "unresolved_edges": [],
+  "validation_patterns": []
+}
