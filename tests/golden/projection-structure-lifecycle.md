@@ -2,7 +2,7 @@
 
 - Projection: `code-analysis-projection@1.0.0`
 - Source: `code-analysis-report@1.0.0`
-- Source SHA-256: `188cd5e256f7ad47ce43dfaa73545446f3b5232b8a052e996b6821424c1f16fd`
+- Source SHA-256: `559d3bbb81a71d65625997ea87d3331608e776a4a2c95aba846c5e104ff5ef74`
 - Completeness: `complete`
 - Records: 2
 - Truncated: `false`

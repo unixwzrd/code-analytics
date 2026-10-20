@@ -542,7 +542,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b1"
+      "version": "0.2.0b2"
     },
     {
       "completeness": "complete",
@@ -559,7 +559,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b1"
+      "version": "0.2.0b2"
     },
     {
       "completeness": "complete",
@@ -976,7 +976,7 @@
   "test_fixtures": [],
   "test_modules": [],
   "test_relationships": [],
-  "tool_version": "0.2.0b1",
+  "tool_version": "0.2.0b2",
   "unresolved_edges": [],
   "validation_patterns": []
 }

@@ -10,7 +10,7 @@
     },
     {
       "name": "getting-started.html",
-      "sha256": "1754a46227ceaf51087ae26be1a778ee4a76e699c9d3746ba52d5dd6301c6ceb"
+      "sha256": "7298cbc99948fcb2bed61023c5194fbb351d86211998913002d80ea510fd7605"
     },
     {
       "name": "reports.html",
@@ -22,7 +22,7 @@
     },
     {
       "name": "user-guide.html",
-      "sha256": "1f667676d328a8752c1c23db071518be12c6fccdef362109dd9e2a6fcd8d7791"
+      "sha256": "418d7dc3f5b090154bf08c2b3823c4692fec1f44027445dd29667ecb38633cc0"
     }
   ],
   "configuration": "commonmark;html=false;tables=true;highlight=false;links=closed-v1",
@@ -704,7 +704,7 @@
   "sources": [
     {
       "name": "README.md",
-      "sha256": "0c0212ac0e126d7db37b0451f31f9057033e4761e31c61a2bc962dbfc0a89cfd"
+      "sha256": "7d935e35edae3db7f010b75928ff7380c133daa341760e9d1799edeaced46224"
     },
     {
       "name": "docs/cli-examples.md",
@@ -720,7 +720,7 @@
     },
     {
       "name": "docs/ui-guide.md",
-      "sha256": "ff0b1bc7951bd08c7881847acded0d28fb33c514864765645e8a221c2642f320"
+      "sha256": "9d4597293c1b964641841d0414c2faf3f6db7d463d267d583e8e8277639841f1"
     }
   ]
 }

@@ -344,6 +344,16 @@ dialog .panel { margin-bottom:12px; }
 .collection-preview textarea { display:block; width:100%; max-width:100%; color:var(--text); background:var(--panel); border:1px solid var(--line); padding:8px; }
 .collection-preview details { max-height:25vh; overflow:auto; }
 .collection-preview summary { cursor:pointer; color:var(--muted); font-size:.85rem; }
+.code-browser-project-access { margin-block:12px; }
+.code-browser-project-access h2 { margin-top:0; }
+.code-browser-project-documents { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.code-browser-project-documents p { flex-basis:100%; }
+.project-source-form { display:grid; gap:12px; max-width:48rem; }
+.project-source-form label:not(.project-source-consent) { display:grid; gap:6px; }
+.project-source-form input[type="text"] { width:100%; max-width:100%; }
+.project-source-consent { display:flex; gap:8px; align-items:flex-start; }
+.project-document-text { white-space:pre-wrap; overflow-wrap:anywhere; max-width:100%; }
+#project-document-reader nav { display:flex; flex-wrap:wrap; gap:8px; }
 @media (max-width:720px) {
   .heading>.detail-button { display:inline-block; margin-top:12px; }
   .collection-meta { grid-template-columns:1fr; }

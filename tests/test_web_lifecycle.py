@@ -79,6 +79,15 @@ def test_strict_shutdown_and_launch_identities(tmp_path):
         )
 
 
+def test_upgrade_does_not_reuse_previous_version_server(tmp_path, monkeypatch):
+    before = options(tmp_path)
+    monkeypatch.setattr("code_analysis.web_launcher.__version__", "different-test-build")
+    after = options(tmp_path)
+    assert before.interpreter == after.interpreter
+    assert before.implementation_root == after.implementation_root
+    assert before.session_id != after.session_id
+
+
 def test_private_records_reject_symlinks_permissions_and_corruption(private_state):
     root = state_directory()
     target = root / "target"

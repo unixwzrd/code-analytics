@@ -80,6 +80,8 @@ Bundled offline help is compiled from curated public documentation and validated
 
 Source preview requires an explicitly authorized source root, a recorded source identity and a matching full-file hash. Confined readers reject path escapes, symlinks and nonregular files and enforce byte/line bounds. Missing or changed source shows no text; it does not erase saved analytical records.
 
+`project_browsing.py` owns transient source-connection and project-document contracts. Explicit same-origin source connection selects a directory inside the startup collection boundary and validates a recorded file before changing session access; it is separate from collection/execution authorization. The browser reuses the existing collection picker. A graph activation uses the existing guarded selection path, rather than requiring a second source button. Related README/text documents are current local reading material in a LocalOps ContentPanel, not analyzer inputs or portable report evidence. Their bounded reads bind report, directory and content identities and display literal text without interpreting target HTML. Project-reader failures cannot disable saved evidence navigation.
+
 Saved evidence, verified original source and session drafts are separate authorities:
 
 - Saved reports determine findings, relationships and recorded spans.

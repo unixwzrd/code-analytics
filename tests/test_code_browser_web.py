@@ -245,7 +245,6 @@ def test_browser_relationship_layers_keyboard_and_collapse(browser_source):
             graph.locator("[data-code-graph-node]").first.wait_for()
             node = graph.locator(f'[data-code-graph-node="code-browse-contained:{module_id}"]')
             node.click()
-            graph.get_by_role("button", name="Browse recorded source", exact=True).click()
             playwright.expect(page.locator(".code-browser-source h3")).to_have_text(module_id)
         finally:
             browser.close()

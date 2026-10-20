@@ -411,7 +411,11 @@ async function render() {
     title.textContent = 'Browse code';
     if (!purpose) description.textContent = 'Navigate saved entities and recorded containment beside verified original source. No target code is executed or changed.';
     search.hidden = true;
-    await codeBrowser(content, api, signal, bootstrap.reports[0].report_sha256, codeBrowserSession, draftSession);
+    await codeBrowser(content, api, signal, bootstrap.reports[0].report_sha256, codeBrowserSession, draftSession, {
+      post: (path, body, local) => post(path, {...body, run: runSelection?.primary || 'current',
+        compare_run: runSelection?.comparison || 'none'}, local),
+      onSourceConnected: () => refreshWorkflow(signal),
+    });
     signal.throwIfAborted();
     const origin = currentInvestigation();
     if (origin) {

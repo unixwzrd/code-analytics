@@ -8,6 +8,8 @@ All three languages are peer packages under `src/code_analysis/languages/`, shar
 
 The [Fawlty Towers tutorials](../tutorials/README.md) support saved-evidence investigation and first-use feedback. The [UI testing guide](ui-testing.md) defines automated gates and a separate human walkthrough. Passing tests does not establish comprehension or release readiness.
 
+The first post-public-beta browsing refinement adds one-activation graph-to-source navigation, explicitly confirmed in-app source-folder connection, and related README/local-text reading without abandoning the investigation. These reuse the existing LocalOps panel and collection picker. They do not provide persistent project profiles, a tutorial catalog, rendered arbitrary Markdown/HTML, unrestricted file browsing or a tutorial execution engine.
+
 ## Next user-workflow improvements
 
 1. Review first-use feedback: begin unaided, understand unavailable evidence, investigate/return with context, and use Help without losing work.

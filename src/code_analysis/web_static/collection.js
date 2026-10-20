@@ -1,5 +1,6 @@
 /** Collection form with opt-in, explicitly confirmed backend jobs. */
 import {collectionJobs} from './collection_jobs.js';
+import {createCollectionPicker} from './collection_picker.js';
 import {disclosure, element} from '/localops/index.js';
 
 const OPERATIONS = {
@@ -158,24 +159,6 @@ function shell() {
       <p id="collection-error" class="collection-error" role="alert" hidden></p>
       <button type="submit" class="detail-button collection-build">Build command</button>
     </form>
-    <dialog id="collection-browser" class="collection-browser" aria-labelledby="collection-browser-title">
-      <form method="dialog" class="collection-browser-head">
-        <h2 id="collection-browser-title">Choose path</h2>
-        <button type="submit" value="cancel" class="detail-button">Close</button>
-      </form>
-      <p class="hint" id="collection-browser-purpose">Folder navigation does not overwrite the target field. Use Choose to apply the selected entry to the chosen field only.</p>
-      <p id="browser-path" class="mono" aria-live="polite"></p>
-      <p id="browser-boundary" class="hint" role="status"></p>
-      <p id="browser-stats" class="hint"></p>
-      <div id="browser-list" class="collection-browser-list" role="listbox" aria-label="Directory entries"></div>
-      <div class="collection-browser-actions">
-        <button type="button" id="browser-root" class="detail-button">Collection root</button>
-        <button type="button" id="browser-up" class="detail-button" aria-describedby="browser-boundary">Up</button>
-        <button type="button" id="browser-open" class="detail-button" disabled>Open directory</button>
-        <button type="button" id="browser-choose-dir" class="detail-button">Choose this directory</button>
-        <button type="button" id="browser-choose" class="detail-button" disabled>Choose selected entry</button>
-      </div>
-    </dialog>
     <aside class="collection-preview panel" aria-label="Command preview">
       <h2>2. Review the exact command</h2>
       <div class="collection-preview-meta">
@@ -367,19 +350,11 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
   const root = content.querySelector(".collection-view");
   const form = root.querySelector("#collection-form");
   const errorBox = root.querySelector("#collection-error");
-  const dialog = root.querySelector("#collection-browser");
-  const browserList = root.querySelector("#browser-list");
-  const browserPath = root.querySelector("#browser-path");
-  const browserBoundary = root.querySelector("#browser-boundary");
-  const browserStats = root.querySelector("#browser-stats");
-  const chooseEntry = root.querySelector("#browser-choose");
-  const chooseDir = root.querySelector("#browser-choose-dir");
-  const openDir = root.querySelector("#browser-open");
-  const upButton = root.querySelector("#browser-up");
   const commandBox = root.querySelector("#collection-command");
   const copyButton = root.querySelector("#copy-command");
   const previewStatus = root.querySelector("#preview-status");
   const previewDetails = root.querySelector("#preview-details");
+  const picker = createCollectionPicker(root, api, signal, {root: status.root});
   const contextContents = element('div', {}, root.querySelector('.collection-meta'), root.querySelector('#collection-continuity'));
   const context = disclosure({title: 'Execution host and exact collection paths', content: contextContents});
   context.classList.add('collection-context');
@@ -401,10 +376,7 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
   form.elements.interpreter_id.value = "current";
 
   let previewController = null;
-  let browseController = null;
   let browseField = "target";
-  let browsePath = ".";
-  let selectedEntry = null;
   let previewGeneration = 0;
   const jobs = status.execution_available ? collectionJobs(root, api, post, escapeHtml, signal,
     () => buildBody(form).workspace || '') : null;
@@ -439,7 +411,7 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
   const abortChildren = () => {
     remember();
     previewController?.abort();
-    browseController?.abort();
+    picker.close();
   };
   signal.addEventListener("abort", abortChildren, {once: true});
 
@@ -497,84 +469,6 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
     syncMeta();
   });
 
-  async function loadBrowser(path) {
-    browseController?.abort();
-    browseController = new AbortController();
-    if (signal.aborted) return;
-    const current = browseController.signal;
-    browserList.replaceChildren();
-    chooseEntry.disabled = true;
-    chooseDir.disabled = true;
-    upButton.disabled = true;
-    openDir.disabled = true;
-    selectedEntry = null;
-    browserPath.textContent = "Loading…";
-    browserBoundary.textContent = "";
-    browserStats.textContent = "";
-    try {
-      const payload = await api(
-        `/api/collection/files?path=${encodeURIComponent(path)}`,
-        current,
-      );
-      current.throwIfAborted();
-      browsePath = payload.path || path;
-      chooseDir.disabled = ["source_report", "workload", "profiles", "import_metadata", "import_source"].includes(browseField);
-      const displayPath = browsePath === '.' ? status.root : `${status.root.replace(/\/$/, '')}/${browsePath}`;
-      browserPath.textContent = `Current directory: ${displayPath}`;
-      browserStats.textContent = `Omitted: ${payload.omitted} · skipped: ${payload.skipped}`;
-      upButton.disabled = payload.parent == null;
-      upButton.dataset.parent = payload.parent == null ? "" : payload.parent;
-      browserBoundary.textContent = payload.parent == null
-        ? 'At collection root. Up stops here. To browse a parent or sibling project, start the UI with --collection-root PATH set to a parent folder.'
-        : 'Up returns to the parent directory within the collection root.';
-
-      for (const entry of payload.entries || []) {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "detail-button collection-entry";
-        button.setAttribute("role", "option");
-        button.dataset.path = entry.path;
-        button.dataset.kind = entry.kind;
-        button.dataset.name = entry.name;
-        button.textContent = `${entry.name} (${entry.kind})`;
-        button.addEventListener("click", () => {
-          browserList.querySelectorAll("[aria-selected='true']").forEach((node) => {
-            node.removeAttribute("aria-selected");
-          });
-          button.setAttribute("aria-selected", "true");
-          selectedEntry = entry;
-          chooseEntry.disabled = false;
-          openDir.disabled = entry.kind !== "directory";
-        });
-        button.addEventListener("dblclick", () => {
-          if (entry.kind === "directory") loadBrowser(entry.path).catch(browseError);
-          else applyBrowse(entry.path);
-        });
-        button.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" && entry.kind === "directory") {
-            event.preventDefault();
-            loadBrowser(entry.path).catch(browseError);
-          }
-        });
-        browserList.append(button);
-      }
-      if (!(payload.entries || []).length) {
-        const empty = document.createElement("p");
-        empty.className = "hint";
-        empty.textContent = "No browsable entries in this directory.";
-        browserList.append(empty);
-      }
-    } catch (error) {
-      if (error.name === "AbortError") return;
-      browserPath.textContent = path;
-      browserStats.textContent = error.message;
-    }
-  }
-
-  function browseError(error) {
-    if (error.name !== "AbortError") browserStats.textContent = error.message;
-  }
-
   function fieldInput(name) {
     if (name === "workspace" && form.elements.operation.value === "profile") return form.elements.runtime_workspace;
     if (name === "cwd") {
@@ -585,14 +479,13 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
     return form.elements[name];
   }
 
-  function applyBrowse(pathValue) {
-    const input = fieldInput(browseField);
-    if (!input) return;
-    input.value = browseField === "profiles"
-      ? [...new Set([...lines(input.value), pathValue])].join("\n") : pathValue;
-    input.dispatchEvent(new Event("input", {bubbles: true}));
-    dialog.close();
-  }
+  const FILE_ONLY_FIELDS = new Set([
+    "source_report",
+    "workload",
+    "profiles",
+    "import_metadata",
+    "import_source",
+  ]);
 
   root.querySelectorAll("[data-browse]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -610,32 +503,27 @@ export async function collectionView(content, api, post, escapeHtml, signal, ses
       };
       // Workspace browsing follows the current operation, not a generic mkdir API.
       const purpose = purposes[browseField === 'workspace' && form.elements.operation.value === 'import-profile' ? 'import_workspace' : browseField];
-      root.querySelector('#collection-browser-title').textContent = purpose[0];
-      root.querySelector('#collection-browser-purpose').textContent = purpose[1] + ' Use Choose to apply the selection; folder navigation alone does not change the field.';
       const current = fieldInput(browseField)?.value;
       const start =
         browseField === "workload" && form.elements.workload_kind.value === "module"
           ? "."
           : current || ".";
-      dialog.showModal();
       const directory = /\.(py|js|mjs|cjs|jsx|rb|json)$/i.test(start)
         ? start.split('/').slice(0, -1).join('/') || '.' : start;
-      loadBrowser(directory || '.').catch(browseError);
+      picker.open({
+        title: purpose[0],
+        purpose: purpose[1] + ' Use Choose to apply the selection; folder navigation alone does not change the field.',
+        start: directory || '.',
+        filesOnly: FILE_ONLY_FIELDS.has(browseField),
+        onChoose: (pathValue) => {
+          const input = fieldInput(browseField);
+          if (!input) return;
+          input.value = browseField === "profiles"
+            ? [...new Set([...lines(input.value), pathValue])].join("\n") : pathValue;
+          input.dispatchEvent(new Event("input", {bubbles: true}));
+        },
+      });
     });
-  });
-
-  upButton.addEventListener("click", () => {
-    const parent = upButton.dataset.parent;
-    if (parent) loadBrowser(parent).catch(browseError);
-  });
-  root.querySelector('#browser-root').addEventListener('click', () => loadBrowser('.').catch(browseError));
-  dialog.addEventListener('close', () => browseController?.abort());
-  openDir.addEventListener("click", () => {
-    if (selectedEntry?.kind === "directory") loadBrowser(selectedEntry.path).catch(browseError);
-  });
-  chooseDir.addEventListener("click", () => applyBrowse(browsePath));
-  chooseEntry.addEventListener("click", () => {
-    if (selectedEntry) applyBrowse(selectedEntry.path);
   });
 
   form.addEventListener("submit", async (event) => {

@@ -1,5 +1,6 @@
 import {wireGraphDisplay} from './projections.js';
 import {DraftSession, mountDraftPane} from './code_drafts.js';
+import {projectBrowser} from './project_browser.js';
 
 // This view presents backend-owned identities and containment. It never parses
 // source, invents call relationships, writes a repository or persists text.
@@ -166,13 +167,21 @@ function relationshipMap(host, result, session, navigate, signal) {
     }
     card.replaceChildren(element('h3', node.label), element('p', `${node.kind} · ${node.node_id}`, 'mono'));
     const link = links.get(node.node_id);
-    if (link) card.append(action('Browse recorded source', () => navigate({identity: link.identity,
-      path: link.path || '', line: link.line ?? null, offset: 0, search: ''})));
-    else card.append(element('p', 'No exact saved source identity is bound to this node. No target is inferred from its name.', 'hint'));
+    if (!link) card.append(element('p', 'No exact saved source identity is bound to this node. No target is inferred from its name.', 'hint'));
     if (containment && graph.edges.some(edge => edge.source_id === node.node_id)) card.append(action(collapsed.has(node.node_id) ? 'Expand children' : 'Collapse children', () => {
       if (collapsed.has(node.node_id)) collapsed.delete(node.node_id); else collapsed.add(node.node_id);
       session.collapsed = [...collapsed].sort(); relationshipMap(host, result, session, navigate, signal);
     }));
+  }
+  function activate(node) {
+    const link = links.get(node.node_id);
+    // Activation synchronizes source through the existing guarded navigation.
+    // Initial highlight/collapse redraw call inspect(), never activate().
+    if (!link) {
+      inspect(node);
+      return;
+    }
+    navigate({identity: link.identity, path: link.path || '', line: link.line ?? null, offset: 0, search: ''});
   }
   for (const node of nodes) {
     const position = positions.get(node.node_id);
@@ -188,8 +197,8 @@ function relationshipMap(host, result, session, navigate, signal) {
     text.textContent = node.label.length > 55 ? `${node.label.slice(0, 54)}…` : node.label;
     const title = document.createElementNS(svg.namespaceURI, 'title'); title.textContent = node.label;
     group.append(hit, circle, text, title);
-    group.addEventListener('click', () => inspect(node));
-    group.addEventListener('keydown', event => { if (['Enter', ' '].includes(event.key)) { event.preventDefault(); inspect(node); } });
+    group.addEventListener('click', () => activate(node));
+    group.addEventListener('keydown', event => { if (['Enter', ' '].includes(event.key)) { event.preventDefault(); activate(node); } });
     svg.append(group);
   }
   const viewport = element('div', undefined, 'graph-wrap'); viewport.append(svg);
@@ -218,7 +227,10 @@ function relationshipMap(host, result, session, navigate, signal) {
 
 function sourceLines(host, response, selected, navigate) {
   const preview = response.preview;
-  host.replaceChildren(element('p', `${preview.state}: ${preview.message}`, 'hint'));
+  const message = preview.state === 'disabled'
+    ? 'Source files are not connected. Use Connect source folder above; selecting another graph node cannot grant file access.'
+    : `${preview.state}: ${preview.message}`;
+  host.replaceChildren(element('p', message, 'hint'));
   if (preview.state !== 'bound') return;
   const code = element('div', undefined, 'code-browser-lines');
   code.setAttribute('role', 'region'); code.setAttribute('aria-label', 'Verified source lines');
@@ -263,7 +275,7 @@ function detailsForSelection(host, page, select) {
   }
 }
 
-export async function codeBrowser(content, api, signal, reportSha256, session = {}, drafts = new DraftSession()) {
+export async function codeBrowser(content, api, signal, reportSha256, session = {}, drafts = new DraftSession(), options = {}) {
   if (session.report_sha256 !== reportSha256) Object.assign(session, {report_sha256: reportSha256, path: '', identity: '', search: '', offset: 0, line: null, revision: 0, layer: 'containment', collapsed: [], active_pane: 'outline'});
   const saved = history.state?.[HISTORY_KEY];
   if (saved?.report_sha256 === reportSha256 && location.hash === '#browse') Object.assign(session, codeBrowserSelectionMetadata(saved));
@@ -271,6 +283,12 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
   let paneIntent = 0;
   const {root, panels, status} = shell(content, session.active_pane, key => {
     session.active_pane = key; paneIntent += 1; remember(true);
+  });
+  const access = element('section'); root.before(access);
+  const project = projectBrowser(access, api, options.post, signal, reportSha256, {
+    selection: () => session,
+    canSwitch: () => drafts.canNavigate() && drafts.allowSwitch('Change source access? Dirty drafts remain in this tab; export them before leaving.'),
+    onConnected: async () => {await options.onSourceConnected?.(); await navigate({}, false);},
   });
   let pending;
   signal.addEventListener('abort', () => pending?.abort(), {once: true});
@@ -341,6 +359,7 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
       const active = page.selected || (page.line_matches.length === 1 ? page.line_matches[0] : null);
       const displayed = {...page, selected: active};
       session.path = page.logical_path || '';
+      project.update(session.path);
       root.dataset.activePane = session.active_pane;
       if (recordHistory) remember();
       status.textContent = `${page.completeness} saved evidence · report ${reportSha256} · source remains read-only`;

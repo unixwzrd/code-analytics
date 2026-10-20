@@ -123,22 +123,31 @@ class SourceBrowseDocument(StrictModel):
     document: SourceDocument
 
 
-def _read_confined(root: Path, parts: tuple[str, ...], max_bytes: int = _MAX_BYTES) -> bytes:
-    directory = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+def _open_confined(root: Path, parts: tuple[str, ...], *, directory: bool = False) -> int:
+    # Walk the explicitly granted root as well as its children. A replaced
+    # ancestor must not redirect a connected source/document folder via symlink.
+    descriptor = os.open(root.anchor or ".", os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        for part in parts[:-1]:
-            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory)
-            os.close(directory)
-            directory = child
-        descriptor = os.open(
-            parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory
-        )
-        with os.fdopen(descriptor, "rb") as stream:
-            if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
-                raise OSError("source is not a regular file")
-            return stream.read(max_bytes + 1)
-    finally:
-        os.close(directory)
+        root_parts = root.parts[1:] if root.anchor else root.parts
+        components = (*root_parts, *parts)
+        for index, part in enumerate(components):
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+            if index < len(components) - 1 or directory:
+                flags |= os.O_DIRECTORY
+            child = os.open(part, flags, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _read_confined(root: Path, parts: tuple[str, ...], max_bytes: int = _MAX_BYTES) -> bytes:
+    with os.fdopen(_open_confined(root, parts), "rb") as stream:
+        if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+            raise OSError("source is not a regular file")
+        return stream.read(max_bytes + 1)
 
 
 def _source_path(logical_path: str) -> PurePosixPath:

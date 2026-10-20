@@ -139,7 +139,6 @@ def test_runtime_frames_open_same_verified_source_browser(runtime_browser, entry
                 graph.locator(f'[data-code-graph-node="{native.frame_id}"]').click()
                 playwright.expect(graph).to_contain_text("No exact saved source identity")
                 graph.locator(f'[data-code-graph-node="{frame.frame_id}"]').click()
-                graph.get_by_role("button", name="Browse recorded source", exact=True).click()
             else:
                 reveal_navigation(page, "Runtime").click()
                 page.get_by_text("Browse recorded frame source", exact=True).click()

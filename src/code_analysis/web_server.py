@@ -11,7 +11,7 @@ import socket
 import sys
 import threading
 from collections.abc import Callable
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -39,6 +39,7 @@ from code_analysis.comparison_browse import (
 from code_analysis.dependency_graph import DependencyGraphRequest
 from code_analysis.dependency_navigation import DependencyRequest, DependencyResult
 from code_analysis.models import Completeness, SourceLanguage, StrictModel
+from code_analysis.project_browsing import ProjectDocumentAccess
 from code_analysis.projection_models import (
     GraphProjection,
     ProjectionCollapse,
@@ -97,6 +98,8 @@ _ASSETS: Final = {
     "/session.js": ("session.js", "text/javascript; charset=utf-8"),
     "/collection_jobs.js": ("collection_jobs.js", "text/javascript; charset=utf-8"),
     "/code_browser.js": ("code_browser.js", "text/javascript; charset=utf-8"),
+    "/project_browser.js": ("project_browser.js", "text/javascript; charset=utf-8"),
+    "/collection_picker.js": ("collection_picker.js", "text/javascript; charset=utf-8"),
     "/code_drafts.js": ("code_drafts.js", "text/javascript; charset=utf-8"),
     "/icon.svg": ("icon.svg", "image/svg+xml"),
     "/styles.css": ("styles.css", "text/css; charset=utf-8"),
@@ -140,6 +143,7 @@ class WebApplication:
     runtime: RuntimeViewService | None = None
     collection: CollectionPlanner | None = None
     collection_session: CollectionSession | None = None
+    project_documents: ProjectDocumentAccess = field(default_factory=ProjectDocumentAccess)
 
 
 class ReportHTTPServer(ThreadingHTTPServer):
@@ -773,6 +777,10 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     },
                 )
                 return
+            if parsed.path.startswith("/api/project/"):
+                assert service is not None
+                self._project_get(parsed.path, params, service)
+                return
             if parsed.path in {
                 "/api/code-browser",
                 "/api/code-browser/source",
@@ -1146,6 +1154,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             return
         if self.path not in {
             "/api/session/stop",
+            "/api/project/source",
             "/api/collection/preview",
             "/api/collection/launch",
             "/api/collection/connect",
@@ -1183,6 +1192,8 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     self._json(HTTPStatus.OK, status.model_dump(mode="json"))
                 finally:
                     threading.Thread(target=self.server.shutdown, daemon=True).start()
+            elif self.path == "/api/project/source":
+                self._connect_source(body)
             elif self.path == "/api/collection/preview":
                 request = CollectionRequest.model_validate_json(body)
                 assert planner is not None
@@ -1211,6 +1222,86 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 error_status,
                 {"error": {"code": "invalid-collection", "message": message}, "status": code},
             )
+
+    def _connect_source(self, body: bytes) -> None:
+        from code_analysis.project_browsing import (
+            SourceConnectionRequest,
+            source_connection,
+            validate_source_connection,
+        )
+
+        request = SourceConnectionRequest.model_validate_json(body)
+        with self.server.lifecycle_lock:
+            app = self.server.app
+            service = app.service
+            if app.runs is not None:
+                service = app.runs.select(request.run, request.compare_run)
+            elif request.run != "current" or request.compare_run != "none":
+                raise ValueError("run selection requires an owned workspace")
+            if service is None or app.collection is None:
+                raise OSError(
+                    errno.EPERM, "a saved report and configured collection root are required"
+                )
+            root = validate_source_connection(service.primary, app.collection, request)
+            result = source_connection(service.primary, root, app.collection)
+            self.server.app = replace(
+                app, source_root=root, project_documents=ProjectDocumentAccess()
+            )
+        self._json(HTTPStatus.OK, result.model_dump(mode="json"))
+
+    def _project_get(
+        self, route: str, params: dict[str, list[str]], service: ReportViewService
+    ) -> None:
+        from code_analysis.project_browsing import (
+            document_catalog,
+            read_project_document,
+            report_identity,
+            source_connection,
+        )
+
+        allowed = {"run", "compare_run", "report_sha256"}
+        if route == "/api/project/documents":
+            allowed.add("path")
+        elif route == "/api/project/document":
+            allowed.update({"path", "root_identity", "sha256"})
+        elif route != "/api/project/source":
+            raise ValueError("unknown project browsing operation")
+        if set(params) - allowed:
+            raise ValueError("unsupported project browsing selectors")
+        if _single(params, "report_sha256", "") != report_identity(service.primary):
+            raise ValueError("project browsing belongs to another saved report")
+        result: StrictModel
+        with self.server.lifecycle_lock:
+            app = self.server.app
+            if route == "/api/project/source":
+                result = source_connection(service.primary, app.source_root, app.collection)
+            elif route == "/api/project/documents":
+                catalog = document_catalog(
+                    service.primary, app.source_root, _single(params, "path", "")
+                )
+                app.project_documents.allow(
+                    catalog.report_sha256, catalog.root_identity, catalog.records
+                )
+                result = catalog
+            else:
+                app.project_documents.require(
+                    report_identity(service.primary),
+                    _single(params, "root_identity", ""),
+                    _single(params, "path", ""),
+                    _single(params, "sha256", ""),
+                )
+                document = read_project_document(
+                    service.primary,
+                    app.source_root,
+                    _single(params, "root_identity", ""),
+                    _single(params, "path", ""),
+                    _single(params, "sha256", ""),
+                )
+                app.project_documents.allow(
+                    document.report_sha256, document.root_identity, document.links
+                )
+                result = document
+        self._json(HTTPStatus.OK, result.model_dump(mode="json"))
 
     def _collection_action(self, body: bytes) -> None:
         session = self.server.app.collection_session

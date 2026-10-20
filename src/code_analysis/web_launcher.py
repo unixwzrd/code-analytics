@@ -22,6 +22,7 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 
 from pydantic import Field, StrictBool, StrictInt, StrictStr, ValidationError, model_validator
 
+from code_analysis import __version__
 from code_analysis.models import StrictModel
 from code_analysis.web_lifecycle import UILifecycleStatus, UIShutdownRequest
 
@@ -122,11 +123,14 @@ def launch_options(args: argparse.Namespace) -> UILaunchOptions:
         implementation_root=str(Path(__file__).resolve().parent),
         environment_sha256=hashlib.sha256(
             json.dumps(
-                sorted(
-                    (name, value)
-                    for name, value in os.environ.items()
-                    if name not in {"COLUMNS", "LINES"}
-                )
+                {
+                    "tool_version": __version__,
+                    "environment": sorted(
+                        (name, value)
+                        for name, value in os.environ.items()
+                        if name not in {"COLUMNS", "LINES"}
+                    ),
+                }
             ).encode()
         ).hexdigest(),
     )

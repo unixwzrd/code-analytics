@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0b2 — synchronized code and project reading
+
+- Selecting a source-bound relationship node now opens its verified source directly with pointer, Enter or Space; remove the redundant source-navigation button. Unresolved nodes remain inspection-only.
+- Add an explicitly confirmed **Connect source folder** workflow using the existing confined folder picker. Validate a recorded file hash before changing session access; connecting does not collect evidence, execute code or create a workspace.
+- Offer nearby README files and linked Markdown/reStructuredText/plain-text documents through the existing LocalOps content panel, with separate provenance, bounded history, literal safe text and spoiler labels. Project documents never become analyzed source or report evidence.
+- Preserve source/graph history, dirty-draft guards, same-origin authentication and full-file source hashes. Refuse symlinks in configured-root ancestors as well as descendants.
+- Include the tool version in UI session matching so an upgrade opens a new backend instead of silently reopening a previous-version process; existing owned sessions are not killed automatically.
+
 ## 0.2.0b1 — public beta candidate
 
 - Exclude private directories entirely from the published tree, including policy markers; local copies remain ignored.

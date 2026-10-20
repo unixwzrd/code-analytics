@@ -10,7 +10,7 @@ Code Analysis Suite turns source structure into portable evidence for architectu
 
 **New here? Start with the [Python beginner tutorial](tutorials/python/beginner/README.md)** or browse [all nine Python, JavaScript and Ruby exercises](tutorials/README.md). Each supplies a working application, saved evidence and an independent investigation before the solutions.
 
-Public-beta preparation is in progress; `0.2.0b1` is the candidate version, not a published release. Read the [beta scope and known limitations](docs/beta.md), then install from the repository below. Python 3.12+ is required; the recorded qualification environment uses Python 3.12.13, not a claim that every supported interpreter has been qualified.
+The public beta source is available on GitHub; the current version is `0.2.0b2`. Read the [beta scope and known limitations](docs/beta.md), then install from the repository below. Python 3.12+ is required; the recorded qualification environment uses Python 3.12.13, not a claim that every supported interpreter has been qualified. Repository availability is separate from a tagged release or PyPI publication.
 
 ## Quick Start
 
@@ -49,7 +49,7 @@ The base installation supports Python analysis and saved-report browsing without
 
 The separate `semantic` extra requires an explicitly configured existing local model; the tool never downloads a model automatically. See the [CLI reference](docs/cli.md) for optional-provider configuration.
 
-On macOS, `code-analysis` opens or reuses a compatible background UI session and returns your prompt. Closing the browser tab leaves that session running; use **Stop Code Analysis** or `code-analysis ui-stop` to stop it. For terminal-controlled operation without browser launch, use `code-analysis ui --foreground --no-open`. Global **Help** opens the bundled offline guide. See the [UI guide](docs/ui-guide.md) for collection roots, source binding and browser preferences.
+On macOS, `code-analysis` opens or reuses a compatible background UI session and returns your prompt. Closing the browser tab leaves that session running; use **Stop Code Analysis** or `code-analysis ui-stop` to stop it. For terminal-controlled operation without browser launch, use `code-analysis ui --foreground --no-open`. In **Browse code**, use **Connect source folder** if needed, then select a graph node to display its source directly. Nearby README files and their local text links open in a separate read-only project reader. Global **Help** opens the bundled offline guide. See the [UI guide](docs/ui-guide.md) for collection roots, source binding and browser preferences.
 
 ## Everyday commands
 
