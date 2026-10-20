@@ -16,7 +16,12 @@ from code_analysis.cache import ContentCache
 from code_analysis.config import JavaScriptModuleMode, LanguageSelection
 from code_analysis.context import AnalysisContext
 from code_analysis.errors import ConfigurationError
-from code_analysis.languages.base import FrontendContext, FrontendResult, SourceUnit
+from code_analysis.languages.base import (
+    FrontendContext,
+    FrontendResult,
+    NormalizedFunctionFact,
+    SourceUnit,
+)
 from code_analysis.languages.javascript.cache import (
     load_cached_javascript_result,
     store_cached_javascript_result,
@@ -1291,13 +1296,15 @@ def _import_edges(results: tuple[FrontendResult, ...]) -> tuple[ImportEdge, ...]
                 continue
             edges.add((result.unit.module_name, target, local, item.kind))
     return tuple(
-        ImportEdge(
-            source=source,
-            target=target,
-            local=local,
-            kind=kind,
-            source_language=SourceLanguage.JAVASCRIPT,
-            target_language=SourceLanguage.JAVASCRIPT if local else None,
+        ImportEdge.model_validate(
+            {
+                "source": source,
+                "target": target,
+                "local": local,
+                "kind": kind,
+                "source_language": SourceLanguage.JAVASCRIPT,
+                "target_language": SourceLanguage.JAVASCRIPT if local else None,
+            }
         )
         for source, target, local, kind in sorted(edges)
     )
@@ -1426,17 +1433,19 @@ def _duplicates(
     threshold = context.config.clone_thresholds
     known_modules = {item.unit.module_name for item in results}
     for left_index, right_index in pairs:
-        left_result, left = functions[left_index]
-        right_result, right = functions[right_index]
+        left_result, left_function = functions[left_index]
+        right_result, right_function = functions[right_index]
         matcher = SequenceMatcher(
-            a=left.statement_signatures, b=right.statement_signatures, autojunk=False
+            a=left_function.statement_signatures,
+            b=right_function.statement_signatures,
+            autojunk=False,
         )
         matched = sum(block.size for block in matcher.get_matching_blocks())
         if (
             matched < threshold.near_clone_min_statements
-            or matched / len(left.statement_signatures)
+            or matched / len(left_function.statement_signatures)
             < threshold.near_clone_min_bilateral_coverage
-            or matched / len(right.statement_signatures)
+            or matched / len(right_function.statement_signatures)
             < threshold.near_clone_min_bilateral_coverage
         ):
             continue
@@ -1448,8 +1457,12 @@ def _duplicates(
         )
         if insertions + deletions + substitutions > threshold.near_clone_max_changed_statements:
             continue
-        left_subject = subject_by_name[f"{left_result.unit.module_name}:{left.qualified_name}"]
-        right_subject = subject_by_name[f"{right_result.unit.module_name}:{right.qualified_name}"]
+        left_subject = subject_by_name[
+            f"{left_result.unit.module_name}:{left_function.qualified_name}"
+        ]
+        right_subject = subject_by_name[
+            f"{right_result.unit.module_name}:{right_function.qualified_name}"
+        ]
         left_id, right_id = sorted((left_subject.subject_id, right_subject.subject_id))
         left_first = left_subject.subject_id == left_id
         canonical_left_subject = left_subject if left_first else right_subject
@@ -1458,8 +1471,8 @@ def _duplicates(
         for tag, i1, i2, j1, j2 in opcodes:
             if tag == "equal":
                 for offset in range(i2 - i1):
-                    left_detail = left.detailed_statement_signatures[i1 + offset]
-                    right_detail = right.detailed_statement_signatures[j1 + offset]
+                    left_detail = left_function.detailed_statement_signatures[i1 + offset]
+                    right_detail = right_function.detailed_statement_signatures[j1 + offset]
                     if left_detail == right_detail:
                         continue
                     canonical_left = left_detail if left_first else right_detail
@@ -1476,8 +1489,8 @@ def _duplicates(
                         )
                     )
             elif tag == "replace":
-                physical_left = " | ".join(left.detailed_statement_signatures[i1:i2])
-                physical_right = " | ".join(right.detailed_statement_signatures[j1:j2])
+                physical_left = " | ".join(left_function.detailed_statement_signatures[i1:i2])
+                physical_right = " | ".join(right_function.detailed_statement_signatures[j1:j2])
                 pair_differences.append(
                     _behavior_difference(
                         left_id,
@@ -1491,17 +1504,17 @@ def _duplicates(
                 )
         differences.extend(pair_differences)
         divergence = []
-        if left.exceptions != right.exceptions:
+        if left_function.exceptions != right_function.exceptions:
             divergence.append(DivergenceReason.EXCEPTION)
-        if left.side_effects != right.side_effects:
+        if left_function.side_effects != right_function.side_effects:
             divergence.append(DivergenceReason.SIDE_EFFECT)
         evidence = (left_subject.evidence[0], right_subject.evidence[0])
         canonical_owner = _canonical_owner(
             left_result,
-            left,
+            left_function,
             left_subject,
             right_result,
-            right,
+            right_function,
             right_subject,
             known_modules,
         )
@@ -1515,8 +1528,8 @@ def _duplicates(
                 right_subject_id=right_id,
                 clone_cluster_ids=cluster_pairs.get((left_id, right_id), ()),
                 matched_statements=matched,
-                left_statement_total=len(left.statement_signatures),
-                right_statement_total=len(right.statement_signatures),
+                left_statement_total=len(left_function.statement_signatures),
+                right_statement_total=len(right_function.statement_signatures),
                 insertions=insertions,
                 deletions=deletions,
                 substitutions=substitutions,
@@ -1683,7 +1696,9 @@ def _clone_records(
     int,
 ]:
     subject_map = _function_subjects(results, subjects)
-    candidates: list[tuple[FrontendResult, object, AnalysisSubject, str, str, int, int]] = []
+    candidates: list[
+        tuple[FrontendResult, NormalizedFunctionFact, AnalysisSubject, str, str, int, int]
+    ] = []
     for result in results:
         for item in result.functions:
             body = result.unit.source_bytes[item.body_start_byte : item.body_end_byte]
@@ -1710,11 +1725,15 @@ def _clone_records(
         (CloneKind.NORMALIZED_AST, 4, context.config.clone_thresholds.near_clone_min_statements),
     ):
         groups: dict[
-            str, list[tuple[FrontendResult, object, AnalysisSubject, str, str, int, int]]
+            str,
+            list[
+                tuple[FrontendResult, NormalizedFunctionFact, AnalysisSubject, str, str, int, int]
+            ],
         ] = defaultdict(list)
         for candidate in candidates:
             if candidate[5] >= minimum:
-                groups[candidate[fingerprint_index]].append(candidate)
+                fingerprint = candidate[3] if fingerprint_index == 3 else candidate[4]
+                groups[fingerprint].append(candidate)
         for fingerprint, members in sorted(groups.items()):
             if len(members) < 2:
                 continue
@@ -1943,8 +1962,8 @@ def _javascript_test_impact(
             )
         for function in result.functions:
             for callee in function.callees:
-                target = known_subjects.get(callee.rsplit(".", 1)[-1])
-                if target is None:
+                target_subject = known_subjects.get(callee.rsplit(".", 1)[-1])
+                if target_subject is None:
                     continue
                 relationships.append(
                     TestRelationshipRecord(
@@ -1952,12 +1971,12 @@ def _javascript_test_impact(
                             "test-relationship",
                             source_id,
                             "direct-symbol",
-                            target.subject_id,
+                            target_subject.subject_id,
                             function.start_line,
                         ),
                         source_test_module_id=source_id,
                         kind=TestRelationshipKind.DIRECT_SYMBOL,
-                        target_subject_id=target.subject_id,
+                        target_subject_id=target_subject.subject_id,
                         resolved=True,
                         evidence=(
                             _evidence(

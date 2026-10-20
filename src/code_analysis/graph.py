@@ -6,7 +6,7 @@ from collections.abc import Callable, Iterable
 def strongly_connected_components(
     nodes: Iterable[str], edges: Iterable[tuple[str, str]]
 ) -> tuple[tuple[str, ...], ...]:
-    graph = {node: set() for node in nodes}
+    graph: dict[str, set[str]] = {node: set() for node in nodes}
     for source, target in edges:
         if source in graph and target in graph:
             graph[source].add(target)
@@ -70,7 +70,7 @@ def canonical_cycles(
 ) -> tuple[tuple[str, ...], ...]:
     node_list = list(nodes)
     edge_list = list(edges)
-    graph = {node: set() for node in node_list}
+    graph: dict[str, set[str]] = {node: set() for node in node_list}
     for source, target in edge_list:
         if source in graph and target in graph:
             graph[source].add(target)

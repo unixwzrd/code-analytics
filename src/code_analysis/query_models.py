@@ -10,8 +10,8 @@ from pydantic import Field, StrictBool, StrictInt, StrictStr, model_validator
 from code_analysis.finding_suppression_models import FindingSuppressionAnnotation
 from code_analysis.models import Completeness, Confidence, Evidence, StrictModel
 
-QUERY_SCHEMA_NAME = "code-analysis-query"
-QUERY_SCHEMA_VERSION = "1.0.0"
+QUERY_SCHEMA_NAME: Literal["code-analysis-query"] = "code-analysis-query"
+QUERY_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
 
 
 class QuerySelectorKind(StrEnum):

@@ -218,7 +218,7 @@ def _candidate_state(proposals: tuple[RefactorProposal, ...]) -> RefactorCandida
 
 
 def _components(nodes: set[str], edges: set[tuple[str, str]]) -> tuple[tuple[str, ...], ...]:
-    adjacency = {node: set() for node in nodes}
+    adjacency: dict[str, set[str]] = {node: set() for node in nodes}
     for left, right in edges:
         adjacency[left].add(right)
         adjacency[right].add(left)
@@ -1303,11 +1303,11 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
         owners_by_candidate.setdefault(item.candidate_id, []).append(item)
     unique_behavioral_events = {item.event_id: item for item in behavioral_events}
     invariants_by_candidate: dict[str, list[BehavioralInvariant]] = {}
-    for item in behavioral_invariants:
-        invariants_by_candidate.setdefault(item.candidate_id, []).append(item)
+    for invariant in behavioral_invariants:
+        invariants_by_candidate.setdefault(invariant.candidate_id, []).append(invariant)
     differences_by_candidate: dict[str, list[CandidateBehaviorDifference]] = {}
-    for item in behavioral_differences:
-        differences_by_candidate.setdefault(item.candidate_id, []).append(item)
+    for difference in behavioral_differences:
+        differences_by_candidate.setdefault(difference.candidate_id, []).append(difference)
     for candidate_id, candidate_proposals in sorted(proposals_by_candidate.items()):
         first = candidate_proposals[0]
         candidate_kind = (
@@ -1330,7 +1330,7 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
                 participating_subject_ids=candidate_subject_ids,
             )
         )
-        responsibility = (
+        candidate_responsibility = (
             responsibility_by_id[first.responsibility_id]
             if first.responsibility_id is not None
             else None
@@ -1351,7 +1351,9 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
                 configuration_sha256=report.configuration.digest_sha256,
                 source_sha256s=source_hashes,
                 responsibility_ids=(
-                    (responsibility.responsibility_id,) if responsibility is not None else ()
+                    (candidate_responsibility.responsibility_id,)
+                    if candidate_responsibility is not None
+                    else ()
                 ),
                 proposal_ids=tuple(item.proposal_id for item in candidate_proposal_tuple),
                 cost_estimate_id=cost_by_candidate[candidate_id].cost_estimate_id,
@@ -1387,11 +1389,13 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
                     for decision in item.gate_decisions
                 ),
                 evidence=(
-                    responsibility.evidence if responsibility is not None else first.evidence
+                    candidate_responsibility.evidence
+                    if candidate_responsibility is not None
+                    else first.evidence
                 ),
                 counter_evidence=(
-                    responsibility.counter_evidence
-                    if responsibility is not None
+                    candidate_responsibility.counter_evidence
+                    if candidate_responsibility is not None
                     else first.counter_evidence
                 ),
                 completeness=first.completeness,
@@ -1705,7 +1709,7 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
         for item in public_assembly_failures
     )
     diagnostic = (*diagnostic, *assembly_diagnostics)
-    state = (
+    section_state = (
         SectionState.PARTIAL
         if truncated or finding_truncated or public_assembly_failures
         else SectionState.COMPLETE
@@ -1715,7 +1719,7 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
         if report.completeness is Completeness.FAILED
         else (
             Completeness.PARTIAL
-            if report.completeness is Completeness.PARTIAL or state is SectionState.PARTIAL
+            if report.completeness is Completeness.PARTIAL or section_state is SectionState.PARTIAL
             else Completeness.COMPLETE
         )
     )
@@ -1723,7 +1727,7 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
         (
             SectionCoverage(
                 section="cohesion-refactoring",
-                state=state,
+                state=section_state,
                 parsed=len(responsibilities),
                 failed=len(public_assembly_failures),
                 truncated=truncated + finding_truncated,
@@ -1737,7 +1741,11 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
     )
     provider = ProviderResult(
         provider_id="native-cohesion",
-        state=ProviderState.PARTIAL if state is SectionState.PARTIAL else ProviderState.SUCCESS,
+        state=(
+            ProviderState.PARTIAL
+            if section_state is SectionState.PARTIAL
+            else ProviderState.SUCCESS
+        ),
         executable="python",
         version=platform.python_version(),
         duration_ms=0,
@@ -1749,7 +1757,7 @@ def integrate_cohesion_report(context: AnalysisContext, report: AnalysisReport) 
         ),
         diagnostics=diagnostic,
         completeness=(
-            Completeness.PARTIAL if state is SectionState.PARTIAL else Completeness.COMPLETE
+            Completeness.PARTIAL if section_state is SectionState.PARTIAL else Completeness.COMPLETE
         ),
     )
     summary = SummaryCounts(

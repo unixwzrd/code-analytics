@@ -227,12 +227,13 @@ def _extract_imports(tree: ast.AST) -> list[RawImport]:
             self.optional_depth = 0
             self.type_checking_depth = 0
 
-        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        def visit_FunctionDef(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
             self.function_depth += 1
             self.generic_visit(node)
             self.function_depth -= 1
 
-        visit_AsyncFunctionDef = visit_FunctionDef
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            self.visit_FunctionDef(node)
 
         def visit_If(self, node: ast.If) -> None:
             is_type = isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING"

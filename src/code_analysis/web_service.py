@@ -193,19 +193,19 @@ class ReportViewService:
         )
 
     def _build_bootstrap(self) -> UIBootstrap:
-        reports = (self._identity(self.primary, "primary"),)
+        reports: tuple[UIReportIdentity, ...] = (self._identity(self.primary, "primary"),)
         delta_counts = None
         if self.comparison is not None:
             reports += (self._identity(self.comparison, "comparison"),)
             assert self.delta is not None
             delta = self.delta
-            counts = delta.change_counts
+            change_counts = delta.change_counts
             delta_counts = UIComparisonCounts(
                 identical=delta.identical,
-                added=counts.added if counts else 0,
-                removed=counts.removed if counts else 0,
-                changed=counts.changed if counts else 0,
-                unchanged=counts.unchanged if counts else 0,
+                added=change_counts.added if change_counts else 0,
+                removed=change_counts.removed if change_counts else 0,
+                changed=change_counts.changed if change_counts else 0,
+                unchanged=change_counts.unchanged if change_counts else 0,
             )
         summary = self.primary.summary
         counts = (

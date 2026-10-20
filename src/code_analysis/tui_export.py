@@ -112,31 +112,36 @@ class ExportPage(ModalScreen[None]):
                 allow_blank=False,
                 id="export-format",
             )
-            graph = isinstance(
-                self.request, (RuntimeGraphRequest, DependencyGraphRequest, StaticGraphRequest)
+            request = self.request
+            graph_request = (
+                request
+                if isinstance(
+                    request, (RuntimeGraphRequest, DependencyGraphRequest, StaticGraphRequest)
+                )
+                else None
             )
             bound = (
                 500
                 if isinstance(
-                    self.request, (BrowseRequest, StaticProjectionRequest, ComparisonPageRequest)
+                    request, (BrowseRequest, StaticProjectionRequest, ComparisonPageRequest)
                 )
                 else 100
             )
             scope = (
-                f"Selected graph is bounded to {self.request.max_nodes} nodes and "
-                f"{self.request.max_edges} edges."
-                if graph
+                f"Selected graph is bounded to {graph_request.max_nodes} nodes and "
+                f"{graph_request.max_edges} edges."
+                if graph_request is not None
                 else f"Selected scope is bounded to {bound} rows."
             )
             yield Checkbox(
                 (
-                    f"Graph bounds: {self.request.max_nodes} nodes / "
-                    f"{self.request.max_edges} edges"
-                    if graph
+                    f"Graph bounds: {graph_request.max_nodes} nodes / "
+                    f"{graph_request.max_edges} edges"
+                    if graph_request is not None
                     else f"Export selected rows from start (up to {bound})"
                 ),
                 id="export-filtered",
-                disabled=graph,
+                disabled=graph_request is not None,
             )
             yield Static(
                 "Saved under this index's exports directory. " + scope,

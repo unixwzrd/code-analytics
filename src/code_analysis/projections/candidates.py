@@ -33,7 +33,9 @@ from code_analysis.projections._shared import (
     _table_base,
 )
 from code_analysis.report_models import (
+    AbstractionCostEstimate,
     AnalysisReport,
+    OwnerAlternative,
     OwnerAlternativeClass,
     RefactorCandidate,
     RefactorCandidateObservation,
@@ -48,7 +50,7 @@ _OWNER_RANK = {
 }
 
 
-def _net_class(estimate) -> tuple[str, int]:
+def _net_class(estimate: AbstractionCostEstimate) -> tuple[str, int]:
     value = estimate.net_production_loc
     if value.lower is None or value.upper is None:
         return "unresolved", 3
@@ -105,7 +107,7 @@ def ranked_candidates(
     observations = {item.candidate_id: item for item in report.candidate_observations}
     responsibilities = {item.responsibility_id: item for item in report.responsibility_clusters}
     costs = {item.cost_estimate_id: item for item in report.abstraction_cost_estimates}
-    owners: dict[str, list] = {}
+    owners: dict[str, list[OwnerAlternative]] = {}
     for item in report.owner_alternatives:
         owners.setdefault(item.candidate_id, []).append(item)
     proposals = {item.proposal_id: item for item in report.refactor_proposals}
@@ -137,7 +139,11 @@ def ranked_candidates(
             ),
             default=0,
         )
-        estimate = costs.get(observation.cost_estimate_id)
+        estimate = (
+            costs.get(observation.cost_estimate_id)
+            if observation.cost_estimate_id is not None
+            else None
+        )
         alternatives = tuple(item for item in owners.get(candidate.candidate_id, ()) if item.viable)
         owner_rank = min((_OWNER_RANK[item.owner_class] for item in alternatives), default=4)
         net_name, net_rank = _net_class(estimate) if estimate is not None else ("unresolved", 3)
@@ -297,8 +303,9 @@ def build_candidate_worklist_projection(
         f"Candidate selection retained {len(rows)} of {eligible_count} eligible records; "
         f"{omitted} omitted."
     )
+    base["limitations"] = tuple(sorted(limitations))
     return TableProjection(
-        **{**base, "limitations": tuple(sorted(limitations))},
+        **base,
         columns=tuple(
             TableColumn(
                 column_id=column_id,

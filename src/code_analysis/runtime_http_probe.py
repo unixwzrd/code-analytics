@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import sys
+from email.message import Message
 from urllib.error import URLError
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 
 class NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
+    def redirect_request(
+        self, req: Request, fp: object, code: int, msg: str, headers: Message, newurl: str
+    ) -> None:
         return None
 
 

@@ -236,6 +236,7 @@ def _write_comparison(
     connection: sqlite3.Connection, service: ReportViewService
 ) -> BrowseComparisonSummary | None:
     from code_analysis.static_comparison_source import (
+        StaticComparisonSourceBinding,
         write_comparison_source_bindings,
         write_comparison_test_sources,
     )
@@ -244,7 +245,7 @@ def _write_comparison(
     delta = service.delta
     if delta is None:
         return None
-    bindings = ()
+    bindings: tuple[StaticComparisonSourceBinding, ...] = ()
     if service.comparison is not None and delta.records:
         bindings = service._comparison_source_bindings
         write_comparison_source_bindings(connection, bindings)

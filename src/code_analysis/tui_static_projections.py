@@ -635,7 +635,10 @@ class StaticProjectionBrowser(ModalScreen[int]):
         event.stop()
         if self.page is None:
             return
-        row = self.page.records[int(event.row_key.value)]
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        row = self.page.records[int(row_key)]
         if self.request.name is ProjectionName.CANDIDATE_WORKLIST:
             self.load_candidate_packet(row.row_id)
             return

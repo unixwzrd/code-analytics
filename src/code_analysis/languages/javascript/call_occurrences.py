@@ -211,7 +211,7 @@ def _invert_span_key(key: tuple[int, ...]) -> tuple[int, ...]:
     return tuple(-part for part in key)
 
 
-def _safe_callee(node: Node, source_bytes: bytes) -> str | None:
+def _safe_callee(node: Node | None, source_bytes: bytes) -> str | None:
     if node is None:
         return None
     if node.type in {

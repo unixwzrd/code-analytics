@@ -54,13 +54,13 @@ def collapse_graph(
         target = node_keys[edge.target_id]
         if source == target:
             continue
-        key = (source, target, edge.kind)
-        identity = "edge-" + hashlib.sha256("\0".join(key).encode()).hexdigest()[:20]
-        previous = collapsed_edges.get(key)
+        edge_key = (source, target, edge.kind)
+        identity = "edge-" + hashlib.sha256("\0".join(edge_key).encode()).hexdigest()[:20]
+        previous = collapsed_edges.get(edge_key)
         evidence_ids = set(edge.evidence_ids)
         if previous is not None:
             evidence_ids.update(previous.evidence_ids)
-        collapsed_edges[key] = GraphEdge(
+        collapsed_edges[edge_key] = GraphEdge(
             edge_id=identity,
             source_id=source,
             target_id=target,

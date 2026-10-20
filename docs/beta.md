@@ -10,9 +10,9 @@ Python, JavaScript/JSX and Ruby have peer parser-adapter packages, but they do n
 
 ## Candidate qualification
 
-On Python 3.12.13, the candidate passed 2,808 product tests across a disjoint 852-test UI/support gate and 1,956-test non-UI partition, with no failures or skips. The separate 13-case smoke gate also passed; its cases overlap the full UI gate and must not be added to that total. Black, Ruff, documentation links, compiled-help freshness, archived package builds and installed offline Chromium/WebKit checks passed. The source distribution retains all 135 tutorial files; all nine supplied reports' source hashes were checked without rerunning or rewriting the exercises.
+On Python 3.12.13, the `0.2.0b1` candidate passed 2,811 product tests across a disjoint 852-test UI/support gate and 1,959-test non-UI partition, with no failures or skips. A focused 100-case regression selection also passed; those cases overlap the full partitions and must not be added to that total. Black, Ruff, 559 documentation links, compiled-help freshness, archived package builds and installed offline Chromium/WebKit checks passed. The source distribution retains all 135 tutorial files; all nine supplied reports' source hashes were checked without rerunning or rewriting the exercises.
 
-These technical checks do not establish unfamiliar-user comprehension, real Safari/hardware IME or every interpreter/platform combination. Local type checkers were unavailable and were not installed or claimed passed. Source self-analysis retains partiality for bounded/unresolved evidence rather than returning a clean verdict.
+These technical checks do not establish unfamiliar-user comprehension, real Safari/hardware IME or every interpreter/platform combination. The `0.2.0b1` preparation additionally corrects the strict mypy failures exposed by clean CI; the local checker now passes across 213 source modules with psutil development stubs, without disabling checks. Source self-analysis retains partiality for bounded/unresolved evidence rather than returning a clean verdict.
 
 ## Known limitations
 

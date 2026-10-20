@@ -21,8 +21,10 @@ from code_analysis.browse_index import BrowseIndex
 from code_analysis.comparison_browse import ComparisonFilters, ComparisonPageRequest
 from code_analysis.projection_models import ComparisonChange
 from code_analysis.static_comparison_source import (
+    ComparisonSourceSide,
     StaticComparisonSourceBinding,
     StaticComparisonSourceQuery,
+    StaticComparisonSourceSide,
     resolve_static_comparison_source_option,
 )
 from code_analysis.tui_app import RowDetails, plain_text
@@ -171,7 +173,10 @@ class ComparisonBrowser(ModalScreen[int]):
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         event.stop()
         if self.page is not None:
-            self.load_record(self.page.records[int(event.row_key.value)].position)
+            row_key = event.row_key.value
+            if row_key is None:
+                return
+            self.load_record(self.page.records[int(row_key)].position)
 
     @work(exclusive=True, group="comparison-detail")
     async def load_record(self, position: int) -> None:
@@ -216,7 +221,8 @@ class ComparisonBrowser(ModalScreen[int]):
             self.action_close()
 
     def apply_filters(self) -> None:
-        change = self.query_one("#comparison-change", Select).value
+        selected_change = self.query_one("#comparison-change", Select).value
+        change = selected_change if isinstance(selected_change, str) else ""
         kind = self.query_one("#comparison-kind", Input).value.strip()
         try:
             self.filters = ComparisonFilters(
@@ -304,6 +310,10 @@ class ComparisonSources(ModalScreen[None]):
             source_root,
             on_status,
         )
+        sides: tuple[tuple[ComparisonSourceSide, StaticComparisonSourceSide], ...] = (
+            ("baseline", binding.baseline),
+            ("candidate", binding.candidate),
+        )
         self.choices = tuple(
             StaticComparisonSourceQuery(
                 baseline_sha256=binding.baseline.report_sha256,
@@ -312,7 +322,7 @@ class ComparisonSources(ModalScreen[None]):
                 side=side,
                 option_id=option.option_id,
             )
-            for side, detail in (("baseline", binding.baseline), ("candidate", binding.candidate))
+            for side, detail in sides
             for option in detail.options
         )
 
@@ -346,7 +356,10 @@ class ComparisonSources(ModalScreen[None]):
         from code_analysis.ui_source import SourcePreviewIdentity
 
         event.stop()
-        query = self.choices[int(event.row_key.value)]
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        query = self.choices[int(row_key)]
         option = resolve_static_comparison_source_option(self.binding, query)
         self.app.push_screen(
             TerminalSource(

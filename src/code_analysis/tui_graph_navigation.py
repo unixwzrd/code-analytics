@@ -195,7 +195,10 @@ class StaticGraphNavigation(ModalScreen[int]):
         if self.page is None or self.page.offset != self.page_offset:
             return
         try:
-            position = int(event.row_key.value)
+            row_key = event.row_key.value
+            if row_key is None:
+                return
+            position = int(row_key)
             if position < 0:
                 return
             item = self.page.records[position]

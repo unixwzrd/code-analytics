@@ -10,6 +10,7 @@ from code_analysis.config import LanguageSelection
 from code_analysis.context import AnalysisContext
 from code_analysis.graph import canonical_cycles, strongly_connected_components
 from code_analysis.languages import FrontendContext, FrontendResult, SourceUnit, frontend_for
+from code_analysis.languages.base import NormalizedFunctionFact, NormalizedSymbolFact
 from code_analysis.models import (
     AvailabilityState,
     Completeness,
@@ -57,7 +58,7 @@ def _stable_id(prefix: str, *parts: str) -> str:
     return prefix + "-" + hashlib.sha256("\0".join(parts).encode()).hexdigest()[:20]
 
 
-def _evidence(result: FrontendResult, symbol, observation: str) -> Evidence:
+def _evidence(result: FrontendResult, symbol: NormalizedSymbolFact, observation: str) -> Evidence:
     return Evidence(
         span=SourceSpan(
             path=result.unit.logical_path,
@@ -221,7 +222,7 @@ def _clone_records(
     int,
 ]:
     by_name = {item.logical_name: item for item in subjects}
-    groups: dict[str, list[tuple[object, AnalysisSubject]]] = {}
+    groups: dict[str, list[tuple[NormalizedFunctionFact, AnalysisSubject]]] = {}
     minimum = context.config.clone_thresholds.near_clone_min_statements
     for result in results:
         for function in result.functions:

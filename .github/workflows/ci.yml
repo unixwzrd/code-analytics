@@ -35,7 +35,7 @@ jobs:
           python -c 'import coverage, psutil, tree_sitter, tree_sitter_javascript'
           ruby -rprism -e 'abort "unexpected Prism" unless Prism::VERSION == "1.9.0"'
       - name: Reject tracked private documents
-        run: git ls-files private | awk '$0 != "private/README.md" { exit 1 }'
+        run: python -c 'import pathlib, subprocess; paths = subprocess.check_output(["git", "ls-files"], text=True).splitlines(); assert not [path for path in paths if "private" in pathlib.PurePosixPath(path).parts]'
       - run: black --check src tests
       - run: ruff check src tests
       - run: mypy src/code_analysis

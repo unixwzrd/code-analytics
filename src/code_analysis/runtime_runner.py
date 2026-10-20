@@ -289,7 +289,11 @@ def _await_ready(
         if subject.overflow:
             raise OSError(errno.ENODATA, "subject stream bound exceeded during readiness")
         try:
-            command = probe.command or _url_probe_command(probe.url, probe.expected_http_status)
+            if probe.command:
+                command = probe.command
+            else:
+                assert probe.url is not None  # ReadinessProbe validates command-or-URL.
+                command = _url_probe_command(probe.url, probe.expected_http_status)
             _run_command(
                 command,
                 spec,

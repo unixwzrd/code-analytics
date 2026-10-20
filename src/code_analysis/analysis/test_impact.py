@@ -7,10 +7,14 @@ import hashlib
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 from code_analysis.context import AnalysisContext
 from code_analysis.project import logical_path
 from code_analysis.report_models import TestRelationshipKind
+
+TestFramework = Literal["pytest", "unittest", "mixed", "unknown"]
+FixtureScope = Literal["function", "class", "module", "package", "session", "unknown"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,7 +22,7 @@ class TestModuleFact:
     module: str
     path: str
     source_sha256: str
-    framework: str
+    framework: TestFramework
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,7 +45,7 @@ class FixtureFact:
     local_name: str
     line: int
     end_line: int
-    scope: str
+    scope: FixtureScope
     dependencies: tuple[str, ...]
 
 
@@ -129,7 +133,7 @@ def parse_test_module(context: AnalysisContext, path: Path) -> ParsedTestModule:
                         relationships,
                     )
 
-    sources = [*cases, *fixtures]
+    sources: list[TestCaseFact | FixtureFact] = [*cases, *fixtures]
     for source_fact in sources:
         for imported in imports:
             relationships.append(
@@ -178,7 +182,9 @@ def _test_module_name(relative: str) -> str:
     return ".".join(parts)
 
 
-def _imports(tree: ast.Module) -> tuple[tuple[str, ...], dict[str, tuple[str, str | None]], str]:
+def _imports(
+    tree: ast.Module,
+) -> tuple[tuple[str, ...], dict[str, tuple[str, str | None]], TestFramework]:
     imported: set[str] = set()
     aliases: dict[str, tuple[str, str | None]] = {}
     pytest_seen = False
@@ -197,7 +203,7 @@ def _imports(tree: ast.Module) -> tuple[tuple[str, ...], dict[str, tuple[str, st
                 aliases[alias.asname or alias.name] = (node.module, alias.name)
             pytest_seen |= node.module == "pytest"
             unittest_seen |= node.module == "unittest" or node.module.startswith("unittest.")
-    framework = (
+    framework: TestFramework = (
         "mixed"
         if pytest_seen and unittest_seen
         else "pytest" if pytest_seen else "unittest" if unittest_seen else "unknown"
@@ -315,7 +321,7 @@ def _collect_function(
             )
 
 
-def _fixture_scope(decorators: list[ast.expr]) -> str | None:
+def _fixture_scope(decorators: list[ast.expr]) -> FixtureScope | None:
     for decorator in decorators:
         call = decorator if isinstance(decorator, ast.Call) else None
         target = call.func if call is not None else decorator
@@ -330,11 +336,11 @@ def _fixture_scope(decorators: list[ast.expr]) -> str | None:
                     and isinstance(keyword.value.value, str)
                 ):
                     value = keyword.value.value
-                    return (
-                        value
-                        if value in {"function", "class", "module", "package", "session"}
-                        else "unknown"
-                    )
+                    match value:
+                        case "function" | "class" | "module" | "package" | "session":
+                            return value
+                        case _:
+                            return "unknown"
         return "function"
     return None
 

@@ -111,7 +111,8 @@ def _profile_text(report: AnalysisReport) -> dict[str, str]:
 def _deterministic_support(report: AnalysisReport) -> dict[tuple[str, str], tuple[str, ...]]:
     support: dict[tuple[str, str], set[str]] = defaultdict(set)
     for item in report.function_commonalities:
-        pair = tuple(sorted((item.left_subject_id, item.right_subject_id)))
+        left, right = sorted((item.left_subject_id, item.right_subject_id))
+        pair = (left, right)
         support[pair].add(item.commonality_id)
     for cluster in report.clone_clusters:
         for position, left in enumerate(cluster.subject_ids):
@@ -165,9 +166,8 @@ def build_semantic_nomination_report(
     candidate_by_pair: dict[tuple[str, str], set[str]] = defaultdict(set)
     for candidate in report.refactor_candidates:
         if len(candidate.participating_subject_ids) == 2:
-            candidate_by_pair[tuple(candidate.participating_subject_ids)].add(
-                candidate.candidate_id
-            )
+            left, right = candidate.participating_subject_ids
+            candidate_by_pair[(left, right)].add(candidate.candidate_id)
     nominations = []
     for left, right in pairs:
         similarity = math.fsum(

@@ -171,20 +171,23 @@ class RunPicker(ModalScreen[BrowseIndex | RuntimeIndex | None]):
         try:
             baseline = str(self.query_one("#run-baseline", Select).value)
             candidate = str(self.query_one("#run-candidate", Select).value)
+            repository = self.repository
             if self.profile_only:
-                index = await asyncio.to_thread(
-                    self.repository.select_runtime,
+                runtime_index = await asyncio.to_thread(
+                    repository.select_runtime,
                     profile,
                     None if compare_profile == "none" else compare_profile,
                 )
+                selected: BrowseIndex | RuntimeIndex = runtime_index
             else:
-                index = await asyncio.to_thread(
-                    self.repository.select,
+                browse_index = await asyncio.to_thread(
+                    repository.select,
                     baseline,
                     None if candidate == "none" else candidate,
                     profile=None if profile == "none" else profile,
                     compare_profile=None if compare_profile == "none" else compare_profile,
                 )
+                selected = browse_index
         except (ValueError, OSError, sqlite3.Error) as exc:
             status = (
                 errno.ENODATA
@@ -195,7 +198,7 @@ class RunPicker(ModalScreen[BrowseIndex | RuntimeIndex | None]):
             self.query_one("#run-status", Static).update(plain_text(f"Run selection failed: {exc}"))
             self.query_one("#run-open", Button).disabled = False
         else:
-            self.dismiss(index)
+            self.dismiss(selected)
         finally:
             self.busy = False
 

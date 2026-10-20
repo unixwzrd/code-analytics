@@ -26,6 +26,7 @@ from code_analysis.projection_models import (
     GraphEdge,
     GraphNode,
     GraphProjection,
+    Projection,
     ProjectionCollapse,
     ProjectionInput,
     ProjectionSelection,
@@ -215,6 +216,7 @@ def build_code_graph(
         max_nodes=request.max_nodes,
         max_edges=request.max_edges,
     )
+    graph: Projection
     try:
         if request.layer is CodeGraphLayer.CONTAINMENT:
             if resolved_path is None:

@@ -154,7 +154,10 @@ class ContractExplorer(ModalScreen[None]):
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         event.stop()
-        entry = self.entries[int(event.row_key.value)]
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        entry = self.entries[int(row_key)]
 
         def preview() -> None:
             from code_analysis.tui_source import TerminalSource

@@ -8,7 +8,7 @@ import json
 import sqlite3
 from collections.abc import Callable
 from pathlib import Path
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from rich.text import Text
 from textual import work
@@ -33,6 +33,8 @@ from code_analysis.static_graph_browse import StaticGraphRequest
 from code_analysis.test_browsing import TestImpactPage, TestImpactRow
 from code_analysis.ui_models import UIFindingRow, UIStateEffectPage, UIStateEffectRow
 from code_analysis.ui_rows import BrowseTable
+
+WebHandoffKind = Literal["report", "finding", "symbol", "graph", "projection"]
 
 
 def plain_text(value: str) -> Text:
@@ -393,8 +395,8 @@ class AnalysisTerminal(App[int]):
                 self.workspace_root = self.collection_session.selected().workspace.root
             self.run_selected(index)
 
-    def run_selected(self, index: BrowseIndex | None) -> None:
-        if index is None:
+    def run_selected(self, index: BrowseIndex | RuntimeIndex | None) -> None:
+        if not isinstance(index, BrowseIndex):
             return
         previous_report = self.index.bootstrap().reports[0].report_sha256
         selected_report = index.bootstrap().reports[0].report_sha256
@@ -518,7 +520,7 @@ class AnalysisTerminal(App[int]):
 
     def open_web_handoff(
         self,
-        kind: str = "report",
+        kind: WebHandoffKind = "report",
         identity: str | None = None,
         *,
         graph_request: StaticGraphRequest | None = None,
@@ -785,7 +787,10 @@ class AnalysisTerminal(App[int]):
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         if self.current_page is not None:
-            record = self.current_page.records[int(event.row_key.value)]
+            row_key = event.row_key.value
+            if row_key is None:
+                return
+            record = self.current_page.records[int(row_key)]
             if self.selection.table is BrowseTable.MODULES:
                 from code_analysis.tui_modules import ModuleBrowser
                 from code_analysis.ui_models import UIModuleRow

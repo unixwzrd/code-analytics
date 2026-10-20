@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from code_analysis.models import Completeness
 from code_analysis.profile_ingestion import ingest_profiles
+from code_analysis.profile_models import ProfileReport
 from code_analysis.profiling import load_profile_json, render_profile_diff, render_profile_json
 from code_analysis.reports.json_report import load_json
 from code_analysis.runtime_artifacts import publish_runtime_report
@@ -28,7 +29,9 @@ from code_analysis.runtime_queries import (
 from code_analysis.runtime_spec import RuntimeAnalysisConfig
 
 
-def add_runtime_parser(subparsers) -> None:
+def add_runtime_parser[Parser: argparse.ArgumentParser](
+    subparsers: argparse._SubParsersAction[Parser],
+) -> None:
     parser = subparsers.add_parser("runtime", help="offline-first cProfile evidence")
     commands = parser.add_subparsers(dest="runtime_command", required=True)
     ingest = commands.add_parser("ingest", help="normalize profiles without executing source")
@@ -77,7 +80,7 @@ def add_runtime_parser(subparsers) -> None:
     query.add_argument("--format", choices=("json", "tsv", "markdown"), default="json")
 
 
-def load_runtime_path(path: Path):
+def load_runtime_path(path: Path) -> ProfileReport:
     manifest = None
     if path.is_dir():
         directory = path
@@ -159,18 +162,18 @@ def runtime_command(args: argparse.Namespace) -> int:
         )
         return result.status
     if args.runtime_command == "compare":
-        report = compare_runtime_profiles(
+        comparison_report = compare_runtime_profiles(
             load_runtime_path(args.baseline),
             load_runtime_path(args.candidate),
             diagnostic_only=args.diagnostic_only,
         )
-        rendered = render_profile_diff(report, markdown=args.markdown)
+        rendered = render_profile_diff(comparison_report, markdown=args.markdown)
         if args.output:
             with args.output.open("x", encoding="utf-8") as output:
                 output.write(rendered)
         else:
             sys.stdout.write(rendered)
-        return 0 if report.claim_eligible else errno.ENODATA
+        return 0 if comparison_report.claim_eligible else errno.ENODATA
     if args.runtime_command == "query":
         try:
             request = RuntimeQueryRequest(
@@ -240,7 +243,6 @@ def runtime_command(args: argparse.Namespace) -> int:
             source_report=source,
         )
         if metadata_artifact is not None:
-            from code_analysis.profile_models import ProfileReport
             from code_analysis.runtime_correlation import profile_content_identity
 
             artifacts = {item.sha256: item for item in report.runtime.artifacts}

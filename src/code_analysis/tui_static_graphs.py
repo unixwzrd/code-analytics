@@ -382,7 +382,10 @@ class StaticGraphBrowser(ModalScreen[int]):
         if self.graph is None or self.controls_changed or not self._controls_match_request():
             return
         try:
-            record = self._rows[int(event.row_key.value)]
+            row_key = event.row_key.value
+            if row_key is None:
+                return
+            record = self._rows[int(row_key)]
         except (IndexError, TypeError, ValueError):
             return
         if isinstance(record, GraphNode):

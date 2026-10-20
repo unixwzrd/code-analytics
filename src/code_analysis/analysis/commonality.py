@@ -79,7 +79,7 @@ def generate_commonality_candidates(
         if len(set(names)) <= subject_threshold
     }
     clone_pair_set = {
-        tuple(sorted(pair))
+        (min(pair), max(pair))
         for pair in clone_pairs
         if pair[0] in by_name and pair[1] in by_name and pair[0] != pair[1]
     }

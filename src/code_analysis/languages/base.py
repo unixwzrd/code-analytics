@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Literal, Protocol
 
 from code_analysis.config import AnalysisConfig
 from code_analysis.models import (
@@ -77,7 +77,7 @@ class NormalizedImportFact:
 @dataclass(frozen=True, slots=True)
 class NormalizedExportFact:
     name: str
-    kind: str
+    kind: Literal["default", "named", "re-export", "commonjs"]
     local_name: str | None
     source_specifier: str | None
     start_line: int

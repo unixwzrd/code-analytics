@@ -10,14 +10,15 @@ import secrets
 import socket
 import sys
 import threading
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING, Final, Literal
 from urllib.parse import parse_qs, urlsplit
 
-from pydantic import ValidationError
+from pydantic import TypeAdapter, ValidationError
 
 from code_analysis.collection_commands import (
     CollectionContext,
@@ -37,7 +38,7 @@ from code_analysis.comparison_browse import (
 )
 from code_analysis.dependency_graph import DependencyGraphRequest
 from code_analysis.dependency_navigation import DependencyRequest, DependencyResult
-from code_analysis.models import Completeness, SourceLanguage
+from code_analysis.models import Completeness, SourceLanguage, StrictModel
 from code_analysis.projection_models import (
     GraphProjection,
     ProjectionCollapse,
@@ -276,12 +277,12 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             if parsed.path == "/api/profile-runs":
                 from code_analysis.profile_runs import ProfileRunCatalog
 
-                catalog = (
+                profile_catalog = (
                     self.server.app.runs.profiles()
                     if self.server.app.runs
                     else ProfileRunCatalog(records=())
                 )
-                self._json(HTTPStatus.OK, catalog.model_dump(mode="json"))
+                self._json(HTTPStatus.OK, profile_catalog.model_dump(mode="json"))
                 return
             if parsed.path == "/api/runs":
                 refresh = _single(params, "refresh", "0")
@@ -322,6 +323,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 "/api/navigation",
                 "/api/source",
             } and {"report_sha256", "decision_ledger_sha256"}.intersection(params):
+                assert service is not None
                 binding = UIEvidenceBinding(
                     report_sha256=_single(params, "report_sha256", ""),
                     decision_ledger_sha256=(
@@ -382,9 +384,12 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 if set(params) - {"report_sha256", "kind", "identity", "graph_request"}:
                     raise ValueError("unsupported handoff parameters")
                 graph_request = _single(params, "graph_request", "")
+                assert service is not None
                 selection = WebHandoffSelection(
                     report_sha256=_single(params, "report_sha256", ""),
-                    kind=_single(params, "kind", "report"),
+                    kind=TypeAdapter[Literal["report", "finding", "symbol", "graph", "projection"]](
+                        Literal["report", "finding", "symbol", "graph", "projection"]
+                    ).validate_python(_single(params, "kind", "report")),
                     identity=_single(params, "identity", "") or None,
                     graph_request=(
                         StaticGraphRequest.model_validate_json(graph_request)
@@ -490,22 +495,25 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                         )
                     query_request = _runtime_query_request(params)
                     panel = runtime.panel(query_request)
-                    projection = panel.projection
-                    format_ = _single(params, "format", "json")
-                    renderers = {
+                    runtime_projection = panel.projection
+                    table_format = _single(params, "format", "json")
+                    table_renderers = {
                         "json": render_runtime_query_json,
                         "tsv": render_runtime_query_tsv,
                         "markdown": render_runtime_query_markdown,
                     }
-                    if format_ not in renderers:
+                    if table_format not in table_renderers:
                         raise ValueError("unsupported runtime table format")
-                    payload = renderers[format_](projection).encode("utf-8")
-                    self._send_headers(HTTPStatus.OK, _RUNTIME_TABLE_MEDIA[format_], len(payload))
+                    payload = table_renderers[table_format](runtime_projection).encode("utf-8")
+                    self._send_headers(
+                        HTTPStatus.OK, _RUNTIME_TABLE_MEDIA[table_format], len(payload)
+                    )
                     self.send_header(
                         "Content-Disposition",
-                        f'attachment; filename="runtime-{projection.section.value}.{format_}"',
+                        f'attachment; filename="runtime-{runtime_projection.section.value}'
+                        f'.{table_format}"',
                     )
-                    for key, value in _runtime_table_download_headers(projection).items():
+                    for key, value in _runtime_table_download_headers(runtime_projection).items():
                         self.send_header(key, value)
                     self._emit_response_body(payload)
                     return
@@ -518,8 +526,8 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                             + ", ".join(sorted(unknown))
                         )
                     comparison = runtime.comparison_view()
-                    format_ = _single(params, "format", "json")
-                    renderers = {
+                    comparison_format = _single(params, "format", "json")
+                    comparison_renderers = {
                         "json": lambda: render_runtime_comparison_json(comparison),
                         "tsv": lambda: render_runtime_comparison_tsv(comparison),
                         "markdown": lambda: render_runtime_comparison_markdown(
@@ -530,13 +538,15 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                             ),
                         ),
                     }
-                    if format_ not in renderers:
+                    if comparison_format not in comparison_renderers:
                         raise ValueError("unsupported runtime comparison format")
-                    payload = renderers[format_]().encode("utf-8")
-                    self._send_headers(HTTPStatus.OK, _RUNTIME_TABLE_MEDIA[format_], len(payload))
+                    payload = comparison_renderers[comparison_format]().encode("utf-8")
+                    self._send_headers(
+                        HTTPStatus.OK, _RUNTIME_TABLE_MEDIA[comparison_format], len(payload)
+                    )
                     self.send_header(
                         "Content-Disposition",
-                        f'attachment; filename="runtime-comparison.{format_}"',
+                        f'attachment; filename="runtime-comparison.{comparison_format}"',
                     )
                     for key, value in runtime_comparison_download_headers(
                         comparison, runtime
@@ -553,30 +563,32 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                         raise ValueError(
                             "runtime comparison source requires a saved analysis report"
                         )
-                    query = parse_runtime_comparison_source_query(params)
+                    comparison_source_query = parse_runtime_comparison_source_query(params)
                     compare_run = _single(params, "compare_run", "none")
                     if runtime.comparison is None or runtime.delta is None:
-                        payload = runtime_comparison_source_unavailable(
-                            query,
+                        comparison_source_payload = runtime_comparison_source_unavailable(
+                            comparison_source_query,
                             "runtime comparison source preview unavailable: "
                             "no comparison was indexed",
                         )
                     else:
                         try:
-                            payload = runtime_comparison_source_preview(
+                            comparison_source_payload = runtime_comparison_source_preview(
                                 service,
                                 runtime,
                                 source_root=self.server.app.source_root,
                                 compare_run=compare_run,
-                                query=query,
+                                query=comparison_source_query,
                             )
                         except RuntimeSourceUnavailable as exc:
-                            payload = runtime_comparison_source_unavailable(query, str(exc))
-                    self._json(HTTPStatus.OK, payload.model_dump(mode="json"))
+                            comparison_source_payload = runtime_comparison_source_unavailable(
+                                comparison_source_query, str(exc)
+                            )
+                    self._json(HTTPStatus.OK, comparison_source_payload.model_dump(mode="json"))
                     return
-                value: RuntimeOverview | RuntimePanel | RuntimeComparison
+                runtime_value: RuntimeOverview | RuntimePanel | RuntimeComparison
                 if parsed.path == "/api/runtime":
-                    value = (
+                    runtime_value = (
                         runtime.overview(
                             service.bootstrap().reports[0].report_sha256 if service else None
                         )
@@ -590,12 +602,12 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 elif runtime is None:
                     raise ValueError("no saved runtime profile supplied")
                 elif parsed.path == "/api/runtime/comparison":
-                    value = runtime.comparison_view()
+                    runtime_value = runtime.comparison_view()
                 elif parsed.path == "/api/runtime/query":
-                    value = runtime.panel(_runtime_query_request(params))
+                    runtime_value = runtime.panel(_runtime_query_request(params))
                 else:
                     raise ValueError("unknown runtime view")
-                self._json(HTTPStatus.OK, value.model_dump(mode="json"))
+                self._json(HTTPStatus.OK, runtime_value.model_dump(mode="json"))
                 return
             assert service is not None
             if parsed.path in {
@@ -603,26 +615,26 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 "/api/dependencies/graph",
                 "/api/dependencies/download",
             }:
-                request = _dependency_request(params)
+                dependency_request = _dependency_request(params)
                 if parsed.path == "/api/dependencies":
                     # Validate optional graph bounds here too, so an Apply
                     # request never accepts controls that its later graph or
                     # download would reject.
-                    _dependency_graph_request(request, params)
-                    result = service.dependencies(request)
+                    _dependency_graph_request(dependency_request, params)
+                    dependency_result = service.dependencies(dependency_request)
                     self._json(
                         HTTPStatus.OK,
-                        result.model_dump(mode="json"),
-                        _dependency_headers(result),
+                        dependency_result.model_dump(mode="json"),
+                        _dependency_headers(dependency_result),
                     )
                     return
-                graph_request = _dependency_graph_request(request, params)
-                graph = service.dependency_graph(graph_request)
+                dependency_graph_request = _dependency_graph_request(dependency_request, params)
+                graph = service.dependency_graph(dependency_graph_request)
                 if parsed.path == "/api/dependencies/graph":
                     self._json(
                         HTTPStatus.OK,
                         graph.model_dump(mode="json"),
-                        _dependency_graph_headers(graph, graph_request),
+                        _dependency_graph_headers(graph, dependency_graph_request),
                     )
                     return
                 output_format = ProjectionFormat(_single(params, "format", "json"))
@@ -655,7 +667,9 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     "Content-Disposition",
                     f'attachment; filename="dependencies.{output_format.value}"',
                 )
-                for key, value in _dependency_graph_headers(graph, graph_request).items():
+                for key, value in _dependency_graph_headers(
+                    graph, dependency_graph_request
+                ).items():
                     self.send_header(key, value)
                 self._emit_response_body(payload)
                 return
@@ -682,15 +696,15 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     frame_id=_single(params, "frame_id", ""),
                 )
                 runtime = _selected_runtime(self.server.app, params)
-                source = service.code_runtime_source(
+                runtime_source = service.code_runtime_source(
                     source_request,
                     runtime.profile if runtime is not None else None,
                 )
                 self._json(
                     HTTPStatus.OK,
-                    source.model_dump(mode="json"),
+                    runtime_source.model_dump(mode="json"),
                     {
-                        "X-Analysis-Completeness": source.completeness.value,
+                        "X-Analysis-Completeness": runtime_source.completeness.value,
                     },
                 )
                 return
@@ -725,7 +739,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     "profile_identity_sha256",
                 }:
                     raise ValueError("profile selection requires the runtime-call layer")
-                graph = service.code_graph(
+                code_graph = service.code_graph(
                     CodeGraphRequest(
                         report_sha256=_single(params, "report_sha256", ""),
                         revision=_single_int(params, "revision", 0),
@@ -750,11 +764,11 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 )
                 self._json(
                     HTTPStatus.OK,
-                    graph.model_dump(mode="json"),
+                    code_graph.model_dump(mode="json"),
                     {
-                        "X-Analysis-Completeness": graph.completeness.value,
+                        "X-Analysis-Completeness": code_graph.completeness.value,
                         "X-Projection-Truncated": str(
-                            bool(graph.graph and graph.graph.truncated)
+                            bool(code_graph.graph and code_graph.graph.truncated)
                         ).lower(),
                     },
                 )
@@ -764,7 +778,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 "/api/code-browser/source",
                 "/api/code-browser/document",
             }:
-                from code_analysis.code_browse import CodeBrowseRequest
+                from code_analysis.code_browse import CodeBrowsePage, CodeBrowseRequest
                 from code_analysis.ui_source import (
                     SourceBrowseDocument,
                     SourceBrowsePreview,
@@ -794,54 +808,57 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     limit=_single_int(params, "limit", 50),
                     line=_single_int(params, "line", 1) if "line" in params else None,
                 )
-                page = service.code_browse(browse_request)
+                browse_page = service.code_browse(browse_request)
+                browse_payload: SourceBrowseDocument | SourceBrowsePreview | CodeBrowsePage
                 if parsed.path == "/api/code-browser/document":
-                    if not page.logical_path:
+                    if not browse_page.logical_path:
                         raise ValueError("full source requires a selected saved file")
-                    source = next(
+                    source_file = next(
                         (
                             item
                             for item in service.primary.source_files
-                            if item.logical_path == page.logical_path
+                            if item.logical_path == browse_page.logical_path
                         ),
                         None,
                     )
-                    if source is None:
+                    if source_file is None:
                         raise ValueError("full source path is absent from the selected report")
-                    payload = SourceBrowseDocument(
-                        report_sha256=page.report_sha256,
-                        revision=page.revision,
-                        document=read_source_document(source, self.server.app.source_root),
+                    browse_payload = SourceBrowseDocument(
+                        report_sha256=browse_page.report_sha256,
+                        revision=browse_page.revision,
+                        document=read_source_document(source_file, self.server.app.source_root),
                     )
                 elif parsed.path == "/api/code-browser/source":
-                    if not page.logical_path:
+                    if not browse_page.logical_path:
                         raise ValueError("source browsing requires a selected saved file")
                     start = browse_request.line or 1
                     preview = preview_source(
                         service.primary,
                         self.server.app.source_root,
-                        page.logical_path,
+                        browse_page.logical_path,
                         start=start,
                         end=start + 200,
                     )
-                    payload = SourceBrowsePreview(
-                        report_sha256=page.report_sha256,
-                        revision=page.revision,
+                    browse_payload = SourceBrowsePreview(
+                        report_sha256=browse_page.report_sha256,
+                        revision=browse_page.revision,
                         preview=preview,
                     )
                 else:
-                    payload = page
+                    browse_payload = browse_page
                 self._json(
                     HTTPStatus.OK,
-                    payload.model_dump(mode="json"),
-                    {"X-Analysis-Completeness": page.completeness.value},
+                    browse_payload.model_dump(mode="json"),
+                    {"X-Analysis-Completeness": browse_page.completeness.value},
                 )
                 return
             if parsed.path == "/api/navigation":
                 from code_analysis.ui_navigation import navigation_page
 
-                page = navigation_page(service.primary, _single(params, "identity", ""), offset)
-                self._json(HTTPStatus.OK, page.model_dump(mode="json"))
+                navigation_result = navigation_page(
+                    service.primary, _single(params, "identity", ""), offset
+                )
+                self._json(HTTPStatus.OK, navigation_result.model_dump(mode="json"))
                 return
             if parsed.path == "/api/comparison-download":
                 if set(params) - {
@@ -857,7 +874,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     "format",
                 }:
                     raise ValueError("unsupported comparison export selection")
-                selection = ComparisonPageRequest(
+                comparison_selection = ComparisonPageRequest(
                     baseline_sha256=_single(params, "baseline_sha256", ""),
                     candidate_sha256=_single(params, "candidate_sha256", ""),
                     offset=offset,
@@ -872,14 +889,14 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 }
                 if output_format not in media:
                     raise ValueError("comparison export supports JSON, TSV or Markdown")
-                projection = comparison_page_projection(
+                comparison_projection = comparison_page_projection(
                     service.comparison_records(
-                        offset=offset, limit=limit, filters=selection.filters
+                        offset=offset, limit=limit, filters=comparison_selection.filters
                     ),
-                    selection,
+                    comparison_selection,
                     service.bootstrap().reports,
                 )
-                payload = render_projection(projection, output_format).encode("utf-8")
+                payload = render_projection(comparison_projection, output_format).encode("utf-8")
                 if len(payload) > 16 * 1024**2:
                     raise ValueError("comparison export exceeds the 16-MiB bound")
                 extension = {
@@ -891,9 +908,13 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 self.send_header(
                     "Content-Disposition", f'attachment; filename="comparison.{extension}"'
                 )
-                self.send_header("X-Code-Analysis-Completeness", projection.completeness.value)
-                self.send_header("X-Code-Analysis-Truncated", str(projection.truncated).lower())
-                self.send_header("X-Code-Analysis-Projection", projection.projection_id)
+                self.send_header(
+                    "X-Code-Analysis-Completeness", comparison_projection.completeness.value
+                )
+                self.send_header(
+                    "X-Code-Analysis-Truncated", str(comparison_projection.truncated).lower()
+                )
+                self.send_header("X-Code-Analysis-Projection", comparison_projection.projection_id)
                 self._emit_response_body(payload)
                 return
             if parsed.path in {"/api/comparison-detail", "/api/comparison-source"}:
@@ -904,31 +925,33 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     validate_static_comparison_selection,
                 )
 
-                source_request = parsed.path == "/api/comparison-source"
+                is_source_request = parsed.path == "/api/comparison-source"
                 allowed = {"run", "compare_run", "position", "baseline_sha256", "candidate_sha256"}
-                if source_request:
+                if is_source_request:
                     allowed.update({"side", "option_id"})
                 if set(params) - allowed:
                     raise ValueError("unsupported comparison source selection")
-                selection = StaticComparisonSelection(
+                static_selection = StaticComparisonSelection(
                     position=_single_int(params, "position", -1),
                     baseline_sha256=_single(params, "baseline_sha256", ""),
                     candidate_sha256=_single(params, "candidate_sha256", ""),
                 )
-                binding = service.static_comparison_source_detail(selection.position)
-                validate_static_comparison_selection(binding, selection)
-                if source_request:
-                    query = StaticComparisonSourceQuery(
-                        **selection.model_dump(),
-                        side=_single(params, "side", ""),
+                static_binding = service.static_comparison_source_detail(static_selection.position)
+                validate_static_comparison_selection(static_binding, static_selection)
+                if is_source_request:
+                    static_source_query = StaticComparisonSourceQuery(
+                        **static_selection.model_dump(),
+                        side=TypeAdapter[Literal["baseline", "candidate"]](
+                            Literal["baseline", "candidate"]
+                        ).validate_python(_single(params, "side", "")),
                         option_id=_single(params, "option_id", ""),
                     )
                     preview = preview_static_comparison_source(
-                        binding, query, self.server.app.source_root
+                        static_binding, static_source_query, self.server.app.source_root
                     )
                     self._json(HTTPStatus.OK, preview.model_dump(mode="json"))
                 else:
-                    self._json(HTTPStatus.OK, binding.model_dump(mode="json"))
+                    self._json(HTTPStatus.OK, static_binding.model_dump(mode="json"))
                 return
             if parsed.path in {"/api/test-detail", "/api/test-source"}:
                 from code_analysis.ui_source import SourcePreviewIdentity, preview_source_record
@@ -992,13 +1015,13 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 )
                 return
             if parsed.path == "/api/projection-node":
-                selection = graph_node_selection(
+                node_selection = graph_node_selection(
                     service.primary,
                     _projection_request(params),
                     _single(params, "projection_id", ""),
                     _single(params, "node", ""),
                 )
-                self._json(HTTPStatus.OK, selection.model_dump(mode="json"))
+                self._json(HTTPStatus.OK, node_selection.model_dump(mode="json"))
                 return
             if parsed.path in {"/api/projection", "/api/download"}:
                 projection_request = _projection_request(params)
@@ -1033,7 +1056,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 self.send_header("X-Projection-Truncated", str(projection.truncated).lower())
                 self._emit_response_body(payload)
                 return
-            routes = {
+            routes: dict[str, Callable[[], StrictModel]] = {
                 "/api/bootstrap": lambda: service.bootstrap(),
                 "/api/modules": lambda: service.modules(
                     offset=offset, limit=limit, query=query, facets=facets
@@ -1162,6 +1185,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     threading.Thread(target=self.server.shutdown, daemon=True).start()
             elif self.path == "/api/collection/preview":
                 request = CollectionRequest.model_validate_json(body)
+                assert planner is not None
                 self._json(HTTPStatus.OK, planner.preview(request).model_dump(mode="json"))
             else:
                 self._collection_action(body)
@@ -1178,13 +1202,13 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             elif isinstance(exc, OSError):
                 message = exc.strerror or message
             code = (exc.errno or errno.EIO) if isinstance(exc, OSError) else errno.EINVAL
-            status = (
+            error_status = (
                 HTTPStatus.FORBIDDEN
                 if code == errno.EPERM
                 else HTTPStatus.CONFLICT if code == errno.EBUSY else HTTPStatus.BAD_REQUEST
             )
             self._json(
-                status,
+                error_status,
                 {"error": {"code": "invalid-collection", "message": message}, "status": code},
             )
 
@@ -1527,7 +1551,9 @@ def _dependency_request(params: dict[str, list[str]]) -> DependencyRequest:
     return DependencyRequest(
         source=_single(params, "source", ""),
         target=target or None,
-        mode=_single(params, "mode", "path"),
+        mode=TypeAdapter[Literal["path", "component"]](
+            Literal["path", "component"]
+        ).validate_python(_single(params, "mode", "path")),
         max_nodes=_single_int(params, "max_nodes", 500),
         max_edges=_single_int(params, "max_edges", 5000),
     )

@@ -5,9 +5,14 @@ from __future__ import annotations
 import ast
 import hashlib
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
+
+if TYPE_CHECKING:
+    from tree_sitter import Node, Parser
 
 from code_analysis.context import AnalysisContext
 from code_analysis.models import (
@@ -288,12 +293,14 @@ def _python_endpoints(
         except SyntaxError:
             continue
         prefixes: dict[str, str] = {}
-        for node in tree.body:
-            if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+        for assignment_node in tree.body:
+            if not isinstance(assignment_node, (ast.Assign, ast.AnnAssign)):
                 continue
-            value = node.value
+            value = assignment_node.value
             target = (
-                node.targets[0] if isinstance(node, ast.Assign) and node.targets else node.target
+                assignment_node.targets[0]
+                if isinstance(assignment_node, ast.Assign)
+                else assignment_node.target
             )
             if not isinstance(target, ast.Name) or not isinstance(value, ast.Call):
                 continue
@@ -411,17 +418,17 @@ def _python_endpoints(
     return tuple(endpoints)
 
 
-def _walk(node):
+def _walk(node: Node) -> Iterator[Node]:
     yield node
     for child in node.children:
         yield from _walk(child)
 
 
-def _node_text(source: bytes, node) -> str:
+def _node_text(source: bytes, node: Node) -> str:
     return source[node.start_byte : node.end_byte].decode("utf-8")
 
 
-def _js_literal(source: bytes, node) -> str | None:
+def _js_literal(source: bytes, node: Node) -> str | None:
     text = _node_text(source, node)
     if node.type == "string":
         try:
@@ -438,7 +445,7 @@ def _js_literal(source: bytes, node) -> str | None:
     return None
 
 
-def _js_static_urls(source: bytes, node, bindings: dict[str, object]) -> tuple[str, ...]:
+def _js_static_urls(source: bytes, node: Node, bindings: dict[str, Node]) -> tuple[str, ...]:
     """Resolve a URL's fixed prefix while leaving dynamic values opaque.
 
     Query values are deliberately not required to be static: endpoint identity is
@@ -484,12 +491,12 @@ def _js_static_urls(source: bytes, node, bindings: dict[str, object]) -> tuple[s
     )
 
 
-def _js_static_url(source: bytes, node, bindings: dict[str, object]) -> str | None:
+def _js_static_url(source: bytes, node: Node, bindings: dict[str, Node]) -> str | None:
     values = _js_static_urls(source, node, bindings)
     return values[0] if len(values) == 1 else None
 
 
-def _js_parameter_names(parameters, source: bytes) -> set[str]:
+def _js_parameter_names(parameters: Node, source: bytes) -> set[str]:
     names: set[str] = set()
     for item in parameters.named_children:
         if item.type == "identifier":
@@ -505,7 +512,7 @@ def _js_parameter_names(parameters, source: bytes) -> set[str]:
     return names
 
 
-def _js_transport_routes(source: bytes, node, bindings: dict[str, object]) -> tuple[str, ...]:
+def _js_transport_routes(source: bytes, node: Node, bindings: dict[str, Node]) -> tuple[str, ...]:
     if node.type != "object":
         return _js_static_urls(source, node, bindings)
     pairs = dict(_js_object_pairs(source, node))
@@ -515,8 +522,8 @@ def _js_transport_routes(source: bytes, node, bindings: dict[str, object]) -> tu
     return ()
 
 
-def _js_bindings(root, source: bytes) -> dict[str, object]:
-    bindings: dict[str, object] = {}
+def _js_bindings(root: Node, source: bytes) -> dict[str, Node]:
+    bindings: dict[str, Node] = {}
     for node in _walk(root):
         if node.type not in {"variable_declarator", "assignment_expression"}:
             continue
@@ -527,7 +534,7 @@ def _js_bindings(root, source: bytes) -> dict[str, object]:
     return bindings
 
 
-def _js_fetch_wrappers(root, source: bytes) -> dict[str, str]:
+def _js_fetch_wrappers(root: Node, source: bytes) -> dict[str, str]:
     """Return local wrapper name -> URL parameter for direct ``fetch`` wrappers."""
 
     wrappers: dict[str, str] = {}
@@ -560,7 +567,7 @@ def _js_fetch_wrappers(root, source: bytes) -> dict[str, str]:
     return wrappers
 
 
-def _js_wrapper_targets(root, source: bytes) -> dict[str, str]:
+def _js_wrapper_targets(root: Node, source: bytes) -> dict[str, str]:
     """Return local one-argument wrappers and their immediate call targets."""
 
     targets: dict[str, str] = {}
@@ -591,7 +598,9 @@ def _js_wrapper_targets(root, source: bytes) -> dict[str, str]:
     return targets
 
 
-def _js_wrapper_implementation_call(node, source: bytes, wrapper_targets: dict[str, str]) -> bool:
+def _js_wrapper_implementation_call(
+    node: Node, source: bytes, wrapper_targets: dict[str, str]
+) -> bool:
     """Whether a call forwards a wrapper parameter rather than naming an endpoint."""
 
     arguments = node.child_by_field_name("arguments")
@@ -625,7 +634,7 @@ def _js_wrapper_implementation_call(node, source: bytes, wrapper_targets: dict[s
 
 
 def _js_import_targets(
-    context: AnalysisContext, file_path: Path, root, source: bytes
+    context: AnalysisContext, file_path: Path, root: Node, source: bytes
 ) -> dict[str, tuple[Path, str]]:
     """Resolve only literal relative ESM named imports inside the analysis roots."""
 
@@ -671,7 +680,7 @@ def _js_import_targets(
 
 def _js_is_local_transport_wrapper(
     context: AnalysisContext,
-    parser,
+    parser: Parser,
     file_path: Path,
     name: str,
     visited: set[tuple[Path, str]],
@@ -699,10 +708,10 @@ def _js_is_local_transport_wrapper(
     return _js_is_local_transport_wrapper(context, parser, imported_path, imported_name, visited)
 
 
-def _js_object_pairs(source: bytes, node) -> tuple[tuple[str, object], ...]:
+def _js_object_pairs(source: bytes, node: Node) -> tuple[tuple[str, Node], ...]:
     if node.type != "object":
         return ()
-    pairs: list[tuple[str, object]] = []
+    pairs: list[tuple[str, Node]] = []
     for child in node.named_children:
         if child.type != "pair":
             continue
@@ -716,7 +725,7 @@ def _js_object_pairs(source: bytes, node) -> tuple[tuple[str, object], ...]:
     return tuple(pairs)
 
 
-def _js_variant(source: bytes, node, evidence: Evidence) -> _VariantFact | None:
+def _js_variant(source: bytes, node: Node, evidence: Evidence) -> _VariantFact | None:
     target = node
     if node.type == "call_expression":
         function = node.child_by_field_name("function")
@@ -829,11 +838,8 @@ def _javascript_endpoints(
                 method = "GET"
                 if len(named) > 1 and named[1].type == "object":
                     options = dict(_js_object_pairs(source, named[1]))
-                    method_literal = (
-                        _js_literal(source, options.get("method"))
-                        if options.get("method")
-                        else None
-                    )
+                    method_node = options.get("method")
+                    method_literal = _js_literal(source, method_node) if method_node else None
                     if method_literal is not None:
                         method = method_literal.upper()
                     body = options.get("body")

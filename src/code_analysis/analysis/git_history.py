@@ -210,7 +210,7 @@ def _scoped_change(
         return path, previous, kind
     if current_python:
         return path, None, ChangeKind.ADDED if previous is not None else kind
-    if previous_python:
+    if previous_python and previous is not None:
         return previous, None, ChangeKind.REMOVED
     return None
 

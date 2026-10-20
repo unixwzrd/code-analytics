@@ -284,6 +284,8 @@ def _add_domain_items(
     if len(selected) == len(identities):
         return
     for relation in report.test_relationships:
+        if relation.source_test_module_id is None:
+            continue
         test_module_evidence.setdefault(relation.source_test_module_id, []).extend(
             relation.evidence
         )

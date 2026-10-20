@@ -16,6 +16,7 @@ from textual.screen import ModalScreen
 from textual.widgets import Button, DataTable, Input, Select, Static
 
 from code_analysis.artifact_viewer import ViewerCommand
+from code_analysis.browse_index import BrowseIndex
 from code_analysis.dependency_graph import DependencyGraphRequest
 from code_analysis.dependency_navigation import (
     DependencyRequest,
@@ -24,6 +25,7 @@ from code_analysis.dependency_navigation import (
     investigate_dependencies,
 )
 from code_analysis.module_navigation import ModuleSelectionError
+from code_analysis.runtime_index import RuntimeIndex
 from code_analysis.tui_app import RowDetails, plain_text
 
 
@@ -259,9 +261,15 @@ class DependencyBrowser(ModalScreen[str | None]):
                     "Press Apply to refresh dependency evidence before exporting."
                 )
                 return
+            index = self.reader
+            if not isinstance(index, (BrowseIndex, RuntimeIndex)):
+                self.query_one("#dependency-status", Static).update(
+                    "Export requires a browse or runtime index reader."
+                )
+                return
             self.app.push_screen(
                 ExportPage(
-                    self.reader,
+                    index,
                     DependencyGraphRequest(investigation=self.request),
                     self.on_status,
                     self.viewer,

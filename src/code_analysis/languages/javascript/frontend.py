@@ -6,7 +6,10 @@ import hashlib
 import importlib.metadata
 import importlib.util
 from collections.abc import Iterator
-from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from tree_sitter import Node
 
 from code_analysis.languages.base import (
     FrontendContext,
@@ -258,17 +261,17 @@ def _distribution_version(name: str) -> str:
     return importlib.metadata.version(name)
 
 
-def _walk(node: Any) -> Iterator[Any]:
+def _walk(node: Node) -> Iterator[Node]:
     yield node
     for child in node.named_children:
         yield from _walk(child)
 
 
-def _text(node: Any, unit: SourceUnit) -> str:
+def _text(node: Node, unit: SourceUnit) -> str:
     return unit.source_bytes[node.start_byte : node.end_byte].decode("utf-8", errors="replace")
 
 
-def _span(node: Any) -> tuple[int, int, int, int]:
+def _span(node: Node) -> tuple[int, int, int, int]:
     return (
         node.start_point.row + 1,
         node.start_point.column,
@@ -277,14 +280,14 @@ def _span(node: Any) -> tuple[int, int, int, int]:
     )
 
 
-def _string_value(node: Any, unit: SourceUnit) -> str | None:
+def _string_value(node: Node, unit: SourceUnit) -> str | None:
     value = _text(node, unit)
     if len(value) >= 2 and value[0] in {'"', "'"} and value[-1] == value[0]:
         return value[1:-1]
     return None
 
 
-def _imports(root: Any, unit: SourceUnit) -> tuple[NormalizedImportFact, ...]:
+def _imports(root: Node, unit: SourceUnit) -> tuple[NormalizedImportFact, ...]:
     facts: list[NormalizedImportFact] = []
     for node in _walk(root):
         source = None
@@ -297,7 +300,7 @@ def _imports(root: Any, unit: SourceUnit) -> tuple[NormalizedImportFact, ...]:
             function = node.child_by_field_name("function")
             arguments = node.child_by_field_name("arguments")
             function_text = _text(function, unit) if function is not None else ""
-            named = arguments.named_children if arguments is not None else ()
+            named = arguments.named_children if arguments is not None else []
             if function_text in {"require", "import"} and len(named) == 1:
                 source = named[0]
                 kind = "commonjs" if function_text == "require" else "esm-dynamic"
@@ -318,7 +321,7 @@ def _imports(root: Any, unit: SourceUnit) -> tuple[NormalizedImportFact, ...]:
     )
 
 
-def _exports(root: Any, unit: SourceUnit) -> tuple[NormalizedExportFact, ...]:
+def _exports(root: Node, unit: SourceUnit) -> tuple[NormalizedExportFact, ...]:
     facts: list[NormalizedExportFact] = []
     for node in root.named_children:
         if node.type == "export_statement":
@@ -364,7 +367,7 @@ def _exports(root: Any, unit: SourceUnit) -> tuple[NormalizedExportFact, ...]:
     )
 
 
-def _module_system(root: Any, unit: SourceUnit) -> ModuleSystem:
+def _module_system(root: Node, unit: SourceUnit) -> ModuleSystem:
     esm = any(node.type in {"import_statement", "export_statement"} for node in root.named_children)
     commonjs = any(
         "require(" in _text(node, unit)
@@ -381,7 +384,7 @@ def _module_system(root: Any, unit: SourceUnit) -> ModuleSystem:
     return ModuleSystem.SCRIPT
 
 
-def _symbol_name(node: Any, unit: SourceUnit) -> str:
+def _symbol_name(node: Node, unit: SourceUnit) -> str:
     name = node.child_by_field_name("name")
     if name is not None:
         return _text(name, unit)
@@ -393,7 +396,7 @@ def _symbol_name(node: Any, unit: SourceUnit) -> str:
     return "<anonymous>"
 
 
-def _symbols_and_functions(root: Any, unit: SourceUnit) -> tuple[
+def _symbols_and_functions(root: Node, unit: SourceUnit) -> tuple[
     tuple[NormalizedSymbolFact, ...],
     tuple[NormalizedFunctionFact, ...],
     tuple[NormalizedStateFact, ...],
@@ -404,7 +407,7 @@ def _symbols_and_functions(root: Any, unit: SourceUnit) -> tuple[
     module_provenance = _module_provenance(root, unit)
     declaration_counts: dict[tuple[tuple[str, ...], str, str], int] = {}
 
-    def visit(node: Any, parents: tuple[tuple[str, str], ...]) -> None:
+    def visit(node: Node, parents: tuple[tuple[str, str], ...]) -> None:
         is_class = node.type in _CLASS_TYPES
         is_function = node.type in _FUNCTION_TYPES
         if node.type == "field_definition" and parents:
@@ -427,10 +430,10 @@ def _symbols_and_functions(root: Any, unit: SourceUnit) -> tuple[
             for declaration in (
                 child for child in node.named_children if child.type == "variable_declarator"
             ):
-                name_node = declaration.child_by_field_name("name")
+                binding_node = declaration.child_by_field_name("name")
                 value = declaration.child_by_field_name("value")
                 if (
-                    name_node is not None
+                    binding_node is not None
                     and value is not None
                     and value.type
                     in {
@@ -442,7 +445,7 @@ def _symbols_and_functions(root: Any, unit: SourceUnit) -> tuple[
                     states.append(
                         NormalizedStateFact(
                             None,
-                            _text(name_node, unit),
+                            _text(binding_node, unit),
                             False,
                             *_span(declaration),
                         )
@@ -509,7 +512,7 @@ def _symbols_and_functions(root: Any, unit: SourceUnit) -> tuple[
     )
 
 
-def _parameters(node: Any, unit: SourceUnit) -> tuple[str, ...]:
+def _parameters(node: Node, unit: SourceUnit) -> tuple[str, ...]:
     parameters = node.child_by_field_name("parameters")
     if parameters is None:
         parameter = node.child_by_field_name("parameter")
@@ -523,11 +526,11 @@ def _parameters(node: Any, unit: SourceUnit) -> tuple[str, ...]:
     return tuple(values)
 
 
-def _body(node: Any) -> Any:
+def _body(node: Node) -> Node:
     return node.child_by_field_name("body") or node
 
 
-def _complexity(node: Any) -> NormalizedComplexityFact:
+def _complexity(node: Node) -> NormalizedComplexityFact:
     body = _body(node)
     branches = 0
     returns = 0
@@ -535,7 +538,7 @@ def _complexity(node: Any) -> NormalizedComplexityFact:
     logical = 0
     max_depth = 0
 
-    def visit(current: Any, depth: int) -> None:
+    def visit(current: Node, depth: int) -> None:
         nonlocal branches, returns, raises, logical, max_depth
         if current is not body and current.type in _FUNCTION_TYPES | _CLASS_TYPES:
             return
@@ -554,11 +557,8 @@ def _complexity(node: Any) -> NormalizedComplexityFact:
             visit(child, next_depth)
 
     visit(body, 0)
-    parameters = (
-        len(node.child_by_field_name("parameters").named_children)
-        if node.child_by_field_name("parameters") is not None
-        else 0
-    )
+    parameter_node = node.child_by_field_name("parameters")
+    parameters = len(parameter_node.named_children) if parameter_node is not None else 0
     physical = node.end_point.row - node.start_point.row + 1
     return NormalizedComplexityFact(
         physical,
@@ -573,7 +573,7 @@ def _complexity(node: Any) -> NormalizedComplexityFact:
     )
 
 
-def _dotted(node: Any, unit: SourceUnit) -> str | None:
+def _dotted(node: Node, unit: SourceUnit) -> str | None:
     if node.type in {"identifier", "property_identifier", "private_property_identifier", "this"}:
         return _text(node, unit)
     if node.type in {"member_expression", "subscript_expression"}:
@@ -590,7 +590,7 @@ def _dotted(node: Any, unit: SourceUnit) -> str | None:
 
 
 def _function_fact(
-    node: Any,
+    node: Node,
     unit: SourceUnit,
     qualified: str,
     parameters: tuple[str, ...],
@@ -669,9 +669,9 @@ def _function_fact(
                 effects.add("mutable-state-write")
                 attributes.add(dotted)
         if current.type == "identifier":
-            name = _text(current, unit)
-            if name not in local_names and name not in parameter_set:
-                attributes.add(name)
+            identifier_name = _text(current, unit)
+            if identifier_name not in local_names and identifier_name not in parameter_set:
+                attributes.add(identifier_name)
     callee_heads = {item.split(".", 1)[0].removesuffix("()") for item in callees}
     return NormalizedFunctionFact(
         qualified,
@@ -691,7 +691,7 @@ def _function_fact(
     )
 
 
-def _walk_function_body(node: Any) -> Iterator[Any]:
+def _walk_function_body(node: Node) -> Iterator[Node]:
     yield node
     for child in node.named_children:
         if child is not node and child.type in _FUNCTION_TYPES | _CLASS_TYPES:
@@ -733,7 +733,7 @@ def _classify_call(
         effects.add("promise-chain")
 
 
-def _module_provenance(root: Any, unit: SourceUnit) -> dict[str, str]:
+def _module_provenance(root: Node, unit: SourceUnit) -> dict[str, str]:
     provenance: dict[str, str] = {}
     for node in root.named_children:
         if node.type == "import_statement":
@@ -760,7 +760,7 @@ def _module_provenance(root: Any, unit: SourceUnit) -> dict[str, str]:
     return provenance
 
 
-def _binding_names(node: Any, unit: SourceUnit) -> set[str]:
+def _binding_names(node: Node, unit: SourceUnit) -> set[str]:
     return {
         _text(current, unit)
         for current in _walk(node)
@@ -768,7 +768,7 @@ def _binding_names(node: Any, unit: SourceUnit) -> set[str]:
     }
 
 
-def _required_module(node: Any, unit: SourceUnit) -> str | None:
+def _required_module(node: Node, unit: SourceUnit) -> str | None:
     if node is None or node.type != "call_expression":
         return None
     function = node.child_by_field_name("function")
@@ -779,10 +779,10 @@ def _required_module(node: Any, unit: SourceUnit) -> str | None:
     return _string_value(first, unit) if first is not None else None
 
 
-def _normalized_signature(node: Any, unit: SourceUnit, *, detailed: bool) -> str:
+def _normalized_signature(node: Node, unit: SourceUnit, *, detailed: bool) -> str:
     parts: list[str] = []
 
-    def visit(current: Any) -> None:
+    def visit(current: Node) -> None:
         if current.type in _IDENTIFIER_TYPES:
             value = _text(current, unit)
             parts.append(

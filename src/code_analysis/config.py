@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Iterable
 from enum import StrEnum
 from pathlib import Path
 from typing import Self
@@ -77,11 +78,11 @@ class JavaScriptConfig(BaseModel):
 class Thresholds(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    function_loc: StrictInt = Field(75, ge=1)
-    branches: StrictInt = Field(12, ge=0)
-    nesting: StrictInt = Field(4, ge=0)
-    arguments: StrictInt = Field(7, ge=0)
-    weighted_score: StrictInt = Field(15, ge=0)
+    function_loc: StrictInt = Field(default=75, ge=1)
+    branches: StrictInt = Field(default=12, ge=0)
+    nesting: StrictInt = Field(default=4, ge=0)
+    arguments: StrictInt = Field(default=7, ge=0)
+    weighted_score: StrictInt = Field(default=15, ge=0)
 
 
 STRICTNESS_PRESETS: dict[Strictness, Thresholds] = {
@@ -98,19 +99,19 @@ STRICTNESS_PRESETS: dict[Strictness, Thresholds] = {
 class CloneThresholds(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    exact_min_lines: StrictInt = Field(6, ge=1)
-    token_min_tokens: StrictInt = Field(48, ge=1)
-    ast_min_nodes: StrictInt = Field(24, ge=1)
-    statement_window: StrictInt = Field(4, ge=2)
-    sequence_min_events: StrictInt = Field(5, ge=2)
-    sequence_min_coverage: StrictFloat = Field(0.70, ge=0.0, le=1.0)
-    commonality_min_ownership_dimensions: StrictInt = Field(2, ge=1, le=6)
-    commonality_min_bilateral_coverage: StrictFloat = Field(0.25, gt=0.0, le=1.0)
-    commonality_max_feature_subject_fraction: StrictFloat = Field(0.10, gt=0.0, le=1.0)
-    near_clone_min_statements: StrictInt = Field(6, ge=2)
-    near_clone_min_bilateral_coverage: StrictFloat = Field(0.70, gt=0.0, le=1.0)
-    near_clone_max_changed_statements: StrictInt = Field(3, ge=0)
-    max_clone_window_statements: StrictInt = Field(64, ge=4, le=10_000)
+    exact_min_lines: StrictInt = Field(default=6, ge=1)
+    token_min_tokens: StrictInt = Field(default=48, ge=1)
+    ast_min_nodes: StrictInt = Field(default=24, ge=1)
+    statement_window: StrictInt = Field(default=4, ge=2)
+    sequence_min_events: StrictInt = Field(default=5, ge=2)
+    sequence_min_coverage: StrictFloat = Field(default=0.70, ge=0.0, le=1.0)
+    commonality_min_ownership_dimensions: StrictInt = Field(default=2, ge=1, le=6)
+    commonality_min_bilateral_coverage: StrictFloat = Field(default=0.25, gt=0.0, le=1.0)
+    commonality_max_feature_subject_fraction: StrictFloat = Field(default=0.10, gt=0.0, le=1.0)
+    near_clone_min_statements: StrictInt = Field(default=6, ge=2)
+    near_clone_min_bilateral_coverage: StrictFloat = Field(default=0.70, gt=0.0, le=1.0)
+    near_clone_max_changed_statements: StrictInt = Field(default=3, ge=0)
+    max_clone_window_statements: StrictInt = Field(default=64, ge=4, le=10_000)
 
 
 CLONE_THRESHOLD_PRESETS: dict[Strictness, CloneThresholds] = {
@@ -151,34 +152,34 @@ CLONE_THRESHOLD_PRESETS: dict[Strictness, CloneThresholds] = {
 class PhaseThreeLimits(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    max_candidate_pairs: StrictInt = Field(50_000, ge=1)
-    max_clusters: StrictInt = Field(10_000, ge=1)
-    max_cluster_members: StrictInt = Field(100, ge=2)
-    max_proposals: StrictInt = Field(100, ge=1)
-    min_responsibility_ownership_dimensions: StrictInt = Field(2, ge=1)
-    min_responsibility_clone_nonblank_lines: StrictInt = Field(12, ge=1)
+    max_candidate_pairs: StrictInt = Field(default=50_000, ge=1)
+    max_clusters: StrictInt = Field(default=10_000, ge=1)
+    max_cluster_members: StrictInt = Field(default=100, ge=2)
+    max_proposals: StrictInt = Field(default=100, ge=1)
+    min_responsibility_ownership_dimensions: StrictInt = Field(default=2, ge=1)
+    min_responsibility_clone_nonblank_lines: StrictInt = Field(default=12, ge=1)
 
 
 class PhaseFourLimits(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    max_tests: StrictInt = Field(50_000, ge=1)
-    max_test_relationships: StrictInt = Field(250_000, ge=1)
-    max_unresolved_test_references: StrictInt = Field(50_000, ge=1)
-    max_git_commits: StrictInt = Field(500, ge=1)
-    max_git_coupling_pairs: StrictInt = Field(50_000, ge=1)
-    min_git_shared_changes: StrictInt = Field(3, ge=1)
-    max_coverage_contexts_files: StrictInt = Field(100_000, ge=1)
-    max_coverage_arcs: StrictInt = Field(1_000_000, ge=1)
-    max_profile_frames: StrictInt = Field(100_000, ge=1)
-    max_runtime_edges: StrictInt = Field(250_000, ge=1)
-    max_repetitions: StrictInt = Field(20, ge=1, le=20)
+    max_tests: StrictInt = Field(default=50_000, ge=1)
+    max_test_relationships: StrictInt = Field(default=250_000, ge=1)
+    max_unresolved_test_references: StrictInt = Field(default=50_000, ge=1)
+    max_git_commits: StrictInt = Field(default=500, ge=1)
+    max_git_coupling_pairs: StrictInt = Field(default=50_000, ge=1)
+    min_git_shared_changes: StrictInt = Field(default=3, ge=1)
+    max_coverage_contexts_files: StrictInt = Field(default=100_000, ge=1)
+    max_coverage_arcs: StrictInt = Field(default=1_000_000, ge=1)
+    max_profile_frames: StrictInt = Field(default=100_000, ge=1)
+    max_runtime_edges: StrictInt = Field(default=250_000, ge=1)
+    max_repetitions: StrictInt = Field(default=20, ge=1, le=20)
 
 
 class RuntimeConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    timeout_seconds: StrictFloat = Field(300.0, gt=0.0)
+    timeout_seconds: StrictFloat = Field(default=300.0, gt=0.0)
     environment_allowlist: tuple[str, ...] = (
         "CI",
         "COLUMNS",
@@ -206,7 +207,7 @@ class SemanticConfig(BaseModel):
 
     enabled: StrictBool = False
     model_directory: str | None = None
-    max_nominations: StrictInt = Field(1_000, ge=1, le=50_000)
+    max_nominations: StrictInt = Field(default=1_000, ge=1, le=50_000)
 
     @model_validator(mode="after")
     def validate_local_model(self) -> Self:
@@ -671,7 +672,10 @@ def _architecture_layer(raw: dict[object, object]) -> ArchitectureLayer:
     normalized = {str(key).replace("-", "_"): value for key, value in raw.items()}
     for key in ("module_patterns", "may_import_layers"):
         if key in normalized:
-            normalized[key] = tuple(normalized[key])
+            value = normalized[key]
+            if not isinstance(value, Iterable):
+                raise TypeError(f"'{type(value).__name__}' object is not iterable")
+            normalized[key] = tuple(value)
     return ArchitectureLayer.model_validate(normalized)
 
 

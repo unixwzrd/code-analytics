@@ -11,6 +11,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TypedDict
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 
@@ -204,8 +205,20 @@ def _javascript_grammar_detail() -> str | None:
         language = Language(tree_sitter_javascript.language())
     except (ImportError, OSError, TypeError, ValueError):
         return None
-    semantic = ".".join(str(item) for item in language.semantic_version)
+    semantic_version = language.semantic_version
+    if semantic_version is None:
+        return None
+    semantic = ".".join(str(item) for item in semantic_version)
     return f"grammar ABI {language.abi_version}; language {semantic}"
+
+
+class _ProviderExecutionFields(TypedDict):
+    provider_id: str
+    executable: str
+    exit_code: int
+    duration_ms: int
+    stdout_sha256: str
+    stderr_sha256: str
 
 
 class JsonCommandProvider:
@@ -288,7 +301,7 @@ class JsonCommandProvider:
             )
         stdout = completed.stdout
         stderr = completed.stderr
-        common = {
+        common: _ProviderExecutionFields = {
             "provider_id": self.provider_id,
             "executable": Path(executable).name,
             "exit_code": completed.returncode,

@@ -31,12 +31,14 @@ from code_analysis.projections._shared import (
     _simple_phase_three_table,
     _string,
 )
-from code_analysis.report_models import AnalysisReport
+from code_analysis.report_models import AnalysisReport, DuplicateFunctionPair
 
 Report = AnalysisReport
 
 
-def _selected_duplicates(report: Report, selection: ProjectionSelection):
+def _selected_duplicates(
+    report: Report, selection: ProjectionSelection
+) -> list[DuplicateFunctionPair]:
     records = [
         item
         for item in report.duplicate_functions

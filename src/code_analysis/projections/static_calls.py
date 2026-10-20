@@ -376,7 +376,7 @@ def _static_call_graph_projection(
     for node in nodes.values():
         if node.group_id is not None:
             groups[node.group_id].append(node.node_id)
-    source = _report_input(report)
+    report_input = _report_input(report)
     limitations = set(_static_call_limitations(report, section_state, False))
     limitations.update(
         {
@@ -389,9 +389,9 @@ def _static_call_graph_projection(
         }
     )
     return GraphProjection(
-        projection_id=_projection_id(source, ProjectionName.STATIC_CALL_GRAPH, selection),
+        projection_id=_projection_id(report_input, ProjectionName.STATIC_CALL_GRAPH, selection),
         title="Static call-site containment graph (not dispatch)",
-        inputs=(source,),
+        inputs=(report_input,),
         selection=selection,
         completeness=_static_call_completeness(report, section_state, False),
         record_count=len(nodes) + len(edges),

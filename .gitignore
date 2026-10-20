@@ -128,5 +128,4 @@ id_ed25519*
 Thumbs.db
 
 # Internal-only documents and local operator notes
-/private/**
-!/private/README.md
+private/

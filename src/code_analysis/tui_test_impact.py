@@ -96,7 +96,10 @@ class TestInvestigationScreen(ModalScreen[None]):
         from code_analysis.tui_source import TerminalSource
 
         event.stop()
-        source = self.investigation.sources[int(event.row_key.value)]
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        source = self.investigation.sources[int(row_key)]
         self.app.push_screen(
             TerminalSource(
                 self.index,

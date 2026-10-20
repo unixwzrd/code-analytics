@@ -36,7 +36,7 @@ from code_analysis.projections._shared import (
     _string,
     _table_base,
 )
-from code_analysis.report_models import AnalysisReport
+from code_analysis.report_models import AnalysisReport, SymbolCoverageRecord
 
 Report = AnalysisReport
 
@@ -52,6 +52,8 @@ def _test_impact_projection(report: Report, selection: ProjectionSelection) -> T
     subject_names = {item.subject_id: item.logical_name for item in report.subjects}
     rows = []
     for relationship in report.test_relationships:
+        source_id = relationship.source_test_id or relationship.source_test_module_id
+        assert source_id is not None
         target = (
             subject_names.get(relationship.target_subject_id or "")
             or fixture_names.get(relationship.target_fixture_id or "")
@@ -65,10 +67,10 @@ def _test_impact_projection(report: Report, selection: ProjectionSelection) -> T
                 cells=(
                     _string(
                         test_names.get(
-                            relationship.source_test_id or relationship.source_test_module_id,
+                            source_id,
                             fixture_names.get(
-                                relationship.source_test_id,
-                                relationship.source_test_id or relationship.source_test_module_id,
+                                relationship.source_test_id or "",
+                                source_id,
                             ),
                         )
                     ),
@@ -459,7 +461,7 @@ def _proposal_coverage_projection(
     if not report.refactor_proposals:
         raise ProjectionBuildError("uncovered-proposal-subjects requires refactor proposals")
     subject_names = {item.subject_id: item.logical_name for item in report.subjects}
-    observations = {}
+    observations: dict[str, list[SymbolCoverageRecord]] = {}
     for item in report.coverage_observations:
         observations.setdefault(item.subject_id, []).append(item)
     rows = []

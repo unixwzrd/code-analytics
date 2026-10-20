@@ -320,6 +320,7 @@ def _normalize_ruby_scope_path(
 ) -> tuple[StaticCallScope, ...]:
     normalized: list[StaticCallScope] = []
     for record in scope_path:
+        kind: StaticCallScopeKind | None
         if record.kind is RubyLexicalScopeKind.MODULE:
             kind = StaticCallScopeKind.NAMESPACE if record.name else StaticCallScopeKind.MODULE
         else:

@@ -85,14 +85,14 @@ class RuntimeComparisonBrowser(ModalScreen[None]):
         for direction in ("next", "previous"):
             self.query_one(f"#runtime-comparison-{direction}", Button).disabled = True
         runtime = self.index.manifest.runtime
-        summary = runtime.comparison if runtime else None
-        if summary is None:
+        if runtime is None or runtime.comparison is None:
             self.on_status(errno.ENODATA)
             self.query_one("#runtime-comparison-status", Static).update(
                 "Comparison unavailable; prepare an index with "
                 "--profile-report and --compare-profile."
             )
             return
+        summary = runtime.comparison
         try:
             page = await asyncio.to_thread(self.index.runtime_comparison, request)
         except (ValueError, OSError, sqlite3.Error) as exc:

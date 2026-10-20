@@ -174,36 +174,39 @@ def integrate_test_impact(context: AnalysisContext, report: AnalysisReport) -> A
     prior_unresolved = sum(not item.resolved for item in report.test_relationships)
     unresolved = 0
     for parsed_module in parsed:
-        for fact in parsed_module.relationships:
-            source_id = source_ids.get(fact.source_qualified_name)
+        for relationship_fact in parsed_module.relationships:
+            source_id = source_ids.get(relationship_fact.source_qualified_name)
             if source_id is None:
                 continue
             target_subject = None
             target_fixture = None
-            resolved = fact.resolved
-            limitation = fact.limitation
-            if fact.kind is TestRelationshipKind.FIXTURE_USE and fact.target_symbol:
-                candidates = fixture_names.get(fact.target_symbol, ())
+            resolved = relationship_fact.resolved
+            limitation = relationship_fact.limitation
+            if (
+                relationship_fact.kind is TestRelationshipKind.FIXTURE_USE
+                and relationship_fact.target_symbol
+            ):
+                candidates = fixture_names.get(relationship_fact.target_symbol, ())
                 if len(candidates) == 1:
                     target_fixture = candidates[0]
                     resolved = True
                     limitation = None
-            elif fact.target_module and fact.target_symbol:
-                logical = f"{fact.target_module}:{fact.target_symbol}"
+            elif relationship_fact.target_module and relationship_fact.target_symbol:
+                logical = f"{relationship_fact.target_module}:{relationship_fact.target_symbol}"
                 target_subject = subject_by_logical.get(logical)
                 if target_subject is None:
                     matches = sorted(
                         subject_id
                         for name, subject_id in subject_by_logical.items()
-                        if name == logical or name.endswith(f":{fact.target_symbol}")
+                        if name == logical or name.endswith(f":{relationship_fact.target_symbol}")
                     )
                     target_subject = matches[0] if len(matches) == 1 else None
                 resolved = target_subject is not None
                 if not resolved:
                     limitation = "Imported target did not resolve to one analyzed symbol."
-            elif fact.target_module:
-                resolved = fact.target_module in known_modules or any(
-                    name.startswith(fact.target_module + ".") for name in known_modules
+            elif relationship_fact.target_module:
+                resolved = relationship_fact.target_module in known_modules or any(
+                    name.startswith(relationship_fact.target_module + ".") for name in known_modules
                 )
                 if not resolved:
                     limitation = "Imported module is outside the analyzed target or unresolved."
@@ -217,27 +220,27 @@ def integrate_test_impact(context: AnalysisContext, report: AnalysisReport) -> A
                     relationship_id=_stable_id(
                         "test-relationship",
                         source_id,
-                        fact.kind.value,
-                        fact.target_module or "",
-                        fact.target_symbol or "",
-                        fact.target_text or "",
-                        str(fact.line),
-                        str(fact.column),
+                        relationship_fact.kind.value,
+                        relationship_fact.target_module or "",
+                        relationship_fact.target_symbol or "",
+                        relationship_fact.target_text or "",
+                        str(relationship_fact.line),
+                        str(relationship_fact.column),
                     ),
                     source_test_id=source_id,
-                    kind=fact.kind,
+                    kind=relationship_fact.kind,
                     target_subject_id=target_subject,
                     target_fixture_id=target_fixture,
-                    target_module=fact.target_module,
-                    target_text=fact.target_text or fact.target_symbol,
+                    target_module=relationship_fact.target_module,
+                    target_text=relationship_fact.target_text or relationship_fact.target_symbol,
                     resolved=resolved,
                     evidence=(
                         _evidence(
                             parsed_module.module.path,
-                            fact.line,
-                            fact.line,
+                            relationship_fact.line,
+                            relationship_fact.line,
                             parsed_module.module.source_sha256,
-                            fact.observation,
+                            relationship_fact.observation,
                             Confidence.RESOLVED if resolved else Confidence.INFERRED,
                         ),
                     ),

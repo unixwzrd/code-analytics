@@ -164,9 +164,9 @@ def integrate_commonality_report(
             if subject_id in subjects_by_id
             and subjects_by_id[subject_id].logical_name in features_by_logical
         )
-        for left_index, left in enumerate(logical_names):
-            for right in logical_names[left_index + 1 :]:
-                clone_pairs.add((left, right))
+        for left_index, left_name in enumerate(logical_names):
+            for right_name in logical_names[left_index + 1 :]:
+                clone_pairs.add((left_name, right_name))
     candidates = generate_commonality_candidates(
         features,
         tuple(sorted(clone_pairs)),
@@ -188,9 +188,9 @@ def integrate_commonality_report(
             for item in cluster.subject_ids
             if item in subjects_by_id and subjects_by_id[item].logical_name in features_by_logical
         )
-        for left_index, left in enumerate(logical_names):
-            for right in logical_names[left_index + 1 :]:
-                clusters_by_pair.setdefault((left, right), []).append(cluster.cluster_id)
+        for left_index, left_name in enumerate(logical_names):
+            for right_name in logical_names[left_index + 1 :]:
+                clusters_by_pair.setdefault((left_name, right_name), []).append(cluster.cluster_id)
     commonalities: list[FunctionCommonality] = []
     for left_name, right_name in candidates.pairs:
         # Persisted left/right identities are canonical subject-ID order, not

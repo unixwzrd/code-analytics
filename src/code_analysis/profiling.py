@@ -5,7 +5,6 @@ from __future__ import annotations
 import errno
 import hashlib
 import json
-import pstats
 import shutil
 import signal
 import statistics
@@ -13,6 +12,7 @@ import sys
 import sysconfig
 import tempfile
 import time
+from collections.abc import Mapping
 from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -36,6 +36,7 @@ from code_analysis.profile_models import (
     ResourceObservation,
     RuntimeCallEdge,
 )
+from code_analysis.pstats_table import ProfileStats
 from code_analysis.report_models import AnalysisReport
 from code_analysis.reports.json_report import canonical_json
 from code_analysis.runtime_execution import controlled_environment
@@ -143,14 +144,14 @@ def profile_workload(
             local[stderr_path.name] = stderr_path.read_bytes()
             if raw_path.is_file():
                 local[raw_path.name] = raw_path.read_bytes()
-                frames, edges = _normalize_profile(
+                captured_frames, captured_edges = _normalize_profile(
                     raw_path,
                     portable_path,
                     source_report=source_report,
                     source_root=cwd,
                 )
-                repetition_frames.append(frames)
-                repetition_edges.append(edges)
+                repetition_frames.append(captured_frames)
+                repetition_edges.append(captured_edges)
                 local[portable_path.name] = portable_path.read_bytes()
             else:
                 repetition_frames.append(())
@@ -190,6 +191,10 @@ def profile_workload(
     )
     stdout_payload = b"".join(local[name] for name in sorted(local) if name.startswith("stdout-"))
     stderr_payload = b"".join(local[name] for name in sorted(local) if name.startswith("stderr-"))
+    duration_seconds = 0.0
+    for observation in resources:
+        assert observation.wall_seconds is not None  # Every managed repetition measures wall time.
+        duration_seconds += observation.wall_seconds
     providers = (
         ProviderResult(
             provider_id="stdlib-cprofile",
@@ -205,7 +210,7 @@ def profile_workload(
             executable="python-current-interpreter",
             version=sys.version.split()[0],
             exit_code=statuses[-1] if statuses else None,
-            duration_ms=int(sum(item.wall_seconds for item in resources) * 1000),
+            duration_ms=int(duration_seconds * 1000),
             stdout_sha256=hashlib.sha256(stdout_payload).hexdigest(),
             stderr_sha256=hashlib.sha256(stderr_payload).hexdigest(),
             observations=("callers", "callees", "cumulative-time", "total-time"),
@@ -445,11 +450,12 @@ def render_static_runtime_overlay(
 ) -> str:
     subject_labels = {item.subject_id: item.logical_name for item in source.subjects}
     profile_subjects = {item.frame_id: item.subject_id for item in profile.frames}
-    runtime = {
-        (profile_subjects.get(edge.caller_frame_id), profile_subjects.get(edge.callee_frame_id))
-        for edge in profile.runtime_edges
-    }
-    runtime = {(left, right) for left, right in runtime if left is not None and right is not None}
+    runtime: set[tuple[str, str]] = set()
+    for edge in profile.runtime_edges:
+        caller = profile_subjects.get(edge.caller_frame_id)
+        callee_subject = profile_subjects.get(edge.callee_frame_id)
+        if caller is not None and callee_subject is not None:
+            runtime.add((caller, callee_subject))
     logical_subjects = {item.logical_name: item.subject_id for item in source.subjects}
     static = set()
     for item in source.function_profiles:
@@ -659,7 +665,7 @@ def _normalize_profile(
     source_report: AnalysisReport | None,
     source_root: Path | None,
 ) -> tuple[tuple[InternalFrame, ...], tuple[InternalEdge, ...]]:
-    stats = pstats.Stats(str(raw_path))
+    stats = ProfileStats(str(raw_path))
     raw_stats = stats.stats
     _profile_graph_signature(raw_stats)
     key_map: dict[ProfileKey, ProfileKey] = {}
@@ -725,7 +731,7 @@ def _normalize_profile(
         )
     stats.stats = sanitized
     stats.dump_stats(str(portable_path))
-    restored = pstats.Stats(str(portable_path))
+    restored = ProfileStats(str(portable_path))
     if _profile_graph_signature(restored.stats) != _profile_graph_signature(sanitized):
         raise OSError(errno.EBADMSG, "portable profile reload changed frame or caller identities")
     return (
@@ -746,7 +752,7 @@ def _caller_metrics(value: object) -> tuple[int, int, float, float]:
     return result.primitive, result.total, result.self_seconds, result.cumulative_seconds
 
 
-def _profile_graph_signature(stats: dict[ProfileKey, object]) -> tuple[object, ...]:
+def _profile_graph_signature(stats: Mapping[ProfileKey, object]) -> tuple[object, ...]:
     from code_analysis.profile_ingestion import native_signature
 
     try:

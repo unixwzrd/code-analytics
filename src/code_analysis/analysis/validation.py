@@ -404,14 +404,20 @@ def discover_operational_validation_patterns(
                     and _is_path_receiver(node.func.value, self.path_names, self.aliases)
                 )
 
-            def _record(self, node: ast.AST, kind: OperationalValidationKind, rule: str) -> None:
+            def _record(
+                self, node: ast.expr | ast.stmt, kind: OperationalValidationKind, rule: str
+            ) -> None:
                 site = self._site(node, kind, rule)
                 grouped.setdefault((kind, rule), []).append(site)
 
             def _site(
-                self, node: ast.AST, kind: OperationalValidationKind, rule: str
+                self, node: ast.expr | ast.stmt, kind: OperationalValidationKind, rule: str
             ) -> OperationalValidationSite:
                 scope = ".".join(self.parents) if self.parents else "<module>"
+                end_line = node.end_lineno
+                end_column = node.end_col_offset
+                if end_line is None or end_column is None:
+                    raise TypeError("internal span coordinates must be exact integers")
                 return OperationalValidationSite(
                     owner=f"{self.source.module}:{scope}:operational-validation",
                     kind=kind,
@@ -420,8 +426,8 @@ def discover_operational_validation_patterns(
                         logical_path=self.source.logical_path,
                         start_line=node.lineno,
                         start_column=node.col_offset,
-                        end_line=getattr(node, "end_lineno", node.lineno),
-                        end_column=getattr(node, "end_col_offset", node.col_offset),
+                        end_line=end_line,
+                        end_column=end_column,
                     ),
                 )
 
@@ -461,6 +467,7 @@ def _classify_structural_observation(
         field_identity = None
         kind = StructuralValidationKind.EXACT_KEYS
     else:
+        assert observation.literal_relation is not None
         literals = "[" + ",".join(observation.expected_literals_json) + "]"
         rule = (
             f"dictionary key value {observation.literal_relation.value}: "

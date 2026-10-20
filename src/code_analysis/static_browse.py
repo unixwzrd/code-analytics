@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import sqlite3
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from typing import TYPE_CHECKING, Self
 
 from pydantic import Field, StrictBool, StrictInt, StrictStr, model_validator
@@ -413,7 +413,7 @@ def write_static_projections(
     if static_call_sites_prepared(report):
         optional_names.append(ProjectionName.STATIC_CALL_SITES)
     names = (*STATIC_PROJECTIONS, *optional_names)
-    candidate_rows = ()
+    candidate_rows: tuple[TableRow, ...] = ()
     for name in names:
         projection = prepared_static_projection(report, name)
         if name is ProjectionName.CANDIDATE_WORKLIST:
@@ -600,7 +600,7 @@ def read_static_projection(
             connection, selection, query, current_decisions, column_ids=columns
         )
         eligible = len(positions)
-        rows = []
+        candidate_payloads: list[tuple[str]] = []
         for position in positions[request.offset : request.offset + request.limit]:
             record = connection.execute(
                 "SELECT s.payload, p.payload FROM static_projection_rows s "
@@ -626,13 +626,14 @@ def read_static_projection(
                     effective_candidate_policy(facts, current_decisions.get(facts.candidate_id)),
                     columns,
                 )
-            rows.append((row.model_dump_json(),))
+            candidate_payloads.append((row.model_dump_json(),))
         summary = StaticProjectionSummary.model_validate(
             {
                 **summary.model_dump(),
                 "sort": candidate_worklist_sort(selection.prefer_existing_owner),
             }
         )
+        rows: Iterable[tuple[str]] = candidate_payloads
     else:
         eligible = connection.execute(
             f"SELECT count(*) FROM static_projection_rows WHERE {predicate}", parameters

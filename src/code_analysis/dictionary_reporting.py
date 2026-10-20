@@ -388,7 +388,7 @@ def integrate_dictionary_report(
             else Completeness.COMPLETE
         )
     )
-    dictionary_diagnostics = (
+    dictionary_diagnostics: tuple[Diagnostic, ...] = (
         (
             Diagnostic(
                 code="dictionary-boundary-conflict",

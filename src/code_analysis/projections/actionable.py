@@ -43,7 +43,7 @@ def _table(
         column_id: position for position, (column_id, _label, _kind) in enumerate(definitions)
     }
 
-    def sort_value(row: TableRow):
+    def sort_value(row: TableRow) -> tuple[str | int, ...]:
         values = []
         for item in sort:
             cell = row.cells[positions[item.column_id]]
@@ -76,7 +76,9 @@ def _table(
     )
 
 
-def _candidate_behavioral_difference_projection(report, selection):
+def _candidate_behavioral_difference_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     rows = [
         TableRow(
             row_id=item.difference_id,
@@ -112,7 +114,9 @@ def _candidate_behavioral_difference_projection(report, selection):
     )
 
 
-def _cross_module_duplication_projection(report, selection):
+def _cross_module_duplication_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     subjects = {item.subject_id: item for item in report.subjects}
     rows = []
     for cluster in report.clone_clusters:
@@ -151,7 +155,9 @@ def _cross_module_duplication_projection(report, selection):
     )
 
 
-def _internal_contract_risk_projection(report, selection):
+def _internal_contract_risk_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     subjects = {item.subject_id: item for item in report.subjects}
     eligible = {
         BoundaryClass.INTERNAL_MUTABLE_INDEX,
@@ -198,7 +204,9 @@ def _internal_contract_risk_projection(report, selection):
     )
 
 
-def _schema_drift_projection(report, selection):
+def _schema_drift_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     endpoints = {item.endpoint_id: item for item in report.interface_endpoints}
     rows = []
     for item in report.interface_correlations:
@@ -238,7 +246,9 @@ def _schema_drift_projection(report, selection):
     )
 
 
-def _interface_mismatch_projection(report, selection):
+def _interface_mismatch_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     endpoints = {item.endpoint_id: item for item in report.interface_endpoints}
     rows = [
         TableRow(
@@ -275,7 +285,9 @@ def _interface_mismatch_projection(report, selection):
     )
 
 
-def _candidate_qualification_projection(report, selection):
+def _candidate_qualification_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     rows = [
         TableRow(
             row_id=item.requirement_id,
@@ -309,7 +321,9 @@ def _candidate_qualification_projection(report, selection):
     )
 
 
-def _candidate_architecture_change_projection(report, selection):
+def _candidate_architecture_change_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> TableProjection:
     proposals = {item.architecture_estimate_id: item for item in report.refactor_proposals}
     rows = []
     for item in report.architecture_estimates:
@@ -348,7 +362,9 @@ def _candidate_architecture_change_projection(report, selection):
     )
 
 
-def _ownership_contract_flow_projection(report, selection):
+def _ownership_contract_flow_projection(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> GraphProjection:
     if not report.interface_endpoints:
         raise ProjectionBuildError("ownership contract flow requires recorded interface evidence")
     nodes = tuple(

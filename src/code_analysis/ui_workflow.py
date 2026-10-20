@@ -12,7 +12,7 @@ from pydantic import Field, StrictStr, model_validator
 
 from code_analysis.collection_commands import CollectionContext, Operation
 from code_analysis.models import Completeness, ProviderState, StrictModel
-from code_analysis.report_models import AnalysisReport, SectionState
+from code_analysis.report_models import AnalysisReport, SectionCoverage, SectionState
 from code_analysis.ui_models import UIReportIdentity
 from code_analysis.ui_runtime import RuntimeOverview, RuntimeViewService
 from code_analysis.web_service import ReportViewService
@@ -351,7 +351,9 @@ def _static_readiness(
     if report is None:
         return _ready("missing", "Load a saved static analysis report.")
     issues = _optional_issues(report)
-    coverage = {section.section: section for section in report.section_coverage}
+    coverage: dict[str, SectionCoverage] = {
+        section.section: section for section in report.section_coverage
+    }
     selected = tuple(coverage.get(name) for name in sections)
     if any(s is not None and s.state is SectionState.FAILED for s in selected):
         return _ready(
@@ -465,10 +467,11 @@ def build_workflow(
                     _static_readiness(service.primary, _core_sections(service.primary)),
                     _static_readiness(service.comparison, _core_sections(service.comparison)),
                 )
-                state = next(
+                priority_states: tuple[ReadinessState, ...] = ("failed", "missing", "partial")
+                state: ReadinessState = next(
                     (
                         state
-                        for state in ("failed", "missing", "partial")
+                        for state in priority_states
                         if any(side.state == state for side in sides)
                     ),
                     "available",
@@ -517,10 +520,11 @@ def build_workflow(
                 operation="scan",
             )
         )
-        for operation, label in (
+        collection_actions: tuple[tuple[Operation, str], ...] = (
             ("profile", "Plan runtime collection"),
             ("import-profile", "Plan profile import"),
-        ):
+        )
+        for operation, label in collection_actions:
             actions.append(
                 WorkflowAction(
                     action_id=f"plan-{operation}",

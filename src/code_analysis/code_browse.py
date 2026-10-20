@@ -23,6 +23,9 @@ from code_analysis.models import (
 from code_analysis.report_models import (
     AnalysisReport,
     AnalysisSubject,
+    ContractDefinition,
+    DataStructureRecord,
+    DictionaryShape,
     SourceFileRecord,
     SubjectKind,
 )
@@ -466,8 +469,8 @@ def _validate_source_bindings(
         {module.path for module in report.modules}
     ) != len(report.modules):
         raise ValueError("browse module identities and paths must be unique")
-    for source in report.source_files:
-        _normalize_browse_path(source.logical_path)
+    for source_file in report.source_files:
+        _normalize_browse_path(source_file.logical_path)
     for module in report.modules:
         source = sources.get(module.path)
         if source is None or (source.language, source.source_sha256, source.module_name) != (
@@ -487,7 +490,12 @@ def _validate_source_bindings(
             raise ValueError("browse declaration identities must be unique")
     for subject in report.subjects:
         _validate_evidence_bindings(subject.evidence, sources)
-    for record in (*report.contracts, *report.dictionary_shapes, *report.data_structures):
+    domain_records: tuple[ContractDefinition | DictionaryShape | DataStructureRecord, ...] = (
+        *report.contracts,
+        *report.dictionary_shapes,
+        *report.data_structures,
+    )
+    for record in domain_records:
         _validate_evidence_bindings(record.evidence, sources)
     for shape in report.dictionary_shapes:
         for state in shape.lifecycle_states:

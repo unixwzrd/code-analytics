@@ -15,7 +15,7 @@ from code_analysis.analysis.dictionary_values import (
 )
 
 
-def _span(node: ast.AST, logical_path: str) -> InternalSourceSpan:
+def _span(node: ast.expr | ast.stmt | ast.arg, logical_path: str) -> InternalSourceSpan:
     return InternalSourceSpan(
         logical_path=logical_path,
         start_line=node.lineno,
@@ -87,11 +87,11 @@ def _instance_member_bindings(
 ) -> tuple[
     dict[str, str],
     dict[str, tuple[str, InternalLockKind]],
-    dict[str, tuple[str, ast.AST]],
+    dict[str, tuple[str, ast.expr]],
 ]:
     dictionaries: dict[str, str] = {}
     locks: dict[str, tuple[str, InternalLockKind]] = {}
-    factories: dict[str, tuple[str, ast.AST]] = {}
+    factories: dict[str, tuple[str, ast.expr]] = {}
     if _is_dataclass_class(node, aliases, module_shadowed):
         for statement in node.body:
             if not isinstance(statement, ast.AnnAssign) or not isinstance(
@@ -138,7 +138,8 @@ def _instance_member_bindings(
             def visit_FunctionDef(self, child: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
                 return
 
-            visit_AsyncFunctionDef = visit_FunctionDef
+            def visit_AsyncFunctionDef(self, child: ast.AsyncFunctionDef) -> None:
+                self.visit_FunctionDef(child)
 
             def visit_ClassDef(self, child: ast.ClassDef) -> None:
                 return
@@ -383,7 +384,7 @@ def _literal_json(node: ast.expr) -> str | None:
 def _default_observation(
     node: ast.expr | None,
     logical_path: str,
-    fallback_node: ast.AST,
+    fallback_node: ast.expr | ast.stmt | ast.arg,
 ) -> DictionaryDefaultObservation:
     span = _span(node if node is not None else fallback_node, logical_path)
     if node is None:

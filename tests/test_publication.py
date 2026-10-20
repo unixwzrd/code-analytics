@@ -29,6 +29,8 @@ TUTORIALS = ROOT / "tutorials"
         "project/.ruby-lsp/index.json",
         "output/qualification/report.json",
         "private/operator-notes.md",
+        "private/README.md",
+        "docs/private/operator-notes.md",
         ".env.production",
         "nested/credentials.json",
         "nested/secrets.json",
@@ -56,7 +58,6 @@ def test_ignore_policy_protects_local_and_private_artifacts(path: str) -> None:
     [
         "README.md",
         "LICENSE",
-        "private/README.md",
         "package-lock.json",
         "tests/golden/minimal-report.json",
         "tests/fixtures/javascript/src/main.js",
@@ -76,9 +77,9 @@ def test_ignore_policy_keeps_deliberate_source_and_evidence(path: str) -> None:
     assert result.returncode == 1, (path, result.stdout, result.stderr)
 
 
-def test_only_the_private_policy_marker_is_tracked() -> None:
-    paths = subprocess.check_output(["git", "ls-files", "private"], cwd=ROOT, text=True)
-    assert paths.splitlines() == ["private/README.md"]
+def test_no_private_directory_content_is_tracked() -> None:
+    paths = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True)
+    assert not [path for path in paths.splitlines() if "private" in Path(path).parts]
 
 
 def test_beta_metadata_and_documented_tutorial_entry_point_agree() -> None:

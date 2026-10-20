@@ -55,7 +55,7 @@
     {
       "report_schema_name": "code-analysis-report",
       "report_schema_version": "1.0.0",
-      "report_sha256": "3c55cc8eb7e9ff80d84a33128144c15903261f8fa6491708a57a4b16cd2b1e16",
+      "report_sha256": "cce00c9a7618b42fb84fd33406046b2aa43cbe036e02b46afcc897b3fae50a66",
       "role": "source",
       "run_identity_sha256": "f66dd666b05eca38b4187c34707b794c65262dabf392242f3dc9a726da38ba50"
     }
@@ -86,7 +86,7 @@
     "runtime-binding-is-not-established-by-static-call-evidence",
     "static-call-evidence-is-syntactic-and-does-not-establish-runtime-dispatch"
   ],
-  "projection_id": "projection-cc2cd3b861d66ac468de",
+  "projection_id": "projection-ea02f6990b7b70bfc066",
   "projection_kind": "table",
   "record_count": 1,
   "rows": [

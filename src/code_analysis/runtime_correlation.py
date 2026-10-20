@@ -104,6 +104,7 @@ def correlate_runtime(
                 ):
                     candidates.append(subject)
         ids = tuple(sorted(subject.subject_id for subject in candidates))
+        limitations: tuple[str, ...]
         if len(ids) == 1:
             state = SourceBindingState.MATCHED
             limitations = ()

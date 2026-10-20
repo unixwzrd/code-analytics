@@ -148,7 +148,10 @@ class CollectionPlan(ModalScreen[BrowseIndex | None]):
             if self.session is not None:
                 from code_analysis.tui_collection_jobs import CollectionJobsPanel
 
-                yield CollectionJobsPanel(self.session, self.dismiss)
+                def open_index(index: BrowseIndex) -> None:
+                    self.dismiss(index)
+
+                yield CollectionJobsPanel(self.session, open_index)
             yield Button("Close", id="collection-close")
 
     def value(self, name: str) -> str:

@@ -66,7 +66,14 @@ class UICandidatePacket(StrictModel):
 
     @model_validator(mode="after")
     def validate_candidate_packet(self) -> UICandidatePacket:
-        records = (
+        records: tuple[
+            RefactorCandidateObservation
+            | OwnerAlternative
+            | RefactorProposal
+            | CandidateBehaviorDifference
+            | CandidateQualificationRequirement,
+            ...,
+        ] = (
             self.observation,
             *self.owners,
             *self.proposals,

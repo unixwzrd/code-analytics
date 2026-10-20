@@ -151,21 +151,21 @@ def build_regression_report(
                     )
                 )
     baseline_sources = {item.source_file_id: item for item in baseline.source_files}
-    for item in candidate.source_files:
-        before = baseline_sources.get(item.source_file_id)
+    for source_file in candidate.source_files:
+        before = baseline_sources.get(source_file.source_file_id)
         if before is None or before.physical_loc <= 0:
             continue
-        absolute = item.physical_loc - before.physical_loc
+        absolute = source_file.physical_loc - before.physical_loc
         relative = absolute / before.physical_loc
         if absolute >= 25 and relative >= 0.2:
             observations.append(
                 _observation(
                     RegressionKind.MODULE_GROWTH,
-                    item.source_file_id,
+                    source_file.source_file_id,
                     "Module grew by at least 25 physical lines and 20 percent.",
-                    module=item.module_name,
+                    module=source_file.module_name,
                     baseline_value=before.physical_loc,
-                    candidate_value=item.physical_loc,
+                    candidate_value=source_file.physical_loc,
                     absolute_change=absolute,
                     relative_change=relative,
                 )
@@ -175,14 +175,17 @@ def build_regression_report(
         RefactorCandidateState.REVIEWABLE_INCOMPLETE,
         RefactorCandidateState.READY_FOR_MAINTAINER_REVIEW,
     }
-    for item in candidate.candidate_observations:
-        if item.state in actionable and baseline_states.get(item.candidate_id) not in actionable:
+    for candidate_observation in candidate.candidate_observations:
+        if (
+            candidate_observation.state in actionable
+            and baseline_states.get(candidate_observation.candidate_id) not in actionable
+        ):
             observations.append(
                 _observation(
                     RegressionKind.CANDIDATE_NEWLY_ACTIONABLE,
-                    item.candidate_id,
-                    f"Candidate state advanced to {item.state.value}.",
-                    source_ids=(item.observation_id,),
+                    candidate_observation.candidate_id,
+                    f"Candidate state advanced to {candidate_observation.state.value}.",
+                    source_ids=(candidate_observation.observation_id,),
                 )
             )
     for candidate_id, decision in sorted((decisions or {}).items()):

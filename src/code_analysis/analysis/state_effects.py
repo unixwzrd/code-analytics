@@ -66,7 +66,7 @@ def _dotted(node: ast.AST) -> str | None:
     return None
 
 
-def _span(source: CloneSource, node: ast.AST, observation: str) -> FactSpan:
+def _span(source: CloneSource, node: ast.expr | ast.stmt, observation: str) -> FactSpan:
     return FactSpan(
         source.logical_path,
         source.source_sha256,
@@ -201,7 +201,7 @@ def discover_state_and_side_effects(
     for source in sorted(sources, key=lambda item: (item.module, item.logical_path)):
         tree = ast.parse(source.source, filename=source.logical_path)
         aliases = _imports(tree)
-        declarations: dict[tuple[str, str], tuple[StateResourceKind, StructureScope, ast.AST]] = {}
+        declarations: dict[tuple[str, str], tuple[StateResourceKind, StructureScope, ast.stmt]] = {}
         for statement in tree.body:
             assignment = _assignment(statement)
             if assignment:
@@ -352,7 +352,7 @@ def discover_state_and_side_effects(
                         )
                 self.generic_visit(node)
 
-            def visit_With(self, node: ast.With) -> None:
+            def visit_With(self, node: ast.With | ast.AsyncWith) -> None:
                 for item in node.items:
                     name = _dotted(item.context_expr)
                     key = (source.module, name or "")
@@ -362,7 +362,8 @@ def discover_state_and_side_effects(
                         )
                 self.generic_visit(node)
 
-            visit_AsyncWith = visit_With
+            def visit_AsyncWith(self, node: ast.AsyncWith) -> None:
+                self.visit_With(node)
 
             def visit_Call(self, node: ast.Call) -> None:
                 if isinstance(node.func, ast.Attribute):

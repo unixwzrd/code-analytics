@@ -156,7 +156,7 @@ def _call_span_key(node: ast.Call, traversal_ordinal: int) -> tuple[int, int, in
 
 
 def _invert_span_key(key: tuple[int, int, int, int, int]) -> tuple[int, int, int, int, int]:
-    return tuple(-part for part in key)
+    return (-key[0], -key[1], -key[2], -key[3], -key[4])
 
 
 @dataclass(frozen=True, slots=True)

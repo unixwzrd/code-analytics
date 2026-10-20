@@ -195,12 +195,12 @@ class BrowseIndexManifest(StrictModel):
         if self.comparison is None and self.candidate_source_file_count:
             raise ValueError("candidate source inventory requires comparison metadata")
         if self.runtime is not None and self.runtime.comparison is not None:
-            candidate = self.runtime.comparison
+            runtime_candidate = self.runtime.comparison
             indexed_static_sha256s = {self.report_sha256}
             if self.comparison is not None:
                 indexed_static_sha256s.add(self.comparison.candidate_sha256)
-            if candidate.candidate_overview.source_matches != (
-                candidate.candidate_static_sha256 in indexed_static_sha256s
+            if runtime_candidate.candidate_overview.source_matches != (
+                runtime_candidate.candidate_static_sha256 in indexed_static_sha256s
             ):
                 raise ValueError("runtime candidate/static binding disagrees with receipt")
         if self.state_effect_coverage.section != "state-side-effects":
@@ -257,14 +257,14 @@ class BrowseIndexManifest(StrictModel):
             raise ValueError("browse index overview must match the report identity")
         if self.target.logical_root != source.target_root:
             raise ValueError("browse index target must match the primary report root")
-        counts = {item.label: item.value for item in self.overview.counts}
+        overview_counts = {item.label: item.value for item in self.overview.counts}
         for table, label in (
             (BrowseTable.MODULES, "Modules"),
             (BrowseTable.FINDINGS, "Findings"),
             (BrowseTable.CANDIDATES, "Candidates"),
         ):
             actual = next(item.records for item in self.tables if item.table is table)
-            if counts.get(label) != actual:
+            if overview_counts.get(label) != actual:
                 raise ValueError("browse index table counts must match the overview")
         return self
 

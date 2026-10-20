@@ -95,8 +95,9 @@ def launch_options(args: argparse.Namespace) -> UILaunchOptions:
         paths[name] = str(value.expanduser().absolute()) if value is not None else None
     hashes = []
     for name in ("report", "compare", "profile_report", "compare_profile", "display_config"):
-        if paths[name] is not None:
-            path = Path(paths[name])
+        selected_path = paths[name]
+        if selected_path is not None:
+            path = Path(selected_path)
             if path.is_dir():
                 path = path / "profile.json"
             hashes.append((name, hashlib.sha256(path.read_bytes()).hexdigest()))
@@ -299,7 +300,7 @@ def start_session(options: UILaunchOptions, *, timeout: float = 20) -> tuple[UIS
             while time.monotonic() < deadline:
                 if child.poll() is not None:
                     failure_path = root / f"{record.session_id}.error"
-                    status = errno.EPROTO
+                    startup_status = errno.EPROTO
                     if failure_path.exists():
                         with os.fdopen(_open_private(failure_path, os.O_RDONLY), "rb") as error:
                             failure = UIStartupFailure.model_validate_json(error.read(65537))
@@ -307,9 +308,9 @@ def start_session(options: UILaunchOptions, *, timeout: float = 20) -> tuple[UIS
                             failure.instance_id == record.instance_id
                             and failure.status in errno.errorcode
                         ):
-                            status = failure.status
+                            startup_status = failure.status
                     raise OSError(
-                        status,
+                        startup_status,
                         f"UI startup failed; inspect private log: {log_path}",
                     )
                 if path.exists():

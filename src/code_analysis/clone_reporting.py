@@ -250,16 +250,16 @@ def integrate_clone_report(
             FlowKind.CONVERSION,
         }:
             continue
-        subject_id = (
+        flow_subject_id = (
             flow.source_id
             if flow.source_id in known_subject_ids
             else flow.target_id if flow.target_id in known_subject_ids else None
         )
-        if subject_id is None:
+        if flow_subject_id is None:
             continue
         evidence = flow.evidence[0]
-        signature = (flow.kind.value, evidence.observation)
-        serialization_groups.setdefault(signature, []).append((subject_id, evidence))
+        flow_signature = (flow.kind.value, evidence.observation)
+        serialization_groups.setdefault(flow_signature, []).append((flow_subject_id, evidence))
     for (flow_kind, observation), raw_members in sorted(serialization_groups.items()):
         members_by_subject = dict(raw_members)
         if len(members_by_subject) < 2:
@@ -307,7 +307,7 @@ def integrate_clone_report(
         for item in fragments
     }
     provisional: list[
-        tuple[str, object, tuple[str, ...], tuple[str, ...], tuple[Evidence, ...]]
+        tuple[str, CloneKind, tuple[str, ...], tuple[str, ...], tuple[Evidence, ...]]
     ] = []
     for group in discovery.groups:
         group_fragment_ids = tuple(
@@ -343,8 +343,8 @@ def integrate_clone_report(
     truncated_clusters = discovery.truncated_clusters
     truncated_members = discovery.truncated_members
     limits = context.config.phase_three_limits
-    for kind, digest, raw_members in idiom_groups:
-        subject_count = len({item.subject_id for item in raw_members})
+    for idiom_kind, digest, idiom_members in idiom_groups:
+        subject_count = len({item.subject_id for item in idiom_members})
         prospective_pairs = subject_count * (subject_count - 1) // 2
         if candidate_pairs + prospective_pairs > limits.max_candidate_pairs:
             truncated_pairs += prospective_pairs
@@ -353,17 +353,17 @@ def integrate_clone_report(
         if len(provisional) >= limits.max_clusters:
             truncated_clusters += 1
             continue
-        members = raw_members
+        members = idiom_members
         if len(members) > limits.max_cluster_members:
             truncated_members += len(members) - limits.max_cluster_members
             members = members[: limits.max_cluster_members]
         fragment_ids = tuple(sorted(item.fragment_id for item in members))
         group_subject_ids = tuple(sorted({item.subject_id for item in members}))
-        cluster_id = _stable_id("clone-cluster", kind.value, digest, *fragment_ids)
+        cluster_id = _stable_id("clone-cluster", idiom_kind.value, digest, *fragment_ids)
         provisional.append(
             (
                 cluster_id,
-                kind,
+                idiom_kind,
                 fragment_ids,
                 group_subject_ids,
                 tuple(item.evidence[0] for item in members),

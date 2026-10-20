@@ -379,7 +379,13 @@ def test_static_handoff_after_saved_profile_clears_catalog_from_runtime_routes(
                     assert "profile_run" not in url and "compare_profile_run" not in url
 
                 session.requests.clear()
-                page.get_by_label("Relationship layer", exact=True).select_option("runtime-calls")
+                with page.expect_response(
+                    lambda response: "/api/code-browser/graph" in response.url
+                    and "runtime-calls" in response.url
+                ):
+                    page.get_by_label("Relationship layer", exact=True).select_option(
+                        "runtime-calls"
+                    )
                 page.locator(".code-browser-map").get_by_text(
                     "Loading saved relationships", exact=False
                 ).wait_for(state="hidden")

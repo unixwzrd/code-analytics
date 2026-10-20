@@ -11,6 +11,8 @@ from contextlib import suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from pydantic import BaseModel
+
 from code_analysis.browse_index import BrowseIndex, index_directory
 from code_analysis.browse_index_models import BrowseRequest
 from code_analysis.clone_browsing import CloneRow
@@ -69,7 +71,7 @@ class BrowseExportLimitError(ValueError):
 def build_browse_export(index: BrowseIndex, request: BrowseRequest) -> TableProjection:
     page = index.page(request)
     source = index.bootstrap().reports[0]
-    model = {
+    models: dict[BrowseTable, type[BaseModel]] = {
         BrowseTable.MODULES: UIModuleRow,
         BrowseTable.FINDINGS: UIFindingRow,
         BrowseTable.CANDIDATES: UICandidateRow,
@@ -80,12 +82,12 @@ def build_browse_export(index: BrowseIndex, request: BrowseRequest) -> TableProj
         BrowseTable.CONTRACTS: ContractRow,
         BrowseTable.SHAPES: ShapeRow,
         BrowseTable.TEST_IMPACT: TestImpactRow,
-    }[request.table]
-    fields = tuple(model.model_fields)
+    }
+    fields = tuple(models[request.table].model_fields)
     selection = json.dumps(request.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
     identity = hashlib.sha256((source.report_sha256 + "\0" + selection).encode()).hexdigest()[:20]
     omitted = page.eligible - page.retained
-    limitations = (
+    limitations: tuple[str, ...] = (
         "Display cells are strings; nested values retain JSON notation. "
         "JSON source evidence remains authoritative.",
         f"Exact indexed selection: {selection}",
@@ -242,6 +244,7 @@ def export_browse_page(
         }
     if output_format not in extensions:
         raise BrowseExportSelectionError("unsupported format for the indexed selection")
+    projection: TableProjection | GraphProjection
     if isinstance(request, RuntimeGraphRequest):
         projection = index.runtime_graph(request)
     elif isinstance(request, DependencyGraphRequest):

@@ -288,11 +288,11 @@ def runtime_table(report: ProfileReport, *, kind: str, maximum: int) -> str:
 
 def hotspot_svg(report: ProfileReport, maximum: int) -> str:
     frames = sorted(
-        (item for item in report.frames if item.total_seconds is not None),
-        key=lambda item: (-item.total_seconds, item.frame_id),
+        ((item, item.total_seconds) for item in report.frames if item.total_seconds is not None),
+        key=lambda item: (-item[1], item[0].frame_id),
     )[: min(maximum, 50)]
     height = 110 + len(frames) * 36
-    peak = max((item.total_seconds for item in frames), default=0.0) or 1.0
+    peak = max((seconds for _frame, seconds in frames), default=0.0) or 1.0
     lines = [
         '<svg xmlns="http://www.w3.org/2000/svg" width="1200" '
         f'height="{height}" viewBox="0 0 1200 {height}">',
@@ -303,12 +303,12 @@ def hotspot_svg(report: ProfileReport, maximum: int) -> str:
         f'<text x="20" y="48">{len(frames)} / {len(report.frames)} frames shown; '
         f"{report.completeness.value}; unknown timings excluded</text>",
     ]
-    for index, frame in enumerate(frames):
+    for index, (frame, seconds) in enumerate(frames):
         y = 85 + index * 36
         label = escape(f"{frame.path}:{frame.line}:{frame.function}"[:120])
         lines.append(
             f'<text x="20" y="{y}">{label}</text><rect x="730" y="{y - 12}" '
-            f'width="{350 * frame.total_seconds / peak:.3f}" height="16" fill="#357abd"/>'
-            f'<text x="1090" y="{y}">{frame.total_seconds:.6f}</text>'
+            f'width="{350 * seconds / peak:.3f}" height="16" fill="#357abd"/>'
+            f'<text x="1090" y="{y}">{seconds:.6f}</text>'
         )
     return "\n".join([*lines, "</g></svg>\n"])

@@ -63,10 +63,16 @@ def bind_collection_generation(
     profile = isinstance(report, ProfileReport)
     if profile != (receipt.command.operation in {"profile", "import-profile"}):
         raise OSError(errno.EBADMSG, "collection operation and report kind disagree")
-    captured = render_profile_json(report, compact=True) if profile else canonical_json(report)
+    captured = (
+        render_profile_json(report, compact=True)
+        if isinstance(report, ProfileReport)
+        else canonical_json(report)
+    )
     if captured.encode() != result.stdout:
         raise OSError(errno.EBADMSG, "captured report does not match validated report values")
-    kind = GenerationKind.PROFILE if profile else GenerationKind.ANALYSIS
+    kind: Literal[GenerationKind.PROFILE, GenerationKind.ANALYSIS] = (
+        GenerationKind.PROFILE if profile else GenerationKind.ANALYSIS
+    )
     workspace = open_workspace(workspace_path)
     manifest = read_generation(workspace, kind, generation_id)
     marker = validate_workspace_ownership(workspace)
@@ -87,12 +93,16 @@ def bind_collection_generation(
     ):
         raise OSError(errno.EBADMSG, "generation does not belong to the captured invocation")
     report_hash = hashlib.sha256(result.stdout).hexdigest()
-    portable_identity = report.profile_identity_sha256 if profile else report_hash
+    portable_identity = (
+        report.profile_identity_sha256 if isinstance(report, ProfileReport) else report_hash
+    )
     if manifest.portable_identity_sha256 != portable_identity:
         raise OSError(errno.EBADMSG, "generation portable report identity mismatch")
-    name = "profile.json" if profile else "report.json"
+    name: Literal["profile.json", "report.json"] = "profile.json" if profile else "report.json"
     artifact = next((item for item in manifest.artifacts if item.name == name), None)
-    persisted = render_profile_json(report).encode() if profile else result.stdout
+    persisted = (
+        render_profile_json(report).encode() if isinstance(report, ProfileReport) else result.stdout
+    )
     artifact_hash = hashlib.sha256(persisted).hexdigest()
     if artifact is None or artifact.sha256 != artifact_hash or artifact.bytes != len(persisted):
         raise OSError(errno.EBADMSG, "generation report bytes differ from captured evidence")

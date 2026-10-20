@@ -140,6 +140,8 @@ class RuntimeBrowser(ModalScreen[None]):
                     cells.append(plain_text("unavailable" if value is None else str(value)))
                 table.add_row(*cells, key=str(position))
         summary = self.index.manifest.runtime
+        if summary is None:
+            return
         self.query_one("#runtime-status", Static).update(
             plain_text(
                 f"Profile {summary.profile_report_sha256}; {projection.source_completeness.value}; "
@@ -201,7 +203,10 @@ class RuntimeBrowser(ModalScreen[None]):
         event.stop()
         if self.page is None:
             return
-        record = self.page.panel.projection.records[int(event.row_key.value)]
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        record = self.page.panel.projection.records[int(row_key)]
         if isinstance(record, (ProfileFrame, ProfileStatistic)):
             self.request = RuntimeBrowseRequest(
                 section=RuntimeQuerySection.CALLS, frame_id=record.frame_id

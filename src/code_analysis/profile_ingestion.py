@@ -11,10 +11,10 @@ import hashlib
 import json
 import math
 import os
-import pstats
 import subprocess
 import sys
 import tempfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -35,10 +35,13 @@ from code_analysis.profile_models import (
     ResourceObservation,
     RuntimeCallEdge,
 )
+from code_analysis.pstats_table import ProfileStats
+from code_analysis.report_models import AnalysisReport
 from code_analysis.runtime_identity import CollectionMetadata, RuntimeRoot, read_bounded_artifact
 from code_analysis.runtime_models import (
     CollectionIdentity,
     ProcessProofState,
+    RuntimeArtifact,
     RuntimeEvidence,
     RuntimeProcessProof,
 )
@@ -122,7 +125,7 @@ def caller_metrics(value: object) -> CallerMetrics:
     )
 
 
-def native_signature(stats: dict[ProfileKey, object]) -> tuple[object, ...]:
+def native_signature(stats: Mapping[ProfileKey, object]) -> tuple[object, ...]:
     result: list[object] = []
     for key, value in sorted(stats.items()):
         native_key(key)
@@ -148,7 +151,7 @@ def _worker(source: Path, output: Path, max_frames: int, max_edges: int) -> None
     if sys.platform != "darwin":
         resource.setrlimit(resource.RLIMIT_AS, (2 * 1024**3, 2 * 1024**3))
     resource.setrlimit(resource.RLIMIT_FSIZE, (512 * 1024**2, 512 * 1024**2))
-    stats = pstats.Stats(str(source)).stats
+    stats = ProfileStats(str(source)).stats
     if not stats:
         raise ValueError("empty profile")
     retained: list[object] = []
@@ -310,12 +313,12 @@ def _records(
     with tempfile.TemporaryDirectory(prefix="code-analysis-pstats-reload-") as directory:
         import marshal
 
-        portable = Path(directory) / "portable.prof"
-        portable.write_bytes(marshal.dumps(sanitized))
-        restored = pstats.Stats(str(portable)).stats if sanitized else {}
+        portable_path = Path(directory) / "portable.prof"
+        portable_path.write_bytes(marshal.dumps(sanitized))
+        restored = ProfileStats(str(portable_path)).stats if sanitized else {}
         if native_signature(restored) != native_signature(sanitized):
             raise ValueError("portable pstats reload changed metrics or identities")
-        portable_bytes = portable.read_bytes() if sanitized else None
+        portable_bytes = portable_path.read_bytes() if sanitized else None
     return (
         tuple(sorted(frames, key=lambda item: item.frame_id)),
         tuple(sorted(edges, key=lambda item: item.runtime_edge_id)),
@@ -329,7 +332,7 @@ def ingest_profiles(
     config: RuntimeAnalysisConfig | None = None,
     repo: Path | None = None,
     metadata: CollectionMetadata | None = None,
-    source_report=None,
+    source_report: AnalysisReport | None = None,
 ) -> tuple[ProfileReport, dict[str, bytes]]:
     """Normalize unchanged artifacts separately; raw files cannot prove collection identity."""
     config = config or RuntimeAnalysisConfig()
@@ -337,7 +340,7 @@ def ingest_profiles(
         raise OSError(errno.EINVAL, "runtime profile input is required")
     if len(paths) > config.max_inputs:
         raise OSError(errno.ENODATA, "runtime profile input count exceeds analytical bounds")
-    inputs = {}
+    inputs: dict[str, tuple[Path, bytes, RuntimeArtifact]] = {}
     for path in paths:
         data, artifact = read_bounded_artifact(
             path, maximum=config.max_profile_bytes, kind="profile"

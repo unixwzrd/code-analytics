@@ -20,7 +20,7 @@ from code_analysis.projection_models import (
 from code_analysis.runtime_browse_models import RuntimeBrowseRequest
 from code_analysis.runtime_comparison_browse import RuntimeComparisonRequest
 from code_analysis.runtime_index import RuntimeIndex
-from code_analysis.runtime_queries import runtime_record_type
+from code_analysis.runtime_queries import RuntimeQueryRecord, runtime_record_type
 
 
 def build_runtime_browse_export(
@@ -42,6 +42,7 @@ def build_runtime_browse_export(
     overview = summary.overview
     failed = overview.completeness is Completeness.FAILED
     incomplete = overview.completeness is Completeness.PARTIAL or not overview.source_matches
+    records: tuple[ProfileDiffRecord | RuntimeQueryRecord, ...]
     if isinstance(request, RuntimeComparisonRequest):
         page = index.runtime_comparison(request)
         records, eligible = page.report.records, page.eligible

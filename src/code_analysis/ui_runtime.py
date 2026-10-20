@@ -58,8 +58,10 @@ class RuntimeComparisonSourceQuery(StrictModel):
     def validate_range(self) -> RuntimeComparisonSourceQuery:
         if (self.start is None) != (self.end is None):
             raise ValueError("start and end must be supplied together")
-        if self.start is not None and (self.end < self.start or self.end - self.start > 199):
-            raise ValueError("source range requires end >= start and at most 200 lines")
+        if self.start is not None:
+            assert self.end is not None
+            if self.end < self.start or self.end - self.start > 199:
+                raise ValueError("source range requires end >= start and at most 200 lines")
         return self
 
 
@@ -273,6 +275,7 @@ def runtime_comparison_source_preview(
     if query.start is None and query.end is None:
         start, end = frame.line, frame.line + 39
     else:
+        assert query.start is not None and query.end is not None
         start, end = query.start, query.end
     preview = preview_source_record(static_source, source_root, start=start, end=end)
     if preview.state != "bound":

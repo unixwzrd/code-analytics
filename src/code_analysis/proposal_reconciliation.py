@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 
 from code_analysis.models import Completeness, Confidence
 from code_analysis.report_models import (
@@ -55,7 +56,7 @@ def reconcile_proposal_evidence(report: AnalysisReport) -> AnalysisReport:
         for subject_id in {item.target_subject_id for item in report.test_relationships}
         if subject_id is not None
     }
-    sections = {item.section: item for item in report.section_coverage}
+    sections: dict[str, SectionCoverage] = {item.section: item for item in report.section_coverage}
     proposals = tuple(
         _reconcile_proposal(
             proposal,
@@ -126,7 +127,7 @@ def _reconcile_proposal(
     artifacts: dict[str, CoverageArtifactRecord],
     coverage_by_subject: dict[str, tuple[SymbolCoverageRecord, ...]],
     relationships_by_subject: dict[str, tuple[TestRelationshipRecord, ...]],
-    sections: dict[str, SectionCoverage],
+    sections: Mapping[str, SectionCoverage],
 ) -> RefactorProposal:
     affected_tests: set[str] = set()
     coverage_ids: set[str] = set()

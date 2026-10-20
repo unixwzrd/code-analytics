@@ -248,10 +248,10 @@ def discover_dictionary_flows(
                 self.generic_visit(node)
                 return
             candidates = [] if call_is_shadowed else targets.get(call_expression, [])
-            for owner, argument in dictionary_arguments:
+            for owner, argument_name in dictionary_arguments:
                 if len(candidates) == 1:
                     target = candidates[0]
-                    parameter_identity = _parameter_identity_for_argument(target, argument)
+                    parameter_identity = _parameter_identity_for_argument(target, argument_name)
                     if parameter_identity is not None:
                         observations.append(
                             DictionaryFlowObservation(
@@ -268,7 +268,7 @@ def discover_dictionary_flows(
                 observations.append(
                     DictionaryFlowObservation(
                         source_owner=owner,
-                        target_identity=f"{module}:call:{attempted}:argument:{argument}",
+                        target_identity=f"{module}:call:{attempted}:argument:{argument_name}",
                         kind=InternalFlowKind.ARGUMENT,
                         resolution=(
                             InternalResolutionState.AMBIGUOUS
@@ -706,7 +706,7 @@ def _parameter_identity(
     return f"{module}:{function}:parameter:{parameter}"
 
 
-def _span(node: ast.AST, logical_path: str) -> InternalSourceSpan:
+def _span(node: ast.expr | ast.stmt, logical_path: str) -> InternalSourceSpan:
     return InternalSourceSpan(
         logical_path=logical_path,
         start_line=node.lineno,

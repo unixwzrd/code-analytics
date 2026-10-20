@@ -21,7 +21,7 @@ from textual.widgets import Button, DataTable, Select, Static
 from code_analysis.artifact_viewer import ViewerCommand
 from code_analysis.browse_index import BrowseIndex
 from code_analysis.module_navigation import ModuleNavigationPage, ModuleView
-from code_analysis.tui_app import RowDetails, plain_text
+from code_analysis.tui_app import RowDetails, WebHandoffKind, plain_text
 
 
 class ModuleBrowser(ModalScreen[int]):
@@ -47,7 +47,7 @@ class ModuleBrowser(ModalScreen[int]):
         module: str,
         on_error: Callable[[int], None],
         source_root: Path | None = None,
-        web_action: Callable[[str, str | None], None] | None = None,
+        web_action: Callable[[WebHandoffKind, str | None], None] | None = None,
         viewer: ViewerCommand | None = None,
     ) -> None:
         super().__init__()
@@ -160,9 +160,13 @@ class ModuleBrowser(ModalScreen[int]):
         event.stop()
         if self.page is None:
             return
-        position = int(event.row_key.value)
+        row_key = event.row_key.value
+        if row_key is None:
+            return
+        position = int(row_key)
         if self.view == "symbols":
             symbol = self.page.symbols[position]
+            handoff = self.web_action
             self.app.push_screen(
                 RowDetails(
                     json.dumps(symbol.model_dump(mode="json"), indent=2, ensure_ascii=False),
@@ -171,12 +175,8 @@ class ModuleBrowser(ModalScreen[int]):
                         symbol.span.path, symbol.span.start_line, symbol.span.end_line
                     ),
                     web_action=(
-                        (
-                            lambda: self.web_action(
-                                "symbol", f"{self.module}:{symbol.qualified_name}"
-                            )
-                        )
-                        if self.web_action is not None
+                        (lambda: handoff("symbol", f"{self.module}:{symbol.qualified_name}"))
+                        if handoff is not None
                         else None
                     ),
                 )

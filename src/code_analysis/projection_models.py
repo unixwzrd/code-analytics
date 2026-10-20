@@ -18,8 +18,8 @@ from pydantic import (
 from code_analysis.models import Completeness, Confidence, SourceLanguage, StrictModel
 from code_analysis.report_models import RefactorCandidateKind
 
-PROJECTION_SCHEMA_NAME = "code-analysis-projection"
-PROJECTION_SCHEMA_VERSION = "1.0.0"
+PROJECTION_SCHEMA_NAME: Literal["code-analysis-projection"] = "code-analysis-projection"
+PROJECTION_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
 
 
 class ProjectionInputRole(StrEnum):

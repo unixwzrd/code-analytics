@@ -155,13 +155,13 @@ def integrate_state_effect_report(
             _evidence(fact.declaration),
         )
     effect_subject_ids: dict[SideEffectFact, str] = {}
-    for fact in effect_facts:
-        effect_subject_ids[fact] = _ensure_subject(
+    for effect_fact in effect_facts:
+        effect_subject_ids[effect_fact] = _ensure_subject(
             subjects,
             logical_subjects,
-            fact.subject_logical_name,
-            fact.module,
-            _evidence(fact.span),
+            effect_fact.subject_logical_name,
+            effect_fact.module,
+            _evidence(effect_fact.span),
         )
     structures_by_logical: dict[str, list[str]] = {}
     for structure in report.data_structures:

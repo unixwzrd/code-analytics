@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from collections.abc import Callable
 from typing import Self
 
 from pydantic import Field, StrictBool, StrictInt, StrictStr, model_validator
@@ -26,7 +27,7 @@ from code_analysis.projection_models import (
 from code_analysis.projections import ProjectionName, build_projection
 from code_analysis.projections._shared import _report_input
 from code_analysis.projections.lexical_calls import _unknown_node
-from code_analysis.report_models import AnalysisReport, SectionState
+from code_analysis.report_models import AnalysisReport, DataStructureRecord, SectionState
 
 GRAPH_PROJECTIONS = (
     ProjectionName.OWNERSHIP_ALIAS_FLOW,
@@ -207,6 +208,7 @@ def _language_memberships(
         ProjectionName.OWNERSHIP_ALIAS_FLOW,
         ProjectionName.STRUCTURE_LIFECYCLE_GRAPH,
     }:
+        relation_accessors: tuple[Callable[[DataStructureRecord], tuple[str, ...]], ...]
         if name is ProjectionName.OWNERSHIP_ALIAS_FLOW:
             relation_accessors = (
                 lambda item: (item.owner_subject_id,),
@@ -264,10 +266,10 @@ def _language_memberships(
     elif name is ProjectionName.DEPENDENCIES:
         modules = {item.name: item.language for item in report.modules}
         for node_id in node_languages:
-            language = modules.get(node_id)
-            if language is None:
+            module_language = modules.get(node_id)
+            if module_language is None:
                 raise ValueError("dependency graph node has no recorded module")
-            node_languages[node_id].add(language)
+            node_languages[node_id].add(module_language)
         for edge_id, edge in edges.items():
             edge_languages[edge_id].update({modules[edge.source_id], modules[edge.target_id]})
     elif name is ProjectionName.LEXICAL_CALL_GRAPH:
@@ -291,10 +293,10 @@ def _language_memberships(
                 if target_id in node_languages:
                     node_languages[target_id].add(caller_language)
         for edge_id, edge in edges.items():
-            profile = profiles.get(edge.source_id)
-            if profile is None:
+            edge_profile = profiles.get(edge.source_id)
+            if edge_profile is None:
                 raise ValueError("lexical call graph edge source has no function profile")
-            edge_languages[edge_id].add(profile.language)
+            edge_languages[edge_id].add(edge_profile.language)
     else:
         flows = {item.flow_id: item for item in report.flow_edges}
         relevant_flows = tuple(
@@ -313,12 +315,12 @@ def _language_memberships(
             if flow.target_id in node_languages:
                 node_languages[flow.target_id].update(languages)
         for edge_id in edges:
-            flow = flows.get(edge_id)
-            if flow is None:
+            edge_flow = flows.get(edge_id)
+            if edge_flow is None:
                 continue
             languages = {
-                subjects[flow.source_id].language,
-                subjects[flow.target_id].language,
+                subjects[edge_flow.source_id].language,
+                subjects[edge_flow.target_id].language,
             }
             edge_languages[edge_id].update(languages)
     if any(not value for value in node_languages.values()) or any(
@@ -892,7 +894,7 @@ def read_static_graph(
     if display_truncated and completeness is Completeness.COMPLETE:
         completeness = Completeness.PARTIAL
     if request.name is ProjectionName.STATIC_CALL_GRAPH:
-        nodes = _align_static_call_graph_nodes(tuple(nodes), tuple(edges))
+        nodes = list(_align_static_call_graph_nodes(tuple(nodes), tuple(edges)))
     selection = ProjectionSelection(
         selected_ids=request.selected_ids,
         languages=request.languages,

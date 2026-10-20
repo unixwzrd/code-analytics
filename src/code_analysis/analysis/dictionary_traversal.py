@@ -463,9 +463,8 @@ class DictionaryFactVisitor(ast.NodeVisitor):
             and (expected_type := self._static_type_repr(node.args[1])) is not None
         ):
             key_kind, key_repr, _key_type_repr = _key_fact(node.args[0].slice)
-            negated = isinstance(
-                self.context.parents_by_id.get(id(node)), ast.UnaryOp
-            ) and isinstance(self.context.parents_by_id[id(node)].op, ast.Not)
+            parent = self.context.parents_by_id.get(id(node))
+            negated = isinstance(parent, ast.UnaryOp) and isinstance(parent.op, ast.Not)
             self.facts.structural_validations.append(
                 DictionaryStructuralValidationObservation(
                     owner=owner,
@@ -625,12 +624,12 @@ class DictionaryFactVisitor(ast.NodeVisitor):
                     )
                 )
         if len(node.ops) == 1 and isinstance(node.ops[0], (ast.In, ast.NotIn)):
-            owner = self._bound_owner(node.comparators[0])
-            if owner is not None:
+            membership_owner = self._bound_owner(node.comparators[0])
+            if membership_owner is not None:
                 key_kind, key_repr, key_type_repr = _key_fact(node.left)
                 self.facts.operations.append(
                     DictionaryOperationObservation(
-                        owner=owner,
+                        owner=membership_owner,
                         kind=DictionaryOperationKind.MEMBERSHIP,
                         span=_span(node, self.context.logical_path),
                         variant=self._variant_name(),
@@ -862,7 +861,7 @@ class DictionaryFactVisitor(ast.NodeVisitor):
 
     def _record_truthiness(self, node: ast.expr) -> None:
         negated = isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not)
-        candidate = node.operand if negated else node
+        candidate = node.operand if isinstance(node, ast.UnaryOp) and negated else node
         predicate = DictionaryPredicate.FALSY if negated else DictionaryPredicate.TRUTHY
         owner = self._bound_owner(candidate)
         if owner is not None:

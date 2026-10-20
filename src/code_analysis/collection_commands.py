@@ -327,12 +327,12 @@ class CollectionPlanner:
                 path = self._path(value, directory=False)
                 required.append(str(path))
                 argv.extend(("--profile", str(path)))
-            for flag, value in (
+            for flag, optional_value in (
                 ("--metadata", request.metadata),
                 ("--source-report", request.source_report),
             ):
-                if value is not None:
-                    path = self._path(value, directory=False)
+                if optional_value is not None:
+                    path = self._path(optional_value, directory=False)
                     required.append(str(path))
                     argv.extend((flag, str(path)))
         elif request.operation == "profile":

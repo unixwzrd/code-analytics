@@ -244,7 +244,8 @@ def _control_call_events(statements: tuple[ast.stmt, ...]) -> tuple[str, ...]:
         def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
             return
 
-        visit_AsyncFunctionDef = visit_FunctionDef
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            return
 
         def visit_ClassDef(self, node: ast.ClassDef) -> None:
             return

@@ -23,10 +23,25 @@ from code_analysis.profile_models import (
 )
 from code_analysis.profiling import load_profile_json, render_profile_json, render_profile_markdown
 from code_analysis.projections.runtime import build_runtime_graph, runtime_dot, runtime_table
+from code_analysis.pstats_table import ProfileStats
 from code_analysis.runtime_comparison import compare_runtime_profiles
 from code_analysis.runtime_identity import CollectionMetadata
 from code_analysis.runtime_models import RuntimeSelection
 from code_analysis.runtime_spec import RuntimeAnalysisConfig
+
+
+@pytest.mark.parametrize("profiler_type", [profile.Profile, cProfile.Profile])
+def test_typed_pstats_reader_preserves_native_table_and_reload(tmp_path, profiler_type):
+    capture = profiler_type()
+    capture.runcall(recursive, 3)
+    original = tmp_path / "original.prof"
+    restored = tmp_path / "restored.prof"
+    capture.dump_stats(str(original))
+    reader = ProfileStats(str(original))
+    assert reader.stats == pstats.Stats(str(original)).stats
+    reader.dump_stats(str(restored))
+    assert native_signature(ProfileStats(str(restored)).stats) == native_signature(reader.stats)
+    assert pstats.Stats(str(restored)).stats == reader.stats
 
 
 @pytest.mark.parametrize(

@@ -87,21 +87,21 @@ class CandidateSignatureCatalog:
             for candidate_id in proposal_consumers.get(item.proposal_id, ()):
                 proposals.setdefault(candidate_id, []).append(item)
         costs: dict[str, list[AbstractionCostEstimate]] = {}
-        for item in report.abstraction_cost_estimates:
-            for candidate_id in cost_consumers.get(item.cost_estimate_id, ()):
-                costs.setdefault(candidate_id, []).append(item)
+        for cost_estimate in report.abstraction_cost_estimates:
+            for candidate_id in cost_consumers.get(cost_estimate.cost_estimate_id, ()):
+                costs.setdefault(candidate_id, []).append(cost_estimate)
         owners: dict[str, list[OwnerAlternative]] = {}
-        for item in report.owner_alternatives:
-            for candidate_id in owner_consumers.get(item.alternative_id, ()):
-                owners.setdefault(candidate_id, []).append(item)
+        for owner_alternative in report.owner_alternatives:
+            for candidate_id in owner_consumers.get(owner_alternative.alternative_id, ()):
+                owners.setdefault(candidate_id, []).append(owner_alternative)
         invariants: dict[str, list[BehavioralInvariant]] = {}
-        for item in report.behavioral_invariants:
-            for candidate_id in invariant_consumers.get(item.invariant_id, ()):
-                invariants.setdefault(candidate_id, []).append(item)
+        for invariant in report.behavioral_invariants:
+            for candidate_id in invariant_consumers.get(invariant.invariant_id, ()):
+                invariants.setdefault(candidate_id, []).append(invariant)
         differences: dict[str, list[CandidateBehaviorDifference]] = {}
-        for item in report.candidate_behavior_differences:
-            for candidate_id in difference_consumers.get(item.difference_id, ()):
-                differences.setdefault(candidate_id, []).append(item)
+        for difference in report.candidate_behavior_differences:
+            for candidate_id in difference_consumers.get(difference.difference_id, ()):
+                differences.setdefault(candidate_id, []).append(difference)
 
         return cls(
             _candidates=MappingProxyType(candidates),

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from typing import TypedDict
 
 from code_analysis.models import Completeness, Evidence
 from code_analysis.projection_models import (
@@ -123,6 +124,18 @@ def _selected_contracts(
     return tuple(contract for contract in contracts if contract.contract_id in selected)
 
 
+class _TableBase(TypedDict):
+    projection_id: str
+    title: str
+    inputs: tuple[ProjectionInput, ...]
+    selection: ProjectionSelection
+    completeness: Completeness
+    record_count: int
+    truncated: bool
+    truncation_reason: str | None
+    limitations: tuple[str, ...]
+
+
 def _table_base(
     report: Report,
     name: ProjectionName,
@@ -130,7 +143,7 @@ def _table_base(
     title: str,
     record_count: int,
     truncated: bool,
-) -> dict[str, object]:
+) -> _TableBase:
     source = _report_input(report)
     return {
         "projection_id": _projection_id(source, name, selection),

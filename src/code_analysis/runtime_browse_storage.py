@@ -103,8 +103,8 @@ def write_runtime_records(
         bindings = comparison_frame_bindings(service.profile, candidate)
         if len(bindings) != len(service.delta.records):
             raise ValueError("comparison frame bindings disagree with validated delta")
-        for position, record in enumerate(service.delta.records):
-            payload = record.model_dump_json()
+        for position, comparison_record in enumerate(service.delta.records):
+            payload = comparison_record.model_dump_json()
             size = len(payload.encode())
             total_bytes += size
             if size > 1024**2 or total_bytes > 2 * 1024**3:
@@ -367,6 +367,9 @@ def read_runtime_page(
     summary: RuntimeIndexSummary,
     request: RuntimeBrowseRequest,
 ) -> RuntimeBrowsePage:
+    # RuntimeIndexSummary requires an available, strictly validated overview.
+    completeness = summary.overview.completeness
+    assert completeness is not None
     conditions = "section = ?"
     parameters: list[str | int] = [request.section.value]
     if request.frame_id is not None:
@@ -443,7 +446,7 @@ def read_runtime_page(
                         "retained_count": len(records),
                         "omitted_count": omitted,
                         "truncated": bool(omitted),
-                        "source_completeness": summary.overview.completeness.value,
+                        "source_completeness": completeness.value,
                         "records": records,
                         "limitations": sorted(limitations),
                     },

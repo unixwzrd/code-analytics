@@ -145,12 +145,12 @@ def investigate_dependencies(
             members = tuple(sorted(outgoing.keys() & incoming.keys()))
         elif request.target in outgoing:
             reverse: list[str] = []
-            cursor = request.target
+            cursor: str | None = request.target
             while cursor is not None:
                 reverse.append(cursor)
                 cursor = outgoing[cursor]
             path = tuple(reversed(reverse))
-    limitations = (
+    limitations: tuple[str, ...] = (
         "Known local saved import edges only; external and unresolved imports are excluded.",
         "A path proves saved dependency reachability, not runtime execution.",
     )

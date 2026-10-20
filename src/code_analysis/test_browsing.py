@@ -225,7 +225,7 @@ def investigate_test(row: TestImpactRow) -> TestInvestigation:
         if entity
         else ()
     )
-    locations = [
+    locations: list[tuple[Literal["test", "application", "fixture"], str, str, int, int]] = [
         (
             "test",
             module.path,
@@ -234,10 +234,13 @@ def investigate_test(row: TestImpactRow) -> TestInvestigation:
             test_evidence[0].span.end_line if test_evidence else 40,
         )
     ]
-    for role, target in (
+    targets: tuple[
+        tuple[Literal["application", "fixture"], AnalysisSubject | TestFixtureRecord | None], ...
+    ] = (
         ("application", detail.target_subject),
         ("fixture", detail.target_fixture),
-    ):
+    )
+    for role, target in targets:
         if target is not None:
             locations.extend(
                 (role, item.span.path, item.source_sha256, item.span.start_line, item.span.end_line)
@@ -310,10 +313,12 @@ def test_impact_rows(report: AnalysisReport) -> Iterator[TestImpactRow]:
     coverage = _target_coverage(report)
     for module in sorted(modules.values(), key=lambda item: item.test_module_id):
         yield _row(TestImpactDetail(module=module))
-    for case in sorted(cases.values(), key=lambda item: item.test_id):
-        yield _row(TestImpactDetail(module=modules[case.test_module_id], case=case))
-    for fixture in sorted(fixtures.values(), key=lambda item: item.fixture_id):
-        yield _row(TestImpactDetail(module=modules[fixture.test_module_id], fixture=fixture))
+    for test_case in sorted(cases.values(), key=lambda item: item.test_id):
+        yield _row(TestImpactDetail(module=modules[test_case.test_module_id], case=test_case))
+    for test_fixture in sorted(fixtures.values(), key=lambda item: item.fixture_id):
+        yield _row(
+            TestImpactDetail(module=modules[test_fixture.test_module_id], fixture=test_fixture)
+        )
     for relationship in sorted(report.test_relationships, key=lambda item: item.relationship_id):
         case = cases.get(relationship.source_test_id or "")
         fixture = fixtures.get(relationship.source_test_id or "")

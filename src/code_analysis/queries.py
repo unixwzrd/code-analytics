@@ -93,7 +93,7 @@ def _item(
 def _static_call_items(report: AnalysisReport) -> dict[str, QueryItem]:
     items: dict[str, QueryItem] = {}
     for call in report.static_call_occurrences:
-        related = (f"module:{call.module_name}",)
+        related: tuple[str, ...] = (f"module:{call.module_name}",)
         if call.enclosing_subject_id is not None:
             related += (call.enclosing_subject_id,)
         items[call.occurrence_id] = _item(
@@ -158,8 +158,8 @@ def _entity_items(report: AnalysisReport) -> dict[str, QueryItem]:
             confidence=subject.evidence[0].confidence,
         )
     for contract in report.contracts:
-        related = [contract.defining_subject_id]
-        related.extend(boundary.boundary_id for boundary in contract.boundaries)
+        contract_related = [contract.defining_subject_id]
+        contract_related.extend(boundary.boundary_id for boundary in contract.boundaries)
         items[contract.contract_id] = _item(
             item_id=contract.contract_id,
             kind=QueryItemKind.CONTRACT,
@@ -167,7 +167,7 @@ def _entity_items(report: AnalysisReport) -> dict[str, QueryItem]:
             relationship="selected-contract",
             statement=f"{contract.kind.value} contract with {len(contract.members)} members",
             report=report,
-            related_ids=tuple(related),
+            related_ids=tuple(contract_related),
             evidence=contract.evidence,
             confidence=contract.evidence[0].confidence,
             limitations=contract.unresolved_behavior,
@@ -449,32 +449,32 @@ def _entity_items(report: AnalysisReport) -> dict[str, QueryItem]:
             limitations=proposal.limitations,
         )
     observations = {item.candidate_id: item for item in report.candidate_observations}
-    for candidate in report.refactor_candidates:
-        observation = observations[candidate.candidate_id]
-        items[candidate.candidate_id] = _item(
-            item_id=candidate.candidate_id,
+    for refactor_candidate in report.refactor_candidates:
+        candidate_observation = observations[refactor_candidate.candidate_id]
+        items[refactor_candidate.candidate_id] = _item(
+            item_id=refactor_candidate.candidate_id,
             kind=QueryItemKind.REFACTOR_CANDIDATE,
-            identity=candidate.candidate_id,
+            identity=refactor_candidate.candidate_id,
             relationship="refactor-candidate",
-            statement=f"{candidate.kind.value}: {observation.state.value}",
+            statement=f"{refactor_candidate.kind.value}: {candidate_observation.state.value}",
             report=report,
             related_ids=(
-                *candidate.participating_subject_ids,
-                *observation.responsibility_ids,
-                *observation.duplicate_ids,
-                *observation.proposal_ids,
+                *refactor_candidate.participating_subject_ids,
+                *candidate_observation.responsibility_ids,
+                *candidate_observation.duplicate_ids,
+                *candidate_observation.proposal_ids,
             ),
-            evidence=observation.evidence,
+            evidence=candidate_observation.evidence,
             confidence=Confidence.INFERRED,
-            limitations=observation.limitations,
+            limitations=candidate_observation.limitations,
         )
-    for module in report.test_modules:
-        items[module.test_module_id] = _item(
-            item_id=module.test_module_id,
+    for test_module in report.test_modules:
+        items[test_module.test_module_id] = _item(
+            item_id=test_module.test_module_id,
             kind=QueryItemKind.TEST_MODULE,
-            identity=module.module,
+            identity=test_module.module,
             relationship="test-module",
-            statement=f"{module.framework} test module at {module.path}",
+            statement=f"{test_module.framework} test module at {test_module.path}",
             report=report,
         )
     for test in report.test_cases:
@@ -548,15 +548,15 @@ def _entity_items(report: AnalysisReport) -> dict[str, QueryItem]:
             confidence=Confidence.RUNTIME_OBSERVED,
             limitations=coverage_file.limitations,
         )
-    for observation in report.coverage_observations:
-        items[observation.coverage_observation_id] = _item(
-            item_id=observation.coverage_observation_id,
+    for coverage_observation in report.coverage_observations:
+        items[coverage_observation.coverage_observation_id] = _item(
+            item_id=coverage_observation.coverage_observation_id,
             kind=QueryItemKind.COVERAGE_OBSERVATION,
-            identity=observation.coverage_observation_id,
+            identity=coverage_observation.coverage_observation_id,
             relationship="symbol-coverage",
-            statement=f"{len(observation.covered_lines)} covered lines",
+            statement=f"{len(coverage_observation.covered_lines)} covered lines",
             report=report,
-            related_ids=(observation.coverage_id, observation.subject_id),
+            related_ids=(coverage_observation.coverage_id, coverage_observation.subject_id),
             confidence=Confidence.RUNTIME_OBSERVED,
         )
     for commit in report.git_commits:
@@ -580,16 +580,20 @@ def _entity_items(report: AnalysisReport) -> dict[str, QueryItem]:
             related_ids=(change.commit_id,),
             limitations=change.limitations,
         )
-    for change in report.git_symbol_changes:
-        items[change.symbol_change_id] = _item(
-            item_id=change.symbol_change_id,
+    for symbol_change in report.git_symbol_changes:
+        items[symbol_change.symbol_change_id] = _item(
+            item_id=symbol_change.symbol_change_id,
             kind=QueryItemKind.GIT_SYMBOL_CHANGE,
-            identity=change.subject_id,
+            identity=symbol_change.subject_id,
             relationship="git-symbol-change",
-            statement=f"{change.kind.value} symbol change",
+            statement=f"{symbol_change.kind.value} symbol change",
             report=report,
-            related_ids=(change.commit_id, change.path_change_id, change.subject_id),
-            limitations=change.limitations,
+            related_ids=(
+                symbol_change.commit_id,
+                symbol_change.path_change_id,
+                symbol_change.subject_id,
+            ),
+            limitations=symbol_change.limitations,
         )
     for coupling in report.change_couplings:
         items[coupling.coupling_id] = _item(

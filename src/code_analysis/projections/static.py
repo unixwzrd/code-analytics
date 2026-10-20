@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import PurePosixPath
 
 from code_analysis.finding_suppression_models import FindingSuppression
-from code_analysis.models import Module, SourceLanguage, Symbol
+from code_analysis.models import ComplexityObservation, Module, SourceLanguage, Symbol
 from code_analysis.projection_models import (
     ColumnAlignment,
     EdgeDirection,
@@ -310,11 +310,11 @@ def _finding_suppression_cells(
 def _finding_projection(report: Report, selection: ProjectionSelection) -> TableProjection:
     severity_rank = {"error": 3, "warning": 2, "info": 1}
     module_languages = {item.name: item.language for item in report.modules}
-    findings = tuple(
+    findings = [
         item
         for item in report.findings
         if not selection.languages or module_languages.get(item.module) in selection.languages
-    )
+    ]
     findings = sorted(
         findings,
         key=lambda finding: (
@@ -483,15 +483,15 @@ def _hierarchy_projection(report: Report, selection: ProjectionSelection) -> Hie
 
 
 def _complexity_projection(report: Report, selection: ProjectionSelection) -> TableProjection:
-    records: list[tuple[Module, Symbol]] = []
+    records: list[tuple[Module, Symbol, ComplexityObservation]] = []
     for module in report.modules:
         for symbol in module.symbols:
             if symbol.complexity is not None:
-                records.append((module, symbol))
+                records.append((module, symbol, symbol.complexity))
     records.sort(
         key=lambda item: (
-            -item[1].complexity.weighted_score,
-            -item[1].complexity.physical_loc,
+            -item[2].weighted_score,
+            -item[2].physical_loc,
             item[0].name,
             item[1].qualified_name,
         )
@@ -505,15 +505,15 @@ def _complexity_projection(report: Report, selection: ProjectionSelection) -> Ta
                 _string(symbol.kind),
                 _string(symbol.span.path),
                 _integer(symbol.span.start_line),
-                _integer(symbol.complexity.physical_loc),
-                _integer(symbol.complexity.branches),
-                _integer(symbol.complexity.nesting_depth),
-                _integer(symbol.complexity.argument_count),
-                _integer(symbol.complexity.cyclomatic_complexity),
-                _integer(symbol.complexity.weighted_score),
+                _integer(complexity.physical_loc),
+                _integer(complexity.branches),
+                _integer(complexity.nesting_depth),
+                _integer(complexity.argument_count),
+                _integer(complexity.cyclomatic_complexity),
+                _integer(complexity.weighted_score),
             ),
         )
-        for module, symbol in records
+        for module, symbol, complexity in records
     ]
     bounded, truncated = _bounded_rows(rows, selection)
     integer_columns = {

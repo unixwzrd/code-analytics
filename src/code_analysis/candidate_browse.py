@@ -156,7 +156,7 @@ def _suppressed(effective: EffectiveDecision | None, selection: ProjectionSelect
 def decision_aware_candidate_row(
     row: TableRow, policy: CandidatePolicyFacts, column_ids: tuple[str, ...]
 ) -> TableRow:
-    updates = {"decision": policy.decision_name}
+    updates: dict[str, str | int] = {"decision": policy.decision_name}
     updates["decision-rank"] = DECISION_RANK[policy.decision_name]
     cells = list(row.cells)
     for column, value in updates.items():

@@ -449,74 +449,6 @@
         "behavior-event-c02ad1cc6bc98e67bd4e"
       ],
       "behavioral_invariant_ids": [
-        "behavior-invariant-434dcad39736cf321499"
-      ],
-      "candidate_id": "refactor-candidate-1a59da04878aa1ed4c80",
-      "completeness": "partial",
-      "configuration_sha256": "c4d82fdc920ef3c75f7b3107379c7618a8973c570e161a0d0d6ded72d1cd53f7",
-      "cost_estimate_id": "abstraction-cost-31bb36448f1eb1109571",
-      "counter_evidence_ids": [],
-      "duplicate_ids": [],
-      "evidence_ids": [
-        "evidence-430027e6cd4235c3453b",
-        "evidence-30c03c87622d3a7a09ac",
-        "evidence-a02fc233f4a53faa82fb",
-        "evidence-1bd56328db5dfa959996",
-        "evidence-b4658309d0d90e444cdd",
-        "evidence-240f09456cfc6cf16760",
-        "evidence-8cf39c324288e02d11a7",
-        "evidence-a30857670b19406113c8"
-      ],
-      "failed_gate_count": 0,
-      "limitations": [
-        "Phase 4 test-impact evidence is unavailable.",
-        "Static graph simulation does not establish runtime behavior or authorize source changes."
-      ],
-      "observation_id": "candidate-observation-3379c319b2ffeb3e0389",
-      "owner_alternative_ids": [
-        "owner-alternative-bddf7a63c08106ea455a",
-        "owner-alternative-d1bab80fc1d80d59b1b6",
-        "owner-alternative-e426a7ca1721fb3d9279",
-        "owner-alternative-e83d03440ca861024028",
-        "owner-alternative-fabf69bbe1ea1df81107"
-      ],
-      "proposal_ids": [
-        "refactor-proposal-9b0d4f7972943799b6ed"
-      ],
-      "qualification_requirement_ids": [
-        "candidate-qualification-3584c6a9154ea39e86be",
-        "candidate-qualification-413392176ce9e10fa6ca",
-        "candidate-qualification-575be9390dab3a179eaa",
-        "candidate-qualification-9e70de73ad40c72ad83f",
-        "candidate-qualification-a50bdf807b8cfb65bc2d",
-        "candidate-qualification-a7ed9f2270f5b57c2814",
-        "candidate-qualification-ba6ec5cefe3a98aec4a5",
-        "candidate-qualification-c4a0c85dc3903bc64a7a",
-        "candidate-qualification-ebe1625dc7b501c8babe"
-      ],
-      "responsibility_ids": [
-        "responsibility-2fd397069bf0a104a063"
-      ],
-      "run_identity_sha256": "f1ade7d938b8fd8ce26b57b3f16ffab3a8889aa7af83a1ec67838357c6ec5b31",
-      "source_sha256s": [
-        "4ac38deb9aadc762f3ad48237676c242b09e7a776f522117f18f7b2e2d46ef30",
-        "7760bf104fd48c633055539019ac926d62cb6893fc6ee0e08d3107daf2bef973",
-        "fa8587c61d8f26582a4a8a557fe3ed136c595a622b257107a9607db9a13d2bb9"
-      ],
-      "state": "reviewable-incomplete",
-      "target_identity_sha256": "4d724e5ca25acddda3171e4fd359f79f9e203f75d936a5843208a7d6c9b58c49",
-      "unresolved_gate_count": 2
-    },
-    {
-      "behavioral_difference_ids": [],
-      "behavioral_event_ids": [
-        "behavior-event-26450fd187b1e9d0dff7",
-        "behavior-event-668f21166fab397279ac",
-        "behavior-event-8c25acb1449a5d4dd2f8",
-        "behavior-event-8efd370c9d0d806a8f15",
-        "behavior-event-c02ad1cc6bc98e67bd4e"
-      ],
-      "behavioral_invariant_ids": [
         "behavior-invariant-d6f6ed1b16fd798ba79d"
       ],
       "candidate_id": "refactor-candidate-d4ea0be1a1ea11057c68",
@@ -540,7 +472,7 @@
         "Phase 4 test-impact evidence is unavailable.",
         "Static graph simulation does not establish runtime behavior or authorize source changes."
       ],
-      "observation_id": "candidate-observation-5d622fb389d4b40ef8ce",
+      "observation_id": "candidate-observation-81938bc2be4111e27997",
       "owner_alternative_ids": [
         "owner-alternative-0e9e0990cf818edad086",
         "owner-alternative-68079ea1947b34f3b7b8",
@@ -565,13 +497,81 @@
       "responsibility_ids": [
         "responsibility-2fd397069bf0a104a063"
       ],
-      "run_identity_sha256": "f1ade7d938b8fd8ce26b57b3f16ffab3a8889aa7af83a1ec67838357c6ec5b31",
+      "run_identity_sha256": "660b47825391ce999ce6c5fdbf9c1f817791b76fa33aac0393eeb59cda4fd193",
       "source_sha256s": [
         "4ac38deb9aadc762f3ad48237676c242b09e7a776f522117f18f7b2e2d46ef30",
         "7760bf104fd48c633055539019ac926d62cb6893fc6ee0e08d3107daf2bef973",
         "fa8587c61d8f26582a4a8a557fe3ed136c595a622b257107a9607db9a13d2bb9"
       ],
       "state": "blocked",
+      "target_identity_sha256": "4d724e5ca25acddda3171e4fd359f79f9e203f75d936a5843208a7d6c9b58c49",
+      "unresolved_gate_count": 2
+    },
+    {
+      "behavioral_difference_ids": [],
+      "behavioral_event_ids": [
+        "behavior-event-26450fd187b1e9d0dff7",
+        "behavior-event-668f21166fab397279ac",
+        "behavior-event-8c25acb1449a5d4dd2f8",
+        "behavior-event-8efd370c9d0d806a8f15",
+        "behavior-event-c02ad1cc6bc98e67bd4e"
+      ],
+      "behavioral_invariant_ids": [
+        "behavior-invariant-434dcad39736cf321499"
+      ],
+      "candidate_id": "refactor-candidate-1a59da04878aa1ed4c80",
+      "completeness": "partial",
+      "configuration_sha256": "c4d82fdc920ef3c75f7b3107379c7618a8973c570e161a0d0d6ded72d1cd53f7",
+      "cost_estimate_id": "abstraction-cost-31bb36448f1eb1109571",
+      "counter_evidence_ids": [],
+      "duplicate_ids": [],
+      "evidence_ids": [
+        "evidence-430027e6cd4235c3453b",
+        "evidence-30c03c87622d3a7a09ac",
+        "evidence-a02fc233f4a53faa82fb",
+        "evidence-1bd56328db5dfa959996",
+        "evidence-b4658309d0d90e444cdd",
+        "evidence-240f09456cfc6cf16760",
+        "evidence-8cf39c324288e02d11a7",
+        "evidence-a30857670b19406113c8"
+      ],
+      "failed_gate_count": 0,
+      "limitations": [
+        "Phase 4 test-impact evidence is unavailable.",
+        "Static graph simulation does not establish runtime behavior or authorize source changes."
+      ],
+      "observation_id": "candidate-observation-d297fc6cc7ed0ecb7353",
+      "owner_alternative_ids": [
+        "owner-alternative-bddf7a63c08106ea455a",
+        "owner-alternative-d1bab80fc1d80d59b1b6",
+        "owner-alternative-e426a7ca1721fb3d9279",
+        "owner-alternative-e83d03440ca861024028",
+        "owner-alternative-fabf69bbe1ea1df81107"
+      ],
+      "proposal_ids": [
+        "refactor-proposal-9b0d4f7972943799b6ed"
+      ],
+      "qualification_requirement_ids": [
+        "candidate-qualification-3584c6a9154ea39e86be",
+        "candidate-qualification-413392176ce9e10fa6ca",
+        "candidate-qualification-575be9390dab3a179eaa",
+        "candidate-qualification-9e70de73ad40c72ad83f",
+        "candidate-qualification-a50bdf807b8cfb65bc2d",
+        "candidate-qualification-a7ed9f2270f5b57c2814",
+        "candidate-qualification-ba6ec5cefe3a98aec4a5",
+        "candidate-qualification-c4a0c85dc3903bc64a7a",
+        "candidate-qualification-ebe1625dc7b501c8babe"
+      ],
+      "responsibility_ids": [
+        "responsibility-2fd397069bf0a104a063"
+      ],
+      "run_identity_sha256": "660b47825391ce999ce6c5fdbf9c1f817791b76fa33aac0393eeb59cda4fd193",
+      "source_sha256s": [
+        "4ac38deb9aadc762f3ad48237676c242b09e7a776f522117f18f7b2e2d46ef30",
+        "7760bf104fd48c633055539019ac926d62cb6893fc6ee0e08d3107daf2bef973",
+        "fa8587c61d8f26582a4a8a557fe3ed136c595a622b257107a9607db9a13d2bb9"
+      ],
+      "state": "reviewable-incomplete",
       "target_identity_sha256": "4d724e5ca25acddda3171e4fd359f79f9e203f75d936a5843208a7d6c9b58c49",
       "unresolved_gate_count": 2
     }
@@ -4633,7 +4633,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.1.0b1"
+      "version": "0.2.0b1"
     },
     {
       "completeness": "complete",
@@ -4650,7 +4650,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.1.0b1"
+      "version": "0.2.0b1"
     },
     {
       "completeness": "complete",
@@ -4739,7 +4739,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-819d4f229ae4770f9fd3",
       "candidate_id": "refactor-candidate-1a59da04878aa1ed4c80",
-      "candidate_observation_id": "candidate-observation-3379c319b2ffeb3e0389",
+      "candidate_observation_id": "candidate-observation-d297fc6cc7ed0ecb7353",
       "change_coupling_ids": [],
       "clone_cluster_ids": [
         "clone-cluster-236cb60cfb873613e69f"
@@ -5100,7 +5100,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-b933c963eb57996e41ec",
       "candidate_id": "refactor-candidate-d4ea0be1a1ea11057c68",
-      "candidate_observation_id": "candidate-observation-5d622fb389d4b40ef8ce",
+      "candidate_observation_id": "candidate-observation-81938bc2be4111e27997",
       "change_coupling_ids": [],
       "clone_cluster_ids": [
         "clone-cluster-236cb60cfb873613e69f"
@@ -5475,7 +5475,7 @@
       "state_resource_ids": []
     }
   ],
-  "run_identity_sha256": "1eed57a4144018bdd4b4cbb40cb99c9d4e1c163f020be2145350685deb36e53b",
+  "run_identity_sha256": "45e580ee17b83ff01190411371671999102eaa1b75175db59c3efffcd3f3de34",
   "schema_name": "code-analysis-report",
   "schema_version": "1.0.0",
   "section_coverage": [
@@ -5899,7 +5899,44 @@
   ],
   "static_call_occurrences": [
     {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
+      "callee_spelling": "shared",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-110b6e0a6bc182d3039b",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-4b88066048b9c490a962"
+      ],
+      "language": "python",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "implicit-context-manager-calls-not-modeled",
+        "implicit-decorator-application-not-modeled",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "package.work",
+      "occurrence_id": "call-occurrence-2d33b002bdc32ffdb549",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 0,
+          "definition_line": 11,
+          "kind": "function",
+          "name": "second"
+        }
+      ],
+      "source_file_id": "source-file-71d8e5264566196f8954",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -5917,7 +5954,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.work",
-      "occurrence_id": "call-occurrence-39b2d6b65405b4e6efcb",
+      "occurrence_id": "call-occurrence-3f16a1559d26c071496e",
       "scope_path": [
         {
           "definition_column": 0,
@@ -5936,7 +5973,7 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -5954,7 +5991,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.combine_a",
-      "occurrence_id": "call-occurrence-53a3504c0c190161637a",
+      "occurrence_id": "call-occurrence-4de05d726cf6e6a9fe75",
       "scope_path": [
         {
           "definition_column": 0,
@@ -5973,7 +6010,7 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -5991,7 +6028,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.work",
-      "occurrence_id": "call-occurrence-6a91273c0a60bfeaa609",
+      "occurrence_id": "call-occurrence-6116fd3bdaa46954bead",
       "scope_path": [
         {
           "definition_column": 0,
@@ -6010,7 +6047,7 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -6028,7 +6065,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.combine_b",
-      "occurrence_id": "call-occurrence-aaa63ff11e1f085aa345",
+      "occurrence_id": "call-occurrence-88c42ed04053da7ae916",
       "scope_path": [
         {
           "definition_column": 0,
@@ -6047,7 +6084,7 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
+      "analysis_identity_sha256": "f5a7a485de6b5f00a961c2a73cbeb0bde9895037039112bb4939a1e9a45f78a0",
       "callee_spelling": "work.first",
       "conditional": false,
       "deferred": true,
@@ -6065,7 +6102,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.domain_bad",
-      "occurrence_id": "call-occurrence-f4e00f74746be23c0efa",
+      "occurrence_id": "call-occurrence-97f32b97cf926ee601be",
       "scope_path": [
         {
           "definition_column": 0,
@@ -6081,43 +6118,6 @@
         }
       ],
       "source_file_id": "source-file-21d49a1c6d60f955656b",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "f6b77a5aad7e1f6d0b9370878902f0c02216b4fc6a9ac53a9e188bb4c4d935a6",
-      "callee_spelling": "shared",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-110b6e0a6bc182d3039b",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-4b88066048b9c490a962"
-      ],
-      "language": "python",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "implicit-context-manager-calls-not-modeled",
-        "implicit-decorator-application-not-modeled",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "package.work",
-      "occurrence_id": "call-occurrence-fc7eedbe60ae112a6d5f",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 0,
-          "definition_line": 11,
-          "kind": "function",
-          "name": "second"
-        }
-      ],
-      "source_file_id": "source-file-71d8e5264566196f8954",
       "syntax_kind": "call"
     }
   ],
@@ -6327,7 +6327,7 @@
   "test_fixtures": [],
   "test_modules": [],
   "test_relationships": [],
-  "tool_version": "0.1.0b1",
+  "tool_version": "0.2.0b1",
   "unresolved_edges": [],
   "validation_patterns": []
 }

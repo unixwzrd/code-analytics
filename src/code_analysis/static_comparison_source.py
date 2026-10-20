@@ -553,7 +553,11 @@ def build_comparison_source_bindings(
         after = candidate_index.get(record.subject_id)
         if before is None and after is None:
             raise ValueError("comparison record is absent from both reports")
-        kind = before[0] if before is not None else after[0]
+        if before is not None:
+            kind = before[0]
+        else:
+            assert after is not None
+            kind = after[0]
         if before is not None and after is not None and before[0] != after[0]:
             raise ValueError("comparison record kind disagrees between reports")
         bindings.append(

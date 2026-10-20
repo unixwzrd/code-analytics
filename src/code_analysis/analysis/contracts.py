@@ -991,7 +991,7 @@ def _functional_members(
     if len(call.args) < 2:
         return ()
     fields = call.args[1]
-    pairs: list[tuple[str, ast.expr, ast.AST]] = []
+    pairs: list[tuple[str, ast.expr, ast.expr]] = []
     if isinstance(fields, (ast.List, ast.Tuple)):
         for item in fields.elts:
             if (
@@ -1085,7 +1085,7 @@ def _stable_types(values: tuple[TypeFact, ...]) -> tuple[TypeFact, ...]:
     return tuple(unique[key] for key in sorted(unique, key=repr))
 
 
-def _span(node: ast.AST) -> InternalSpan:
+def _span(node: ast.expr | ast.stmt | ast.arg) -> InternalSpan:
     return InternalSpan(
         start_line=node.lineno,
         start_column=node.col_offset,

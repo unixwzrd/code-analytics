@@ -9,6 +9,7 @@ import signal
 import subprocess
 import time
 from pathlib import Path
+from typing import IO
 
 from code_analysis.profile_models import ResourceObservation
 
@@ -25,17 +26,18 @@ class OwnedRuntimeProcess:
         stream_limit: int,
         require_identity: bool = True,
     ) -> None:
+        psutil_available = True
         try:
             import psutil
         except ImportError:
             if require_identity:
                 raise OSError(errno.ENODATA, "process identity provider unavailable") from None
-            psutil = None
-        self.psutil = psutil
+            psutil_available = False
+        self.psutil = psutil if psutil_available else None
 
         self.started = time.monotonic()
         self.exited: float | None = None
-        self.process = subprocess.Popen(
+        self.process: subprocess.Popen[bytes] = subprocess.Popen(
             argv,
             cwd=cwd,
             env=environment,
@@ -45,6 +47,7 @@ class OwnedRuntimeProcess:
             start_new_session=True,
         )
         self.selector = selectors.DefaultSelector()
+        self.streams: dict[int, IO[bytes]] = {}
         self.stdout = bytearray()
         self.stderr = bytearray()
         self.stream_limit = stream_limit
@@ -56,15 +59,19 @@ class OwnedRuntimeProcess:
         self.io_samples: dict[int, tuple[int, int, int, int]] = {}
         self.peak_rss: int | None = None
         self.maximum_processes: int | None = None
-        identity_errors = (OSError, psutil.Error) if psutil else (OSError,)
+        identity_errors = (OSError, self.psutil.Error) if self.psutil else (OSError,)
         try:
-            self.start = psutil.Process(self.process.pid).create_time() if psutil else None
+            self.start = (
+                self.psutil.Process(self.process.pid).create_time() if self.psutil else None
+            )
             if self.start is not None:
                 self.owned[self.process.pid] = self.start
             for stream, buffer in (
                 (self.process.stdout, self.stdout),
                 (self.process.stderr, self.stderr),
             ):
+                assert stream is not None  # Both streams were explicitly requested as PIPE.
+                self.streams[stream.fileno()] = stream
                 os.set_blocking(stream.fileno(), False)
                 self.selector.register(stream, selectors.EVENT_READ, buffer)
         except identity_errors:
@@ -83,12 +90,12 @@ class OwnedRuntimeProcess:
             self._sample()
         for key, _ in self.selector.select(timeout):
             try:
-                data = os.read(key.fileobj.fileno(), 65536)
+                data = os.read(key.fd, 65536)
             except BlockingIOError:
                 continue
             if not data:
                 self.selector.unregister(key.fileobj)
-                key.fileobj.close()
+                self.streams[key.fd].close()
                 continue
             room = max(0, self.stream_limit - len(key.data))
             key.data.extend(data[:room])
@@ -99,6 +106,7 @@ class OwnedRuntimeProcess:
 
     def _sample(self) -> None:
         psutil = self.psutil
+        assert psutil is not None
         # Continue following proven descendants after the direct subject exits.
         for pid, start in tuple(self.owned.items()):
             try:
@@ -241,7 +249,7 @@ class OwnedRuntimeProcess:
 
     def close(self) -> None:
         for key in list(self.selector.get_map().values()):
-            key.fileobj.close()
+            self.streams[key.fd].close()
         self.selector.close()
 
     def resources(self) -> ResourceObservation:

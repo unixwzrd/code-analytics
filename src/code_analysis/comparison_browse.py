@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from collections.abc import Mapping
 
 from pydantic import Field, StrictInt, StrictStr, model_validator
 
@@ -86,7 +87,7 @@ class ComparisonPageRequest(StrictModel):
 def comparison_page_projection(
     page: UIComparisonPage, request: ComparisonPageRequest, reports: tuple[UIReportIdentity, ...]
 ) -> TableProjection:
-    by_role = {report.role: report for report in reports}
+    by_role: Mapping[str, UIReportIdentity] = {report.role: report for report in reports}
     if (
         set(by_role) != {"primary", "comparison"}
         or len(reports) != 2

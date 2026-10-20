@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from enum import StrEnum
-from typing import Literal, Self
+from typing import Final, Literal, Self
 
 from pydantic import (
     Field,
@@ -47,11 +48,11 @@ from code_analysis.models import (
 from code_analysis.static_call_models import StaticCallOccurrence, StaticCallSourceCoverage
 from code_analysis.static_call_validation import validate_static_call_occurrences
 
-SCHEMA_NAME = "code-analysis-report"
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_NAME: Final = "code-analysis-report"
+SCHEMA_VERSION: Final = "1.0.0"
 
 
-def _require_sorted_unique(label: str, values: tuple[str, ...]) -> None:
+def _require_sorted_unique(label: str, values: Sequence[str] | Sequence[int]) -> None:
     if list(values) != sorted(values) or len(values) != len(set(values)):
         raise ValueError(f"{label} must be unique and sorted")
 
@@ -2584,10 +2585,11 @@ class AnalysisReport(StrictModel):
         ):
             raise ValueError("commonality admission counts do not match report records")
         decisions = self.signal_quality.proposal_decisions
-        admission = self.signal_quality.proposal_admission
-        if admission is not None and (
-            admission.responsibility_clusters_considered != len(self.responsibility_clusters)
-            or admission.retained_proposals != len(self.refactor_proposals)
+        proposal_admission = self.signal_quality.proposal_admission
+        if proposal_admission is not None and (
+            proposal_admission.responsibility_clusters_considered
+            != len(self.responsibility_clusters)
+            or proposal_admission.retained_proposals != len(self.refactor_proposals)
         ):
             raise ValueError("proposal admission counts do not match report records")
         if decisions is not None:
@@ -2639,7 +2641,9 @@ class AnalysisReport(StrictModel):
             raise ValueError(
                 "incomplete required analyzer coverage cannot produce a complete report"
             )
-        coverage_by_name = {section.section: section for section in self.section_coverage}
+        coverage_by_name: dict[str, SectionCoverage] = {
+            section.section: section for section in self.section_coverage
+        }
         commonality = self.signal_quality.commonality_admission
         if commonality is not None and commonality.candidate_bound_omissions:
             coverage = coverage_by_name["function-commonality"]
@@ -3008,8 +3012,8 @@ class AnalysisReport(StrictModel):
                 [export.source_file_id],
                 source_file_ids,
             )
-            module = modules_by_name.get(export.module)
-            if module is None or module.language is not SourceLanguage.JAVASCRIPT:
+            export_module = modules_by_name.get(export.module)
+            if export_module is None or export_module.language is not SourceLanguage.JAVASCRIPT:
                 raise ValueError("JavaScript export references an unknown JavaScript module")
         subjects_by_id = {item.subject_id: item for item in self.subjects}
         for duplicate in self.duplicate_functions:
@@ -3199,17 +3203,17 @@ class AnalysisReport(StrictModel):
                 list(responsibility.side_effect_ids),
                 side_effect_ids,
             )
-        admission = self.signal_quality.proposal_admission
-        if admission is not None:
-            for rejection in admission.rejection_examples:
+        proposal_admission = self.signal_quality.proposal_admission
+        if proposal_admission is not None:
+            for proposal_rejection in proposal_admission.rejection_examples:
                 require_known(
-                    f"proposal rejection {rejection.candidate_id} responsibility",
-                    [rejection.responsibility_id],
+                    f"proposal rejection {proposal_rejection.candidate_id} responsibility",
+                    [proposal_rejection.responsibility_id],
                     responsibility_ids,
                 )
                 require_known(
-                    f"proposal rejection {rejection.candidate_id} subjects",
-                    list(rejection.affected_subject_ids),
+                    f"proposal rejection {proposal_rejection.candidate_id} subjects",
+                    list(proposal_rejection.affected_subject_ids),
                     subject_ids,
                 )
         for proposal in self.refactor_proposals:
@@ -3284,74 +3288,78 @@ class AnalysisReport(StrictModel):
                 list(proposal.change_coupling_ids),
                 coupling_ids,
             )
-        for candidate in self.refactor_candidates:
+        for refactor_candidate in self.refactor_candidates:
             require_known(
-                f"candidate {candidate.candidate_id} subjects",
-                list(candidate.participating_subject_ids),
+                f"candidate {refactor_candidate.candidate_id} subjects",
+                list(refactor_candidate.participating_subject_ids),
                 subject_ids,
             )
             subject_languages = {
                 item.language
                 for item in self.subjects
-                if item.subject_id in candidate.participating_subject_ids
+                if item.subject_id in refactor_candidate.participating_subject_ids
             }
-            if subject_languages != set(candidate.languages):
-                raise ValueError(f"candidate {candidate.candidate_id} language identity disagrees")
+            if subject_languages != set(refactor_candidate.languages):
+                raise ValueError(
+                    f"candidate {refactor_candidate.candidate_id} language identity disagrees"
+                )
         observations_by_candidate: dict[str, int] = {}
-        for observation in self.candidate_observations:
+        for candidate_observation in self.candidate_observations:
             require_known(
-                f"candidate observation {observation.observation_id} candidate",
-                [observation.candidate_id],
+                f"candidate observation {candidate_observation.observation_id} candidate",
+                [candidate_observation.candidate_id],
                 refactor_candidate_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} responsibilities",
-                list(observation.responsibility_ids),
+                f"candidate observation {candidate_observation.observation_id} responsibilities",
+                list(candidate_observation.responsibility_ids),
                 responsibility_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} duplicates",
-                list(observation.duplicate_ids),
+                f"candidate observation {candidate_observation.observation_id} duplicates",
+                list(candidate_observation.duplicate_ids),
                 duplicate_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} proposals",
-                list(observation.proposal_ids),
+                f"candidate observation {candidate_observation.observation_id} proposals",
+                list(candidate_observation.proposal_ids),
                 proposal_ids,
             )
-            if observation.cost_estimate_id is not None:
+            if candidate_observation.cost_estimate_id is not None:
                 require_known(
-                    f"candidate observation {observation.observation_id} cost estimate",
-                    [observation.cost_estimate_id],
+                    f"candidate observation {candidate_observation.observation_id} cost estimate",
+                    [candidate_observation.cost_estimate_id],
                     cost_estimate_ids,
                 )
             require_known(
-                f"candidate observation {observation.observation_id} owner alternatives",
-                list(observation.owner_alternative_ids),
+                f"candidate observation {candidate_observation.observation_id} owner alternatives",
+                list(candidate_observation.owner_alternative_ids),
                 owner_alternative_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} behavior events",
-                list(observation.behavioral_event_ids),
+                f"candidate observation {candidate_observation.observation_id} behavior events",
+                list(candidate_observation.behavioral_event_ids),
                 behavioral_event_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} behavior invariants",
-                list(observation.behavioral_invariant_ids),
+                f"candidate observation {candidate_observation.observation_id} behavior invariants",
+                list(candidate_observation.behavioral_invariant_ids),
                 behavioral_invariant_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} behavior differences",
-                list(observation.behavioral_difference_ids),
+                f"candidate observation {candidate_observation.observation_id} "
+                "behavior differences",
+                list(candidate_observation.behavioral_difference_ids),
                 candidate_behavior_difference_ids,
             )
             require_known(
-                f"candidate observation {observation.observation_id} qualification requirements",
-                list(observation.qualification_requirement_ids),
+                f"candidate observation {candidate_observation.observation_id} "
+                "qualification requirements",
+                list(candidate_observation.qualification_requirement_ids),
                 candidate_qualification_ids,
             )
-            observations_by_candidate[observation.candidate_id] = (
-                observations_by_candidate.get(observation.candidate_id, 0) + 1
+            observations_by_candidate[candidate_observation.candidate_id] = (
+                observations_by_candidate.get(candidate_observation.candidate_id, 0) + 1
             )
         if set(observations_by_candidate) != refactor_candidate_ids or any(
             count != 1 for count in observations_by_candidate.values()
@@ -3488,15 +3496,15 @@ class AnalysisReport(StrictModel):
                     [relationship.target_fixture_id],
                     fixture_ids,
                 )
-        for observation in self.coverage_observations:
+        for coverage_observation in self.coverage_observations:
             require_known(
-                f"coverage observation {observation.coverage_observation_id} artifact",
-                [observation.coverage_id],
+                f"coverage observation {coverage_observation.coverage_observation_id} artifact",
+                [coverage_observation.coverage_id],
                 coverage_ids,
             )
             require_known(
-                f"coverage observation {observation.coverage_observation_id} subject",
-                [observation.subject_id],
+                f"coverage observation {coverage_observation.coverage_observation_id} subject",
+                [coverage_observation.subject_id],
                 subject_ids,
             )
         for item in self.coverage_files:
@@ -3510,18 +3518,20 @@ class AnalysisReport(StrictModel):
             require_known(
                 f"path change {change.path_change_id} commit", [change.commit_id], commit_ids
             )
-        for change in self.git_symbol_changes:
+        for symbol_change in self.git_symbol_changes:
             require_known(
-                f"symbol change {change.symbol_change_id} commit", [change.commit_id], commit_ids
+                f"symbol change {symbol_change.symbol_change_id} commit",
+                [symbol_change.commit_id],
+                commit_ids,
             )
             require_known(
-                f"symbol change {change.symbol_change_id} path change",
-                [change.path_change_id],
+                f"symbol change {symbol_change.symbol_change_id} path change",
+                [symbol_change.path_change_id],
                 path_change_ids,
             )
             require_known(
-                f"symbol change {change.symbol_change_id} subject",
-                [change.subject_id],
+                f"symbol change {symbol_change.symbol_change_id} subject",
+                [symbol_change.subject_id],
                 subject_ids,
             )
         for coupling in self.change_couplings:

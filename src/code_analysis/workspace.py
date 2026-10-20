@@ -31,13 +31,13 @@ from code_analysis import __version__
 from code_analysis.context import AnalysisContext
 from code_analysis.models import ProviderAvailability, StrictModel
 
-WORKSPACE_SCHEMA_NAME = "code-analysis-workspace"
-WORKSPACE_SCHEMA_VERSION = "1.0.0"
-RUN_SCHEMA_NAME = "code-analysis-run"
-RUN_SCHEMA_VERSION = "1.0.0"
-GENERATION_SCHEMA_NAME = "code-analysis-generation"
-GENERATION_SCHEMA_VERSION = "1.0.0"
-CACHE_LAYOUT_VERSION = "current"
+WORKSPACE_SCHEMA_NAME: Literal["code-analysis-workspace"] = "code-analysis-workspace"
+WORKSPACE_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
+RUN_SCHEMA_NAME: Literal["code-analysis-run"] = "code-analysis-run"
+RUN_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
+GENERATION_SCHEMA_NAME: Literal["code-analysis-generation"] = "code-analysis-generation"
+GENERATION_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
+CACHE_LAYOUT_VERSION: Literal["current"] = "current"
 WORKSPACE_DIRECTORY = ".code-analysis"
 WORKSPACE_IGNORE = "*\n"
 

@@ -39,6 +39,9 @@ def read_runtime_graph(
     summary: RuntimeIndexSummary,
     request: RuntimeGraphRequest,
 ) -> GraphProjection:
+    # An indexed overview is available and therefore has recorded completeness.
+    completeness = summary.overview.completeness
+    assert completeness is not None
     rows = connection.execute(
         "SELECT payload FROM runtime_records WHERE section = 'hotspots' "
         "AND (? = 0 OR json_extract(payload, '$.classification') = 'project') "
@@ -73,6 +76,6 @@ def read_runtime_graph(
             report_sha256=summary.profile_report_sha256,
             run_identity_sha256=summary.overview.profile_identity,
         ),
-        summary.overview.completeness,
+        completeness,
         summary.limitations,
     )

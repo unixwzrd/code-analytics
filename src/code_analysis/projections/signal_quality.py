@@ -20,24 +20,31 @@ from code_analysis.projections._shared import (
     _string,
     _table_base,
 )
-from code_analysis.report_models import AnalysisReport, RefactorProposalState
+from code_analysis.report_models import (
+    AnalysisReport,
+    CommonalityAdmissionFunnel,
+    ProposalAdmissionFunnel,
+    ProposalDecisionFunnel,
+    RefactorProposal,
+    RefactorProposalState,
+)
 
 
-def _admission(report: AnalysisReport):
+def _admission(report: AnalysisReport) -> CommonalityAdmissionFunnel:
     value = report.signal_quality.commonality_admission
     if value is None:
         raise ProjectionBuildError("signal-quality projection requires admission evidence")
     return value
 
 
-def _decisions(report: AnalysisReport):
+def _decisions(report: AnalysisReport) -> ProposalDecisionFunnel:
     value = report.signal_quality.proposal_decisions
     if value is None:
         raise ProjectionBuildError("proposal-decision projection requires proposal evidence")
     return value
 
 
-def _proposal_admission(report: AnalysisReport):
+def _proposal_admission(report: AnalysisReport) -> ProposalAdmissionFunnel:
     value = report.signal_quality.proposal_admission
     if value is None:
         raise ProjectionBuildError("proposal-admission projection requires proposal evidence")
@@ -243,7 +250,9 @@ def _proposal_decision_projection(
     )
 
 
-def _selected_proposals(report: AnalysisReport, selection: ProjectionSelection):
+def _selected_proposals(
+    report: AnalysisReport, selection: ProjectionSelection
+) -> tuple[RefactorProposal, ...]:
     proposals = report.refactor_proposals
     if not selection.selected_ids:
         return proposals

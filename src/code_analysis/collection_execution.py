@@ -130,7 +130,9 @@ def execute_collection(
                 environment=environment,
                 stream_limit=limits.stream_bytes,
             )
-            identity = CollectionProcessIdentity(pid=process.process.pid, start_time=process.start)
+            identity = CollectionProcessIdentity.model_validate(
+                {"pid": process.process.pid, "start_time": process.start}
+            )
             if on_started is not None:
                 on_started(identity)
             status, reason = _observe(process, cancel, deadline)

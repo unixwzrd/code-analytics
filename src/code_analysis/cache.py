@@ -16,8 +16,8 @@ from pydantic import Field, StrictStr
 from code_analysis.models import StrictModel
 from code_analysis.workspace import WorkspacePaths, validate_workspace_ownership
 
-CACHE_ENTRY_SCHEMA_NAME = "code-analysis-cache-entry"
-CACHE_ENTRY_SCHEMA_VERSION = "1.0.0"
+CACHE_ENTRY_SCHEMA_NAME: Literal["code-analysis-cache-entry"] = "code-analysis-cache-entry"
+CACHE_ENTRY_SCHEMA_VERSION: Literal["1.0.0"] = "1.0.0"
 DEFAULT_CACHE_BYTES = 512 * 1024 * 1024
 
 

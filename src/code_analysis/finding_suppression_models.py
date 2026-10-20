@@ -6,7 +6,7 @@ from datetime import date
 from enum import StrEnum
 from typing import Literal, Self
 
-from pydantic import Field, StrictStr, field_validator, model_validator
+from pydantic import Field, StrictStr, ValidationInfo, field_validator, model_validator
 
 from code_analysis.models import StrictModel
 
@@ -108,7 +108,7 @@ class FindingSuppression(StrictModel):
 
     @field_validator("expires_on", "evaluated_on")
     @classmethod
-    def validate_dates(cls, value: str, info) -> str:
+    def validate_dates(cls, value: str, info: ValidationInfo) -> str:
         label = "expires_on" if info.field_name == "expires_on" else "evaluated_on"
         return validate_canonical_date_string(value, label=label)
 

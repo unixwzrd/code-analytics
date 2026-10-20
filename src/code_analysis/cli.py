@@ -11,10 +11,11 @@ import time
 from datetime import UTC, datetime
 from enum import IntEnum
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Never
 
 if TYPE_CHECKING:
     from code_analysis.artifact_viewer import ViewerCommand
+    from code_analysis.profile_models import ProfileReport
 
 from pydantic import ValidationError
 
@@ -128,7 +129,7 @@ class ExitCode(IntEnum):
 class ErrnoArgumentParser(argparse.ArgumentParser):
     """Argument parser whose usage failure preserves the errno contract."""
 
-    def error(self, message: str) -> None:
+    def error(self, message: str) -> Never:
         self.print_usage(sys.stderr)
         self.exit(int(ExitCode.EINVAL), f"{self.prog}: error: {message}\n")
 
@@ -1262,7 +1263,7 @@ def _load_profile_path(
     *,
     source_report_path: Path | None = None,
     source_root: Path | None = None,
-):
+) -> ProfileReport:
     selected = path / "profile.json" if path.is_dir() else path
     if selected.suffix == ".prof":
         source_report = (
@@ -1710,7 +1711,7 @@ def _query(args: argparse.Namespace) -> int:
             if args.after is not None:
                 raise QueryBuildError("profile query continuation is not supported")
             response = build_profile_query(load_profile_json(text), selector, limit=args.limit)
-            report_exit = (
+            report_exit: int = (
                 ExitCode.SUCCESS
                 if response.source_completeness is Completeness.COMPLETE
                 else ExitCode.ENODATA
