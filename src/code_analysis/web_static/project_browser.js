@@ -50,13 +50,44 @@ export function projectBrowser(host, api, post, signal, reportSha, {selection, c
     content: reading, fallbackFocus: document.querySelector('#title'),
     onOpenChange: open => {if (!open) {documentController?.abort(); documentGeneration += 1;}}});
 
-  function openSetup() {
-    if (!context?.can_connect || !post || !canSwitch()) return;
+  function openSetup(opener = connect) {
+    if (!context?.can_connect || !post || !canSwitch()) return false;
     consent.checked = false; error.textContent = '';
     rootLabel.textContent = `Collection root: ${context.collection_root}`;
     targetLabel.textContent = `Choose a folder containing ${selection().path || 'the saved source files'}. If paths start with src/, choose its parent, not src itself. No scan or workload runs.`;
     picker ??= createCollectionPicker(setup, api, signal, {root: context.collection_root});
-    sourcePanel.open({opener: connect, initialFocus: directory});
+    return sourcePanel.open({opener, initialFocus: directory});
+  }
+
+  async function requestConnection(opener, isCurrent = () => true) {
+    try {
+      const params = new URLSearchParams({report_sha256: reportSha});
+      const source = await api(`/api/project/source?${params}`, signal);
+      if (signal.aborted || !isCurrent() || !opener?.isConnected) return false;
+      if (source.report_sha256 !== reportSha) throw new Error('Source setup belongs to another saved report.');
+      context = source;
+      if (source.configured) {await onConnected(); return false;}
+      return openSetup(opener);
+    } catch (failure) {
+      if (!signal.aborted) status.textContent = `Source setup unavailable: ${failure.message}`;
+      return false;
+    }
+  }
+
+  function mountConnectionAction(target) {
+    const explanation = element('p', {className: 'hint', text:
+      'Choose the project folder containing the recorded file. This is a one-time read-only connection for this server session; no scan or code execution is needed.'});
+    let requesting = false;
+    const control = button({label: 'Connect source folder to show code', onClick: async () => {
+      if (requesting) return;
+      requesting = true; control.setAttribute('aria-busy', 'true');
+      try {
+        if (!await requestConnection(control)) explanation.textContent =
+          'Source setup is unavailable or was cancelled. Saved relationships remain browsable. Check Source and project reading for the session’s folder-selection capability.';
+      } finally {requesting = false; control.removeAttribute('aria-busy');}
+    }});
+    target.append(explanation, control);
+    return control;
   }
 
   form.addEventListener('input', event => {if (event.target === directory) consent.checked = false;});
@@ -157,5 +188,5 @@ export function projectBrowser(host, api, post, signal, reportSha, {selection, c
     catalogController?.abort(); documentController?.abort();
     picker?.close(); sourcePanel.destroy(); reader.destroy();
   }, {once: true});
-  return {update};
+  return {update, requestConnection, mountConnectionAction};
 }

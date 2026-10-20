@@ -413,6 +413,119 @@ def test_source_connection_waits_for_permission_capability(project, engine):
 
 @pytest.mark.parametrize("engine", ["chromium", "webkit"])
 @pytest.mark.parametrize("width", [1440, 1024])
+def test_leaf_offers_source_setup_in_place_and_keeps_selection(project, monkeypatch, engine, width):
+    playwright = pytest.importorskip("playwright.sync_api")
+    root, folder, report = project
+    original = canonical_json(report)
+    source = (folder / "src/reception.py").read_bytes()
+    monkeypatch.setattr("code_analysis.service.scan", lambda *a, **kw: pytest.fail("rescan"))
+    with (
+        served(
+            create_server(ReportViewService(report), collection_root=root, token=TOKEN)
+        ) as server,
+        playwright.sync_playwright() as runtime,
+    ):
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page(viewport={"width": width, "height": 1000})
+            errors = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
+            page.locator(".cards").wait_for()
+            reveal_navigation(page, "Browse code").click()
+            page.locator('.code-browser-list [data-browse-identity^="source-file-"]').click()
+            pane = page.locator(".code-browser-source")
+            connect = pane.get_by_role(
+                "button", name="Connect source folder to show code", exact=True
+            )
+            playwright.expect(connect).to_be_visible()
+            page.get_by_role("button", name="Recorded relationships", exact=True).click()
+            page.locator(".code-browser-map").get_by_role(
+                "button", name="Inspect book", exact=True
+            ).click()
+            setup = page.get_by_role("dialog", name="Connect source folder", exact=True)
+            playwright.expect(setup).to_be_visible()
+            assert server.app.source_root is None
+            playwright.expect(pane.locator("h3")).to_have_text("book")
+            setup.get_by_role("button", name="Close", exact=True).click()
+            playwright.expect(connect).to_be_focused()
+            # Cancellation keeps saved navigation and never grants source access.
+            page.get_by_role("button", name="Recorded relationships", exact=True).click()
+            page.locator(".code-browser-map").get_by_role(
+                "button", name="Inspect book", exact=True
+            ).click()
+            playwright.expect(setup).not_to_be_visible()
+            connect.click()
+            playwright.expect(setup).to_be_visible()
+            directory = setup.get_by_role(
+                "textbox", name="Project source folder (relative to collection root)"
+            )
+            consent = setup.get_by_role(
+                "checkbox",
+                name="Allow read-only source and related text documents from this folder.",
+            )
+            directory.fill("hotel/src")
+            consent.check()
+            setup.get_by_role("button", name="Connect and display source", exact=True).click()
+            playwright.expect(setup.get_by_role("alert")).not_to_be_empty()
+            assert server.app.source_root is None
+            directory.fill("hotel")
+            assert not consent.is_checked()
+            consent.check()
+            setup.get_by_role("button", name="Connect and display source", exact=True).click()
+            playwright.expect(setup).not_to_be_visible()
+            playwright.expect(pane.locator("h3")).to_have_text("book")
+            playwright.expect(pane.locator(".code-browser-lines")).to_contain_text("return 42")
+            playwright.expect(
+                page.get_by_role("heading", name="Verified original source", exact=True)
+            ).to_be_focused()
+            assert server.app.source_root == folder and not errors
+            assert canonical_json(report) == original
+            assert (folder / "src/reception.py").read_bytes() == source
+            assert not (folder / ".code-analysis").exists()
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+def test_leaving_view_during_source_offer_cannot_open_stale_dialog(project, engine):
+    playwright = pytest.importorskip("playwright.sync_api")
+    root, _, report = project
+    with (
+        served(
+            create_server(ReportViewService(report), collection_root=root, token=TOKEN)
+        ) as server,
+        playwright.sync_playwright() as runtime,
+    ):
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
+            page.locator(".cards").wait_for()
+            reveal_navigation(page, "Browse code").click()
+            page.locator('.code-browser-list [data-browse-identity^="source-file-"]').click()
+            graph = page.locator(".code-browser-map")
+            graph.get_by_role("button", name="Inspect book", exact=True).wait_for()
+            held = []
+            page.route("**/api/project/source?*", lambda route: held.append(route))
+            graph.get_by_role("button", name="Inspect book", exact=True).click()
+            for _ in range(100):
+                if held:
+                    break
+                page.wait_for_timeout(10)
+            assert held
+            reveal_navigation(page, "Overview").click()
+            for route in held:
+                route.fulfill(content_type="application/json", body="{}")
+            page.wait_for_timeout(100)
+            assert page.locator("#project-source-connection[open]").count() == 0
+            assert server.app.source_root is None
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+@pytest.mark.parametrize("width", [1440, 1024])
 def test_connect_folder_browse_graph_and_read_tutorial_without_rescan(
     project, monkeypatch, engine, width
 ):

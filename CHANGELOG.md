@@ -2,6 +2,8 @@
 
 ## 0.2.0b2 — synchronized code and project reading
 
+- Offer source connection directly when selecting a disconnected graph node/entity, with a retry action inside the source pane. Keep the selected method through confirmation and return focus to its verified source without another click; cancellation preserves saved navigation and stale offers cannot reopen after leaving the view.
+
 - After confirmed server shutdown, try closing the initiating tab and replace the interface with a noninteractive session-closed screen if the browser keeps it open. Abort pending UI work and prevent history navigation from reviving controls; failed/cancelled shutdown leaves the UI usable.
 
 - Selecting a source-bound relationship node now opens its verified source directly with pointer, Enter or Space; remove the redundant source-navigation button. Unresolved nodes remain inspection-only.

@@ -225,12 +225,13 @@ function relationshipMap(host, result, session, navigate, signal) {
   wireGraphDisplay(host, signal);
 }
 
-function sourceLines(host, response, selected, navigate) {
+function sourceLines(host, response, selected, navigate, project) {
   const preview = response.preview;
   const message = preview.state === 'disabled'
-    ? 'Source files are not connected. Use Connect source folder above; selecting another graph node cannot grant file access.'
+    ? 'Source files are not connected for this analysis yet. Connect the project folder here to display the selected code.'
     : `${preview.state}: ${preview.message}`;
   host.replaceChildren(element('p', message, 'hint'));
+  if (preview.state === 'disabled') return project.mountConnectionAction(host);
   if (preview.state !== 'bound') return;
   const code = element('div', undefined, 'code-browser-lines');
   code.setAttribute('role', 'region'); code.setAttribute('aria-label', 'Verified source lines');
@@ -288,9 +289,12 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
   const project = projectBrowser(access, api, options.post, signal, reportSha256, {
     selection: () => session,
     canSwitch: () => drafts.canNavigate() && drafts.allowSwitch('Change source access? Dirty drafts remain in this tab; export them before leaving.'),
-    onConnected: async () => {await options.onSourceConnected?.(); await navigate({}, false);},
+    onConnected: async () => {
+      await options.onSourceConnected?.();
+      if (await navigate({}, false)) panels.get('source').parentElement.querySelector('h2').focus();
+    },
   });
-  let pending;
+  let pending, sourceState, sourceConnectionAction, offeredSourceSetup = false;
   signal.addEventListener('abort', () => pending?.abort(), {once: true});
 
   function remember(replace = false) {
@@ -298,14 +302,20 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
     history[replace ? 'replaceState' : 'pushState'](value, '', '#browse');
   }
   async function select(entry, span = entry.spans[0]) {
-    await navigateSource({path: span?.path || entry.logical_path, identity: entry.identity, line: span?.start_line || 1, offset: 0, search: ''});
+    await navigateSource({path: span?.path || entry.logical_path, identity: entry.identity, line: span?.start_line || 1, offset: 0, search: ''}, {offerSetup: entry.kind !== 'source-file'});
   }
-  async function navigateSource(patch) {
+  async function navigateSource(patch, {offerSetup = false} = {}) {
     const intent = paneIntent;
     const accepted = await navigate({...patch, active_pane: 'source'});
     if (!accepted || signal.aborted || !root.isConnected || intent !== paneIntent) return;
     root.dataset.activePane = 'source'; remember(true);
     panels.get('source').parentElement.querySelector('h2').focus();
+    if (offerSetup && sourceState === 'disabled' && !offeredSourceSetup && sourceConnectionAction) {
+      const revision = session.revision;
+      const opened = await project.requestConnection(sourceConnectionAction,
+        () => session.revision === revision && intent === paneIntent);
+      if (opened) offeredSourceSetup = true;
+    }
   }
   async function loadRelationships(page, params, current, local) {
     const host = panels.get('map'); host.replaceChildren();
@@ -334,7 +344,7 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
       if (!current(result) || result.layer !== layer.value || !boundProfile) {
         throw new Error('Saved graph identities disagree with the selected report, profile or revision');
       }
-      relationshipMap(body, result, session, navigateSource, local);
+      relationshipMap(body, result, session, patch => navigateSource(patch, {offerSetup: true}), local);
     } catch (error) {
       if (!signal.aborted && !local.aborted) body.replaceChildren(element('p', `Relationship layer unavailable: ${error.message}. Other saved views remain available.`, 'hint'));
     }
@@ -348,6 +358,7 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
     pending?.abort(); pending = new AbortController();
     const local = pending.signal;
     const revision = session.revision;
+    sourceState = undefined; sourceConnectionAction = undefined;
     const params = new URLSearchParams({report_sha256: reportSha256, revision, path: session.path || '', identity: session.identity || '', search: session.search || '', offset: session.offset || 0, limit: 50});
     if (session.line !== null && session.line !== undefined) params.set('line', session.line);
     const current = response => !signal.aborted && !local.aborted && response.report_sha256 === reportSha256 && response.revision === revision;
@@ -376,7 +387,8 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
         const response = await api(`/api/code-browser/source?${sourceParams}`, local);
         if (signal.aborted || local.aborted || !root.isConnected) return false;
         if (current(response)) {
-          sourceLines(body, response, active, navigateSource);
+          sourceState = response.preview.state;
+          sourceConnectionAction = sourceLines(body, response, active, navigateSource, project);
           if (response.preview.state === 'bound' || drafts.size() > 0) {
             const draftHost = element('div'); source.insertBefore(draftHost, body);
             const mapping = element('p', '', 'hint'); source.insertBefore(mapping, body);
