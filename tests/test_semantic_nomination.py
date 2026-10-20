@@ -143,6 +143,23 @@ def test_semantic_provider_and_invalid_inputs(tmp_path: Path) -> None:
         build_semantic_nomination_report(_report(), tmp_path, max_nominations=True)
 
 
+def test_missing_optional_model_provider_remains_unavailable(tmp_path, monkeypatch):
+    from code_analysis.semantic_nomination import SemanticProviderUnavailable
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", None)
+    with pytest.raises(SemanticProviderUnavailable, match="unavailable"):
+        _vectors(tmp_path, ("one",))
+
+
+@pytest.mark.parametrize("factory", [None, lambda *args, **kwargs: object()])
+def test_optional_model_provider_rejects_malformed_capabilities(tmp_path, monkeypatch, factory):
+    monkeypatch.setitem(
+        sys.modules, "sentence_transformers", types.SimpleNamespace(SentenceTransformer=factory)
+    )
+    with pytest.raises(ComparisonBuildError, match="semantic provider"):
+        _vectors(tmp_path, ("one",))
+
+
 def test_semantic_loader_is_forced_local_and_disables_remote_code(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

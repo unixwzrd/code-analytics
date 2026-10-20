@@ -7,7 +7,9 @@ import importlib.metadata
 import json
 import math
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
+from typing import Protocol, runtime_checkable
 
 from code_analysis.comparisons import ComparisonBuildError
 from code_analysis.models import Completeness
@@ -23,6 +25,29 @@ from code_analysis.semantic_models import (
 
 class SemanticProviderUnavailable(ComparisonBuildError):
     """The optional local semantic provider is not importable."""
+
+
+class _EmbeddingVector(Protocol):
+    def tolist(self) -> Iterable[float]: ...
+
+
+@runtime_checkable
+class _EmbeddingModel(Protocol):
+    def encode(
+        self,
+        texts: list[str],
+        *,
+        normalize_embeddings: bool,
+        convert_to_numpy: bool,
+        show_progress_bar: bool,
+    ) -> Iterable[_EmbeddingVector]: ...
+
+
+@runtime_checkable
+class _EmbeddingFactory(Protocol):
+    def __call__(
+        self, path: str, *, local_files_only: bool, trust_remote_code: bool
+    ) -> _EmbeddingModel: ...
 
 
 def _hash_directory(root: Path) -> str:
@@ -123,12 +148,15 @@ def _deterministic_support(report: AnalysisReport) -> dict[tuple[str, str], tupl
 
 def _vectors(model_directory: Path, texts: tuple[str, ...]) -> tuple[tuple[float, ...], ...]:
     try:
-        from sentence_transformers import SentenceTransformer
+        provider = importlib.import_module("sentence_transformers")
     except ImportError as exc:
         raise SemanticProviderUnavailable("sentence-transformers is unavailable") from exc
-    model = SentenceTransformer(
-        str(model_directory), local_files_only=True, trust_remote_code=False
-    )
+    factory: object = getattr(provider, "SentenceTransformer", None)
+    if not isinstance(factory, _EmbeddingFactory):
+        raise ComparisonBuildError("semantic provider has no callable model factory")
+    model = factory(str(model_directory), local_files_only=True, trust_remote_code=False)
+    if not isinstance(model, _EmbeddingModel):
+        raise ComparisonBuildError("semantic provider model has no encoding capability")
     encoded = model.encode(
         list(texts),
         normalize_embeddings=True,

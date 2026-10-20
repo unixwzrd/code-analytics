@@ -39,7 +39,7 @@ jobs:
       - run: black --check src tests
       - run: ruff check src tests
       - run: mypy src/code_analysis
-      - run: pytest
+      - run: pytest -m 'not ui'
       - run: python -m build
 
   browser:
