@@ -2,6 +2,9 @@
 
 ## 0.2.0b2 — synchronized code and project reading
 
+- Restore source folders from validated local collection JSON metadata when opening collected or saved results, instead of asking again during graph navigation. Explain unavailable/moved/invalid locations in Overview, preserve portable report identities, and keep source-hash checks and filesystem confinement.
+- Open finding titles directly in Browse code with concise context and recorded function names; offer explicit bounded choices for multi-location evidence. Keep full Details accessible, collapse report-wide limitations, and preserve filters, row focus and source/history return state.
+
 - Offer source connection directly when selecting a disconnected graph node/entity, with a retry action inside the source pane. Keep the selected method through confirmation and return focus to its verified source without another click; cancellation preserves saved navigation and stale offers cannot reopen after leaving the view.
 
 - After confirmed server shutdown, try closing the initiating tab and replace the interface with a noninteractive session-closed screen if the browser keeps it open. Abort pending UI work and prevent history navigation from reviving controls; failed/cancelled shutdown leaves the UI usable.

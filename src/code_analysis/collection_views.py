@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 from code_analysis.browse_index import BrowseIndex, builder_identity
 from code_analysis.browse_index_build import build_browse_index
 from code_analysis.profiling import render_profile_json
+from code_analysis.project_browsing import retained_source_location
 from code_analysis.report_models import AnalysisReport
 from code_analysis.reports.json_report import canonical_json, load_json
 from code_analysis.runtime_index import RuntimeIndex, prepare_runtime_index
@@ -35,7 +36,17 @@ def collection_views(session: CollectionSession, identity: str) -> CollectionVie
         raise OSError(errno.ENODATA, "job has no verified generation to open")
     result = jobs.result(identity)
     if isinstance(result.report, AnalysisReport):
-        return CollectionViews(ReportViewService(result.report), None)
+        path = (
+            jobs.workspace.kind_directory(job.binding.kind)
+            / job.binding.generation_id
+            / job.binding.artifact_name
+        )
+        return CollectionViews(
+            ReportViewService(
+                result.report, source_location=retained_source_location(path, result.report)
+            ),
+            None,
+        )
     if result.report is None:
         raise OSError(errno.ENODATA, "profile is unavailable")
     if job.request.source_report is None:
@@ -53,7 +64,11 @@ def collection_views(session: CollectionSession, identity: str) -> CollectionVie
         != result.report.source_report_sha256
     ):
         raise OSError(errno.EBADMSG, "saved source report no longer matches profile")
-    return CollectionViews(ReportViewService(source), RuntimeViewService(result.report))
+    path = session.planner.root / job.request.source_report
+    return CollectionViews(
+        ReportViewService(source, source_location=retained_source_location(path, source)),
+        RuntimeViewService(result.report),
+    )
 
 
 def collection_index(session: CollectionSession, identity: str) -> BrowseIndex | RuntimeIndex:

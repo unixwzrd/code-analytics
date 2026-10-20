@@ -40,6 +40,7 @@ def investigation(browser_source, monkeypatch):
             title=f"Return observation {index:03}",
             explanation="Synthetic saved evidence for return navigation.",
             module=original.primary.modules[0].name,
+            symbol="demo.saved_owner",
             evidence=(evidence,),
             confidence=Confidence.EXACT,
             completeness=Completeness.COMPLETE,
@@ -78,21 +79,27 @@ def investigation(browser_source, monkeypatch):
 def open_finding(page):
     reveal_navigation(page, "Findings").click()
     page.locator('#content [data-kind="finding"]').first.wait_for()
-    page.locator('#content [data-kind="finding"]').first.click()
-    page.get_by_role("button", name="Browse code at this source", exact=True).wait_for()
 
 
 def browse_source(page):
-    page.get_by_role("button", name="Browse code at this source", exact=True).click()
+    if page.locator("#evidence-dialog").is_visible():
+        page.get_by_role("button", name="Browse code at this source", exact=True).click()
+    else:
+        page.locator('#content [data-kind="finding"]').first.click()
     page.locator("#return-to-investigation").wait_for()
     page.locator(".code-browser-source .code-browser-line").first.wait_for()
+    # Loading code below the fold is not a source-first investigation.
+    playwright = pytest.importorskip("playwright.sync_api")
+    playwright.expect(
+        page.locator(".code-browser-source .code-browser-line").first
+    ).to_be_in_viewport()
+    assert not page.locator("#evidence-dialog").is_visible()
 
 
 def test_finding_scope_page_focus_and_source_survive_return_and_history(investigation):
     page, expect_api, _, source, requests = investigation
     before = source.read_bytes()
     open_finding(page)
-    page.locator("#evidence-dialog").evaluate("dialog => dialog.close()")
     page.locator("#filter").fill("Return observation")
     page.locator("#filter").press("Enter")
     page.locator("#facet-language").select_option("python")
@@ -106,10 +113,10 @@ def test_finding_scope_page_focus_and_source_survive_return_and_history(investig
     expect_api.expect(page.locator(".pager")).to_contain_text("51\u201361")
     selected = page.locator('#content [data-kind="finding"]').first
     identity = selected.get_attribute("data-identity")
-    selected.click()
-    # Saved evidence itself does not read source. Only the explicit source jump may.
+    # Listing saved evidence does not read source. Selecting a finding jumps directly.
     assert not any("/api/code-browser/source?" in url for _, url in requests)
     browse_source(page)
+    expect_api.expect(page.locator(".finding-source-context")).to_contain_text("demo.saved_owner")
     page.get_by_role("button", name="Select original line 4", exact=True).click()
     page.locator("#return-to-investigation").click()
     expect_api.expect(page.locator(".pager")).to_contain_text("51\u201361")
@@ -172,8 +179,9 @@ def test_cancelled_source_jump_never_installs_return_context(investigation):
     page, playwright, _, _, _ = investigation
     open_finding(page)
     page.route("**/api/code-browser?*", lambda route: route.abort())
-    page.get_by_role("button", name="Browse code at this source", exact=True).click()
-    playwright.expect(page.locator("#evidence-content")).to_contain_text("Code browser unavailable")
+    page.locator('#content [data-kind="finding"]').first.click()
+    playwright.expect(page.locator("#content")).to_contain_text("Code browser unavailable")
+    assert not page.locator("#evidence-dialog").is_visible()
     assert not page.locator("#return-to-investigation").count()
     assert not page.evaluate("Boolean(history.state?.codeAnalysisInvestigation)")
 
@@ -252,3 +260,127 @@ def test_help_preserves_dirty_draft_dom_value_and_source_selection(investigation
     assert page.evaluate("history.state.codeAnalysisBrowse") == selection
     playwright.expect(page.locator("#return-to-investigation")).to_be_visible()
     assert not any("/api/collection" in url for _, url in requests[before:])
+
+
+def test_distinct_saved_locations_require_explicit_choice_and_preserve_history(investigation):
+    page, playwright, _, _, requests = investigation
+
+    def multiple(route):
+        payload = route.fetch().json()
+        item = next(item for item in payload["items"] if item["kind"] == "finding")
+        evidence = item["evidence"][0]
+        other = {**evidence, "span": {**evidence["span"], "start_line": 4, "end_line": 4}}
+        item["evidence"] = [evidence, evidence, other]
+        route.fulfill(json=payload)
+
+    page.route("**/api/evidence?*", multiple)
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    context = page.locator(".finding-source-context")
+    playwright.expect(context).to_contain_text("Choose a saved evidence location")
+    assert not page.locator("#evidence-dialog").is_visible()
+    assert not any("/api/code-browser/source?" in url for _, url in requests)
+    assert context.get_by_role("button", name="Open ").count() == 2
+    context.get_by_role("button", name="Open demo.py:4\N{EN DASH}4", exact=True).click()
+    page.locator(".code-browser-source .code-browser-line").first.wait_for()
+    assert page.evaluate("history.state.codeAnalysisBrowse.line") == 4
+    page.go_back()
+    playwright.expect(context).to_contain_text("Choose a saved evidence location")
+    page.go_back()
+    playwright.expect(page.locator("#finding-controls")).to_be_visible()
+    page.go_forward()
+    playwright.expect(context).to_contain_text("Choose a saved evidence location")
+
+
+def test_missing_saved_span_opens_honest_details_without_source_request(investigation):
+    page, playwright, _, _, requests = investigation
+
+    def missing(route):
+        payload = route.fetch().json()
+        for item in payload["items"]:
+            item["evidence"] = []
+        route.fulfill(json=payload)
+
+    page.route("**/api/evidence?*", missing)
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    playwright.expect(page.locator("#evidence-dialog")).to_be_visible()
+    playwright.expect(page.locator("#evidence-content")).to_contain_text("Source evidence")
+    assert not page.locator("#evidence-dialog [data-source-path]").count()
+    assert not any(
+        "/api/code-browser?" in url or "/api/code-browser/source?" in url for _, url in requests
+    )
+
+
+def test_late_finding_resolution_cannot_replace_a_new_view(investigation):
+    page, playwright, _, _, _ = investigation
+    held = []
+    page.route("**/api/evidence?*", lambda route: held.append(route))
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    page.wait_for_function("true")
+    reveal_navigation(page, "Modules").click()
+    playwright.expect(page.locator("#title")).to_have_text("Modules")
+    for route in held:
+        route.continue_()
+    playwright.expect(page.locator("#title")).to_have_text("Modules")
+    assert not page.locator("#evidence-dialog").is_visible()
+    assert not page.locator("#return-to-investigation").count()
+
+
+def test_source_unavailable_retains_saved_finding_context_and_return(investigation):
+    page, playwright, _, _, _ = investigation
+    page.route("**/api/code-browser/source?*", lambda route: route.abort())
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    playwright.expect(page.locator(".code-browser-source")).to_contain_text("Source unavailable")
+    playwright.expect(page.locator(".finding-source-context")).to_contain_text(
+        "Return observation 000"
+    )
+    assert not page.locator("#evidence-dialog").is_visible()
+    page.locator(".finding-source-context").get_by_role(
+        "button", name="Details", exact=True
+    ).click()
+    playwright.expect(page.locator("#evidence-content")).to_contain_text(
+        "Saved synthetic source evidence"
+    )
+    page.keyboard.press("Escape")
+    page.locator("#return-to-investigation").click()
+    playwright.expect(page.locator("#finding-controls")).to_be_visible()
+
+
+def test_explicit_details_source_returns_to_its_own_finding_without_stale_context(investigation):
+    page, playwright, _, _, _ = investigation
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    page.locator(".finding-source-context").wait_for()
+    page.locator("#return-to-investigation").click()
+    selected = page.locator('[data-kind="finding"]').nth(2)
+    identity = selected.get_attribute("data-identity")
+    page.locator(f'[data-finding-details="{identity}"]').click()
+    page.get_by_role("button", name="Browse code at this source", exact=True).click()
+    page.locator(".code-browser-source .code-browser-line").first.wait_for()
+    assert not page.locator(".finding-source-context").count()
+    page.locator("#return-to-investigation").click()
+    playwright.expect(page.locator(f'[data-identity="{identity}"]')).to_be_focused()
+
+
+def test_explicit_details_cancels_pending_source_selection(investigation):
+    page, playwright, _, _, _ = investigation
+    held = []
+
+    def delay_first(route):
+        if not held:
+            held.append(route)
+        else:
+            route.continue_()
+
+    page.route("**/api/evidence?*", delay_first)
+    open_finding(page)
+    page.locator('[data-kind="finding"]').first.click()
+    page.locator('[data-finding-details="return-001"]').click()
+    playwright.expect(page.locator("#evidence-dialog")).to_be_visible()
+    playwright.expect(page.locator("#evidence-content")).to_contain_text("return-001")
+    held[0].continue_()
+    playwright.expect(page.locator("#title")).to_have_text("Findings")
+    assert not page.locator("#return-to-investigation").count()

@@ -7,6 +7,7 @@ import hashlib
 import os
 import re
 from collections import OrderedDict
+from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Literal, Self
 
@@ -23,6 +24,85 @@ _MAX_DOCUMENTS = 50
 _DOCUMENT_NAMES = ("README.md", "README.rst", "README.txt", "README", "readme.md")
 _TEXT_SUFFIXES = {".md", ".markdown", ".rst", ".txt"}
 _LINK = re.compile(r"\[[^\]\n]{0,512}\]\(([^\s)]+)(?:\s+[^)\n]*)?\)")
+
+
+@dataclass(frozen=True, slots=True)
+class LocalSourceLocation:
+    """Validated local collection metadata, never part of the portable report."""
+
+    root: Path | None
+    workspace: Path | None
+    message: str
+
+
+def retained_source_location(path: Path, report: AnalysisReport) -> LocalSourceLocation | None:
+    """Recover only an exact owned generation, not arbitrary report-adjacent JSON."""
+    from code_analysis.workspace import (
+        GenerationKind,
+        LocalRunRecord,
+        open_workspace,
+        read_generation,
+        validate_workspace_ownership,
+    )
+
+    path = path.absolute()
+    if (
+        path.name != "report.json"
+        or len(path.parents) < 4
+        or path.parent.parent.name != "analysis"
+        or path.parent.parent.parent.name != "generations"
+    ):
+        return None
+    try:
+        workspace = open_workspace(path.parents[3])
+        manifest = read_generation(workspace, GenerationKind.ANALYSIS, path.parent.name)
+        marker = validate_workspace_ownership(workspace)
+        digest = report_identity(report)
+        if manifest.portable_identity_sha256 != digest:
+            raise ValueError("source metadata belongs to another report")
+        artifact = next((item for item in manifest.artifacts if item.name == "run.json"), None)
+        if artifact is None:
+            raise ValueError("collection has no source-location metadata")
+        payload = _read_confined(
+            workspace.root,
+            ("generations", "analysis", manifest.generation_id, "run.json"),
+            1024 * 1024,
+        )
+        if len(payload) != artifact.bytes or hashlib.sha256(payload).hexdigest() != artifact.sha256:
+            raise ValueError("source metadata no longer matches its manifest")
+        run = LocalRunRecord.model_validate_json(payload)
+        if (
+            run.portable_report_sha256 != digest
+            or run.project_root != manifest.project_root
+            or run.project_root != marker.project_root
+            or run.workspace_path != str(workspace.root)
+        ):
+            raise ValueError("source metadata disagrees with collection ownership")
+        return LocalSourceLocation(
+            Path(run.project_root),
+            workspace.root,
+            "Source location recovered from the selected collection's validated run.json.",
+        )
+    except (OSError, ValueError):
+        return LocalSourceLocation(
+            None,
+            None,
+            "Saved source-location metadata is missing or invalid. Saved analysis remains "
+            "available; choose the local project folder once to view code.",
+        )
+
+
+def located_source_root(
+    location: LocalSourceLocation | None, planner: CollectionPlanner | None
+) -> Path | None:
+    """A saved location is a hint, not authority to leave the selected boundary."""
+    if location is None or location.root is None or location.workspace is None or planner is None:
+        return None
+    try:
+        planner._path(location.workspace.relative_to(planner.root).as_posix(), directory=True)
+        return planner._path(location.root.relative_to(planner.root).as_posix(), directory=True)
+    except (OSError, ValueError):
+        return None
 
 
 class SourceConnectionRequest(StrictModel):

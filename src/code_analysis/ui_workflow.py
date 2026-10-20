@@ -12,6 +12,7 @@ from pydantic import Field, StrictStr, model_validator
 
 from code_analysis.collection_commands import CollectionContext, Operation
 from code_analysis.models import Completeness, ProviderState, StrictModel
+from code_analysis.project_browsing import SourceConnection
 from code_analysis.report_models import AnalysisReport, SectionCoverage, SectionState
 from code_analysis.ui_models import UIReportIdentity
 from code_analysis.ui_runtime import RuntimeOverview, RuntimeViewService
@@ -86,6 +87,7 @@ class WorkflowOverview(StrictModel):
         default=None, pattern=r"^[0-9a-f]{64}$"
     )
     source_access: Literal["not-configured", "configured-unverified"]
+    source_connection: SourceConnection | None = None
     actions: tuple[WorkflowAction, ...] = Field(max_length=20)
     overall_readiness: WorkflowReadiness
 
@@ -393,6 +395,7 @@ def build_workflow(
     *,
     source_configured: bool = False,
     run_catalog_available: bool = False,
+    source_connection: SourceConnection | None = None,
 ) -> WorkflowOverview:
     """Describe existing immutable evidence; never collect, read source, or run jobs."""
     from code_analysis.ui_handoff import canonical_profile_sha256
@@ -572,6 +575,7 @@ def build_workflow(
             else None
         ),
         source_access="configured-unverified" if source_configured else "not-configured",
+        source_connection=source_connection,
         actions=tuple(actions),
         overall_readiness=overall,
     )

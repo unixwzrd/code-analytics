@@ -5,6 +5,8 @@ from __future__ import annotations
 import errno
 import hashlib
 import json
+import sys
+from datetime import UTC, datetime
 from http.client import HTTPConnection
 from urllib.parse import urlencode
 
@@ -24,6 +26,7 @@ from code_analysis.project_browsing import (
     document_catalog,
     read_project_document,
     report_identity,
+    retained_source_location,
     validate_source_connection,
 )
 from code_analysis.reports.json_report import canonical_json
@@ -31,6 +34,13 @@ from code_analysis.service import scan
 from code_analysis.ui_source import preview_source
 from code_analysis.web_server import create_server
 from code_analysis.web_service import ReportViewService
+from code_analysis.workspace import (
+    GenerationKind,
+    commit_generation,
+    create_run_record,
+    prepare_workspace,
+    write_workspace_results,
+)
 
 TOKEN = "project-source-test"
 
@@ -76,6 +86,255 @@ def http(server, method, route, payload=None, *, token=TOKEN, origin=True):
 
 def get_project(server, route, digest, **selectors):
     return http(server, "GET", route + "?" + urlencode({"report_sha256": digest, **selectors}))
+
+
+@pytest.fixture
+def retained_project(project):
+    root, folder, report = project
+    context = discover_context(folder, AnalysisConfig(test_roots=()))
+    workspace = prepare_workspace(context, explicit_path=root / "collections")
+    run = create_run_record(
+        context,
+        workspace,
+        started_at=datetime.now(UTC),
+        duration_ms=0,
+        command=("code-analysis", "scan", str(folder)),
+        providers=(),
+        portable_report_sha256=report_identity(report),
+        interpreter_path=sys.executable,
+    )
+    manifest = write_workspace_results(
+        workspace, report_json=canonical_json(report), report_markdown="", run=run
+    )
+    path = (
+        workspace.kind_directory(GenerationKind.ANALYSIS) / manifest.generation_id / "report.json"
+    )
+    return root, folder, report, workspace, manifest, path, run
+
+
+def test_retained_source_location_is_available_before_investigation(retained_project, monkeypatch):
+    root, folder, report, workspace, manifest, path, _ = retained_project
+    before = canonical_json(report)
+    monkeypatch.setattr("code_analysis.service.scan", lambda *a, **kw: pytest.fail("rescan"))
+    service = ReportViewService.load(path)
+    assert service.source_location.root == folder
+    with served(
+        create_server(service, workspace=workspace.root, collection_root=root, token=TOKEN)
+    ) as server:
+        status, workflow = http(server, "GET", "/api/workflow")
+        assert status == 200 and workflow["source_connection"]["configured"]
+        assert workflow["source_connection"]["source_root"] == str(folder)
+        for selectors in ({}, {"run": manifest.generation_id}):
+            status, connection = get_project(
+                server, "/api/project/source", report_identity(report), **selectors
+            )
+            assert status == 200 and connection["configured"]
+            status, preview = http(
+                server,
+                "GET",
+                "/api/source?"
+                + urlencode(
+                    {
+                        "path": "src/reception.py",
+                        **selectors,
+                    }
+                ),
+            )
+            assert status == 200 and preview["state"] == "bound"
+            assert preview["lines"][0]["text"] == "def book():"
+        assert server.app.collection_session is None
+    assert canonical_json(report) == before
+
+
+@pytest.mark.parametrize("boundary", ["none", "other", "project-only", "workspace-only"])
+def test_recorded_location_cannot_grant_access_outside_selected_boundary(
+    retained_project, boundary
+):
+    root, folder, report, workspace, _, path, _ = retained_project
+    other = root / "other"
+    other.mkdir()
+    service = ReportViewService.load(path)
+    boundary_root = {
+        "none": None,
+        "other": other,
+        "project-only": folder,
+        "workspace-only": workspace.root,
+    }[boundary]
+    with served(create_server(service, collection_root=boundary_root, token=TOKEN)) as server:
+        status, workflow = http(server, "GET", "/api/workflow")
+        assert status == 200 and not workflow["source_connection"]["configured"]
+        assert "recorded source folder is unavailable" in workflow["source_connection"]["message"]
+        status, preview = http(server, "GET", "/api/source?path=src/reception.py")
+        assert status == 200 and preview["state"] == "disabled" and not preview["lines"]
+        assert get_project(server, "/api/bootstrap", report_identity(report))[0] == 200
+
+
+def test_missing_recorded_folder_is_reported_early_without_dropping_graph(retained_project):
+    root, folder, _, _, _, path, _ = retained_project
+    service = ReportViewService.load(path)
+    folder.rename(root / "moved-hotel")
+    with served(create_server(service, collection_root=root, token=TOKEN)) as server:
+        _, workflow = http(server, "GET", "/api/workflow")
+        assert not workflow["source_connection"]["configured"]
+        assert "recorded source folder is unavailable" in workflow["source_connection"]["message"]
+        assert http(server, "GET", "/api/bootstrap")[0] == 200
+
+
+def test_recovered_source_still_checks_current_hashes(retained_project):
+    root, folder, _, _, _, path, _ = retained_project
+    service = ReportViewService.load(path)
+    (folder / "src/reception.py").write_text("changed = True\n")
+    with served(create_server(service, collection_root=root, token=TOKEN)) as server:
+        status, preview = http(server, "GET", "/api/source?path=src/reception.py")
+        assert status == 200 and preview["state"] == "mismatch" and not preview["lines"]
+
+
+def test_recovered_location_rejects_replaced_directory_symlink(retained_project):
+    root, folder, _, _, _, path, _ = retained_project
+    service = ReportViewService.load(path)
+    moved = root / "moved-hotel"
+    folder.rename(moved)
+    folder.symlink_to(moved, target_is_directory=True)
+    with served(create_server(service, collection_root=root, token=TOKEN)) as server:
+        _, workflow = http(server, "GET", "/api/workflow")
+        assert not workflow["source_connection"]["configured"]
+        _, preview = http(server, "GET", "/api/source?path=src/reception.py")
+        assert preview["state"] == "disabled" and not preview["lines"]
+
+
+def test_corrupt_local_metadata_does_not_hide_saved_analysis(retained_project):
+    root, _, _, _, _, path, _ = retained_project
+    path.with_name("run.json").write_text("{}")
+    service = ReportViewService.load(path)
+    assert service.source_location.root is None
+    with served(create_server(service, collection_root=root, token=TOKEN)) as server:
+        _, workflow = http(server, "GET", "/api/workflow")
+        assert not workflow["source_connection"]["configured"]
+        assert http(server, "GET", "/api/bootstrap")[0] == 200
+
+
+@pytest.mark.parametrize("artifact", ["run.json", "report.json"])
+def test_symlinked_generation_artifacts_cannot_grant_source_access(retained_project, artifact):
+    root, _, report, _, _, path, _ = retained_project
+    original = path.with_name(artifact)
+    external = root / f"copied-{artifact}"
+    original.rename(external)
+    original.symlink_to(external)
+    location = retained_source_location(path, report)
+    assert location is not None and location.root is None
+
+
+@pytest.mark.parametrize("connection", ["startup", "manual"])
+def test_moved_explicit_source_does_not_break_workflow(project, connection):
+    root, folder, report = project
+    with served(
+        create_server(
+            ReportViewService(report),
+            source_root=folder if connection == "startup" else None,
+            collection_root=root,
+            token=TOKEN,
+        )
+    ) as server:
+        if connection == "manual":
+            status, _ = http(
+                server,
+                "POST",
+                "/api/project/source",
+                {
+                    "report_sha256": report_identity(report),
+                    "directory": "hotel",
+                    "confirmed": True,
+                },
+            )
+            assert status == 200
+        assert http(server, "GET", "/api/workflow")[1]["source_connection"]["configured"]
+        folder.rename(root / "moved-hotel")
+        status, workflow = http(server, "GET", "/api/workflow")
+        assert status == 200 and not workflow["source_connection"]["configured"]
+        assert "recorded source folder is unavailable" in workflow["source_connection"]["message"]
+        assert http(server, "GET", "/api/bootstrap")[0] == 200
+
+
+def test_arbitrary_report_adjacent_metadata_is_not_source_authority(project):
+    _, folder, report = project
+    path = folder / "report.json"
+    path.write_text(canonical_json(report))
+    (folder / "run.json").write_text(json.dumps({"project_root": str(folder)}))
+    assert retained_source_location(path, report) is None
+
+
+@pytest.mark.parametrize("field", ["project_root", "portable_report_sha256", "workspace_path"])
+def test_coherently_hashed_but_mismatched_source_metadata_is_rejected(retained_project, field):
+    root, folder, report, workspace, _, _, run = retained_project
+    changes = {field: "0" * 64 if field.endswith("sha256") else str(root)}
+    invalid = run.model_copy(update=changes)
+    manifest = commit_generation(
+        workspace,
+        kind=GenerationKind.ANALYSIS,
+        artifacts={
+            "report.json": canonical_json(report).encode(),
+            "run.json": invalid.model_dump_json().encode(),
+        },
+        command=("code-analysis", "scan", str(folder)),
+        interpreter_path=sys.executable,
+        portable_identity_sha256=report_identity(report),
+    )
+    path = (
+        workspace.kind_directory(GenerationKind.ANALYSIS) / manifest.generation_id / "report.json"
+    )
+    location = retained_source_location(path, report)
+    assert location is not None and location.root is None
+    with served(
+        create_server(ReportViewService.load(path), collection_root=root, token=TOKEN)
+    ) as server:
+        _, workflow = http(server, "GET", "/api/workflow")
+        assert not workflow["source_connection"]["configured"]
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+@pytest.mark.parametrize("width", [1440, 1024])
+def test_local_collection_graph_opens_code_without_source_setup(
+    retained_project, monkeypatch, engine, width
+):
+    root, folder, report, _, _, path, _ = retained_project
+    before = (folder / "src/reception.py").read_bytes()
+    monkeypatch.setattr("code_analysis.service.scan", lambda *a, **kw: pytest.fail("rescan"))
+    playwright = pytest.importorskip("playwright.sync_api")
+    with (
+        served(
+            create_server(ReportViewService.load(path), collection_root=root, token=TOKEN)
+        ) as server,
+        playwright.sync_playwright() as runtime,
+    ):
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page(viewport={"width": width, "height": 1000})
+            errors, requests = [], []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.on("request", lambda request: requests.append((request.method, request.url)))
+            page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
+            page.locator(".cards").wait_for()
+            playwright.expect(page.locator(".workflow-source-status")).to_contain_text(str(folder))
+            reveal_navigation(page, "Browse code").click()
+            page.locator('.code-browser-list [data-browse-identity^="source-file-"]').click()
+            page.get_by_role("button", name="Recorded relationships", exact=True).click()
+            page.locator(".code-browser-map").get_by_role(
+                "button", name="Inspect book", exact=True
+            ).click()
+            pane = page.locator(".code-browser-source")
+            playwright.expect(pane.locator("h3")).to_have_text("book")
+            playwright.expect(pane.locator(".code-browser-line").first).to_contain_text(
+                "def book():"
+            )
+            assert not page.get_by_role(
+                "dialog", name="Connect source folder", exact=True
+            ).is_visible()
+            assert all(method == "GET" for method, _ in requests)
+            assert not errors
+        finally:
+            browser.close()
+    assert (folder / "src/reception.py").read_bytes() == before
+    assert report_identity(report) == hashlib.sha256(canonical_json(report).encode()).hexdigest()
 
 
 def test_connect_source_without_execution_or_rescan(project, monkeypatch):

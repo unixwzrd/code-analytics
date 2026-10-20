@@ -53,6 +53,8 @@ installSessionControl(token, draftSession, () => {
 let investigationReturn;
 let investigationSequence = 0;
 let evidenceFocus;
+let findingSourceController;
+let findingSourceContext;
 let refusedInvestigationBack = false;
 
 function investigationBinding() {
@@ -234,6 +236,7 @@ const openEvidence = evidenceViewer(api, escapeHtml, {
   onBrowseSource: jumpToCode,
 });
 const evidenceButton = (kind, identity, label) => `<button class="detail-button" data-kind="${escapeHtml(kind)}" data-identity="${escapeHtml(identity)}">${escapeHtml(label)}</button>`;
+const findingButton = (value, row) => `${row.symbol ? `<div class="hint">${escapeHtml(row.symbol)}</div>` : ''}<button class="detail-button" data-kind="finding" data-identity="${escapeHtml(row.finding_id)}" data-finding-symbol="${escapeHtml(row.symbol || '')}">${escapeHtml(value)}</button> <button class="detail-button" data-finding-details="${escapeHtml(row.finding_id)}">Details</button>`;
 
 async function jumpToCode(selection, signal) {
   if (!draftSession.canNavigate()) return;
@@ -263,10 +266,103 @@ async function jumpToCode(selection, signal) {
   history.pushState({codeAnalysisBrowse: codeBrowserSelectionMetadata(codeBrowserSession)}, '', '#browse');
   const dialog = document.querySelector('#evidence-dialog');
   if (dialog.open) dialog.close();
+  if (findingSourceContext?.binding === binding) {
+    const selected = findingSourceContext.choices.find(item => item.span.path === selection.path && item.span.start_line === Number(selection.line));
+    if (selected) { findingSourceContext.choosing = false; findingSourceContext.selected = selected; }
+    else findingSourceContext = undefined;
+  }
   view = 'browse';
   document.querySelectorAll('.nav').forEach(button => button.classList.toggle('active', button.dataset.view === view));
   await render();
-  finalizeAcceptedNavigation();
+  const sourceHeading = content.querySelector('.code-browser-source h2');
+  finalizeAcceptedNavigation(sourceHeading || document.querySelector('#title'));
+  sourceHeading?.scrollIntoView({block: 'start', inline: 'nearest'});
+}
+
+async function openFindingSource(button) {
+  if (!draftSession.canNavigate()) return;
+  findingSourceController?.abort();
+  const current = findingSourceController = new AbortController();
+  const parentSignal = renderController.signal;
+  parentSignal.addEventListener('abort', () => current.abort(), {once: true});
+  const binding = investigationBinding();
+  const identity = button.dataset.identity;
+  const report = bootstrap.reports[0].report_sha256;
+  try {
+    const params = new URLSearchParams({kind: 'finding', identity, limit: '25', report_sha256: report});
+    const result = await api(`/api/evidence?${params}`, current.signal);
+    current.signal.throwIfAborted();
+    if (binding !== investigationBinding() || !button.isConnected) return;
+    const item = result.items.find(item => item.kind === 'finding' && item.identity === identity);
+    const locations = new Map();
+    for (const evidence of item?.evidence || []) {
+      const span = evidence.span;
+      if (!span?.path || !Number.isInteger(span.start_line) || span.start_line < 1 || !Number.isInteger(span.end_line) || span.end_line < span.start_line) continue;
+      locations.set(JSON.stringify([span.path, span.start_line, span.end_line]), evidence);
+    }
+    if (!locations.size || result.next_identity) {
+      await openEvidence('finding', identity, '', 0, {report_sha256: report, signal: parentSignal});
+      return;
+    }
+    findingSourceContext = {binding, identity, title: button.textContent, symbol: button.dataset.findingSymbol, statement: item.statement,
+      cautions: item.limitations || [], choices: [...locations.values()], choosing: locations.size > 1};
+    if (locations.size === 1) {
+      const span = [...locations.values()][0].span;
+      await jumpToCode({report_sha256: report, path: span.path, line: span.start_line}, current.signal);
+    } else {
+      investigationReturn = {id: ++investigationSequence, binding, view, filter: filter.value, offset,
+        url: location.pathname + location.search + location.hash,
+        scrollTop: document.querySelector('.lui-shell__content')?.scrollTop || 0,
+        findings: {...findingSelection}, facets: {...facetSelection}, comparison: {...comparisonSelection},
+        focus: {...evidenceFocus}};
+      history.replaceState({codeAnalysisInvestigation: investigationReturn.id}, '');
+      history.pushState({codeAnalysisFindingChoices: investigationReturn.id}, '', '#browse');
+      view = 'browse';
+      document.querySelectorAll('.nav').forEach(item => item.classList.toggle('active', item.dataset.view === view));
+      await render();
+      finalizeAcceptedNavigation();
+    }
+  } catch (error) {
+    if (!current.signal.aborted && button.isConnected) {
+      const message = element('p', {className: 'hint', role: 'status', text: `Code browser unavailable: ${error.message}. Use Details to inspect the saved evidence.`});
+      button.parentElement.append(message);
+    }
+  }
+}
+
+function findingContextPanel(context, signal) {
+  const concise = value => String(value || '').length > 280 ? `${String(value).slice(0, 279)}…` : String(value || '');
+  const panel = element('section', {className: 'panel finding-source-context', 'aria-label': 'Finding context'});
+  panel.append(element('h2', {text: context.title}), element('p', {text: concise(context.statement)}));
+  if (context.symbol) panel.append(element('p', {className: 'mono', text: context.symbol}));
+  if (context.cautions.length) panel.append(element('p', {className: 'hint', text: concise(context.cautions[0])}));
+  if (context.choosing) panel.append(element('p', {text: 'Choose a saved evidence location. No location has been selected automatically.'}));
+  const choices = context.choosing ? context.choices.slice(0, 25) : [context.selected || context.choices[0]];
+  if (context.choosing && context.choices.length > choices.length) panel.append(element('p', {className: 'hint', text: `${context.choices.length - choices.length} additional saved locations omitted from this bounded chooser. Use Details for all saved evidence.`}));
+  for (const evidence of choices) {
+    const span = evidence.span;
+    const row = element('p', {text: `${span.path}:${span.start_line}–${span.end_line} — ${concise(evidence.observation)}`});
+    if (context.choosing) {
+      const choose = element('button', {className: 'detail-button', type: 'button', text: `Open ${span.path}:${span.start_line}–${span.end_line}`});
+      choose.addEventListener('click', async () => {
+        findingSourceController?.abort();
+        const current = findingSourceController = new AbortController();
+        signal.addEventListener('abort', () => current.abort(), {once: true});
+        try {
+          await jumpToCode({report_sha256: bootstrap.reports[0].report_sha256, path: span.path, line: span.start_line}, current.signal);
+        } catch (error) { if (!current.signal.aborted) row.append(element('span', {text: ` Code browser unavailable: ${error.message}`})); }
+      });
+      row.append(choose);
+    }
+    panel.append(row);
+  }
+  const details = element('button', {className: 'detail-button', type: 'button', text: 'Details'});
+  details.addEventListener('click', () => {
+    findingSourceController?.abort();
+    openEvidence('finding', context.identity, '', 0, {report_sha256: bootstrap.reports[0].report_sha256, signal});
+  });
+  panel.append(details);
+  return panel;
 }
 
 function facetControls(includeOwner = false) {
@@ -301,8 +397,20 @@ function coverageSummary(page) {
   return `<p class="hint">Section coverage: ${badge(coverage.state)} · ${coverage.parsed.toLocaleString()} parsed · ${coverage.skipped.toLocaleString()} skipped · ${coverage.failed.toLocaleString()} failed · ${coverage.unresolved.toLocaleString()} unresolved · ${coverage.truncated.toLocaleString()} truncated</p>`;
 }
 content.addEventListener('click', event => {
+  const details = event.target.closest('[data-finding-details]');
+  if (details) {
+    findingSourceController?.abort();
+    evidenceFocus = {kind: 'finding', identity: details.dataset.findingDetails};
+    findingSourceContext = undefined;
+    openEvidence('finding', details.dataset.findingDetails, '', 0,
+      {report_sha256: bootstrap.reports[0].report_sha256, signal: renderController.signal});
+    return;
+  }
   const button = event.target.closest('[data-kind][data-identity]');
+  if (button) findingSourceController?.abort();
   if (button) evidenceFocus = {kind: button.dataset.kind, identity: button.dataset.identity};
+  if (button?.dataset.kind === 'finding') { openFindingSource(button); return; }
+  if (button) findingSourceContext = undefined;
   if (button) openEvidence(button.dataset.kind, button.dataset.identity, '', 0,
     button.dataset.kind === 'test' ? {report_sha256: bootstrap.reports[0].report_sha256, signal: renderController.signal} : null);
 });
@@ -421,12 +529,15 @@ async function render() {
     title.textContent = 'Browse code';
     if (!purpose) description.textContent = 'Navigate saved entities and recorded containment beside verified original source. No target code is executed or changed.';
     search.hidden = true;
-    await codeBrowser(content, api, signal, bootstrap.reports[0].report_sha256, codeBrowserSession, draftSession, {
+    const findingContext = findingSourceContext?.binding === investigationBinding() ? findingSourceContext : null;
+    if (findingContext?.choosing) content.replaceChildren();
+    else await codeBrowser(content, api, signal, bootstrap.reports[0].report_sha256, codeBrowserSession, draftSession, {
       post: (path, body, local) => post(path, {...body, run: runSelection?.primary || 'current',
         compare_run: runSelection?.comparison || 'none'}, local),
       onSourceConnected: () => refreshWorkflow(signal),
     });
     signal.throwIfAborted();
+    if (findingContext) content.prepend(findingContextPanel(findingContext, signal));
     const origin = currentInvestigation();
     if (origin) {
       const back = document.createElement('button');
@@ -596,7 +707,7 @@ async function render() {
       if (!rationale) return badge(value);
       return `${badge(value)}<div class="hint findings-suppression-rationale">${findingsTextCell(rationale)}</div>`;
     };
-    content.innerHTML = facetControls() + `<form id="finding-controls" class="downloads">${choice('severity','Severity',['error','warning','info'])}${choice('category','Category',bootstrap.finding_categories)}${choice('confidence','Confidence',bootstrap.finding_confidences)}<button class="detail-button">Apply finding filters</button></form>` + table([["Severity","severity",badge],["Confidence","confidence",badge],["Finding","title",(value,row) => evidenceButton('finding', row.finding_id, value)],["Suppression","suppression_summary",suppressionCell],["Explanation","explanation",findingsTextCell],["Language","language",badge],["Module","module"],["Rule","rule_id"],["Category","category",badge]], page, {wrapClass: "findings-table"});
+    content.innerHTML = facetControls() + `<form id="finding-controls" class="downloads">${choice('severity','Severity',['error','warning','info'])}${choice('category','Category',bootstrap.finding_categories)}${choice('confidence','Confidence',bootstrap.finding_confidences)}<button class="detail-button">Apply finding filters</button></form>` + table([["Severity","severity",badge],["Confidence","confidence",badge],["Finding","title",findingButton],["Suppression","suppression_summary",suppressionCell],["Explanation","explanation",findingsTextCell],["Language","language",badge],["Module","module"],["Rule","rule_id"],["Category","category",badge]], page, {wrapClass: "findings-table"});
     wireFacetControls();
     const controls = content.querySelector('#finding-controls');
     for (const [key, value] of Object.entries(findingSelection)) controls.elements[key].value = value;
@@ -773,6 +884,18 @@ window.addEventListener('hashchange', () => {
 window.addEventListener('popstate', () => {
   if (sessionClosed) return;
   if (refusedInvestigationBack) { refusedInvestigationBack = false; return; }
+  if (history.state?.codeAnalysisFindingChoices) {
+    const origin = currentInvestigation();
+    if (!origin || origin.id !== history.state.codeAnalysisFindingChoices || !findingSourceContext) return;
+    if (!draftSession.canNavigate() || !draftSession.allowSwitch('Return to saved source choices? Dirty drafts remain in this session; export them before leaving.')) {
+      refusedInvestigationBack = true; history.forward(); return;
+    }
+    findingSourceContext.choosing = true;
+    view = 'browse';
+    document.querySelectorAll('.nav').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+    render().catch(showError);
+    return;
+  }
   if (history.state?.codeAnalysisInvestigation) {
     const origin = currentInvestigation();
     if (!origin || history.state.codeAnalysisInvestigation !== origin.id) return;
@@ -785,6 +908,7 @@ window.addEventListener('popstate', () => {
   }
   if (!bootstrap || location.hash !== '#browse' || !history.state?.codeAnalysisBrowse) return;
   if (!draftSession.canNavigate()) return;
+  if (findingSourceContext) findingSourceContext.choosing = false;
   view = 'browse';
   document.querySelectorAll('.nav').forEach(button => button.classList.toggle('active', button.dataset.view === view));
   render().catch(showError);

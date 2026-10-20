@@ -10,6 +10,8 @@ The [Fawlty Towers tutorials](../tutorials/README.md) support saved-evidence inv
 
 The first post-public-beta browsing refinement adds one-activation graph-to-source navigation, explicitly confirmed in-app source-folder connection, and related README/local-text reading without abandoning the investigation. These reuse the existing LocalOps panel and collection picker. They do not provide persistent project profiles, a tutorial catalog, rendered arbitrary Markdown/HTML, unrestricted file browsing or a tutorial execution engine.
 
+Local collection opening now restores the source location from its owned JSON metadata within the session's collection boundary; Overview explains missing/moved/invalid locations before investigation. Finding investigations open source-first, with concise context and full evidence available on demand rather than an obligatory evidence modal. Source hashes, saved-evidence partiality and authorization boundaries remain unchanged.
+
 ## Next user-workflow improvements
 
 1. Review first-use feedback: begin unaided, understand unavailable evidence, investigate/return with context, and use Help without losing work.

@@ -8,6 +8,7 @@ import time
 from http.client import HTTPConnection
 
 import pytest
+from browser_navigation import reveal_navigation
 
 from code_analysis.collection_execution import CollectionExecutionLimits
 from code_analysis.web_server import create_server
@@ -81,6 +82,12 @@ def test_http_launch_reconnect_and_open_verified_static_report(server):
     assert status == 200 and opened["kind"] == "analysis"
     assert request(server, "/api/bootstrap")[0] == 200
     assert request(server, "/api/collection")[1]["report_available"]
+    status, workflow = request(server, "/api/workflow")
+    assert status == 200 and workflow["source_connection"]["configured"]
+    assert workflow["source_connection"]["source_root"] == str(server.app.collection.root)
+    status, preview = request(server, "/api/source?path=sample.py")
+    assert status == 200 and preview["state"] == "bound"
+    assert preview["lines"][0]["text"] == "def answer():"
 
 
 def test_connect_does_not_rebind_existing_report_workspace(tmp_path):
@@ -283,14 +290,16 @@ def test_collection_enablement_requires_explicit_root(tmp_path):
 
 
 @pytest.mark.parametrize("width", [1280, 390])
-def test_browser_collect_reconnect_and_open(server, width):
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+def test_browser_collect_reconnect_and_open(server, width, engine):
     playwright = pytest.importorskip("playwright.sync_api")
     with playwright.sync_playwright() as runtime:
-        browser = runtime.chromium.launch()
+        browser = getattr(runtime, engine).launch()
         try:
             page = browser.new_page(viewport={"width": width, "height": 960})
-            errors = []
+            errors, requests = [], []
             page.on("pageerror", lambda error: errors.append(str(error)))
+            page.on("request", lambda request: requests.append((request.method, request.url)))
             page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token=jobs-test")
             toggle = page.get_by_role("button", name="Toggle navigation", exact=True)
             if toggle.is_visible():
@@ -312,6 +321,24 @@ def test_browser_collect_reconnect_and_open(server, width):
             assert page.locator("body").evaluate("node => node.scrollWidth <= window.innerWidth")
             page.get_by_role("button", name="Open verified result").click()
             page.get_by_role("heading", name="Overview", exact=True).wait_for()
+            playwright.expect(page.locator(".workflow-source-status")).to_contain_text(
+                "Source folder:"
+            )
+            reveal_navigation(page, "Browse code").click()
+            page.locator('.code-browser-list [data-browse-identity^="source-file-"]').click()
+            page.get_by_role("button", name="Recorded relationships", exact=True).click()
+            page.locator(".code-browser-map").get_by_role(
+                "button", name="Inspect answer", exact=True
+            ).click()
+            playwright.expect(
+                page.locator(".code-browser-source .code-browser-lines")
+            ).to_contain_text("return 42")
+            assert not page.get_by_role(
+                "dialog", name="Connect source folder", exact=True
+            ).is_visible()
+            assert not any(
+                method == "POST" and "/api/project/source" in url for method, url in requests
+            )
             assert not errors
         finally:
             browser.close()

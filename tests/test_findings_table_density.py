@@ -129,7 +129,7 @@ def test_findings_table_keeps_compact_rows_and_discloses_long_text(
 
                 held = []
                 page.route("**/api/evidence?*", lambda route: held.append(route))
-                page.get_by_role("button", name=PROBE_TITLE, exact=True).click()
+                probe_row.get_by_role("button", name="Details", exact=True).click()
                 page.get_by_role("dialog").wait_for()
                 content = page.locator("#evidence-content")
                 playwright.expect(content).to_have_text("Loading evidence…")

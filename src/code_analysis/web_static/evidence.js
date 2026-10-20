@@ -1,4 +1,5 @@
 import {candidatePacket} from './candidate.js';
+import {disclosure, element} from '/localops/index.js';
 
 // Render the same bounded evidence neighborhood returned by the CLI query service.
 export function evidenceViewer(api, escapeHtml, {reportIdentity, onBrowseSource} = {}) {
@@ -80,7 +81,12 @@ export function evidenceViewer(api, escapeHtml, {reportIdentity, onBrowseSource}
         }).join('');
         return `<article class="panel"><p class="eyebrow">${escapeHtml(item.kind)}</p><h3>${escapeHtml(item.identity)}</h3><p>${escapeHtml(item.statement)}</p><ul>${spans}</ul>${item.limitations.map(value => `<p class="hint">${escapeHtml(value)}</p>`).join('')}</article>`;
       }).join('');
-      content.innerHTML = `${packet ? candidatePacket(packet, escapeHtml) : ''}<h3>Source evidence</h3><p>Source completeness: <strong>${escapeHtml(result.source_completeness)}</strong>. ${result.returned_count} evidence records on this page.</p>${items || '<p>No related records in this query.</p>'}${result.limitations.map(value => `<p class="hint">${escapeHtml(value)}</p>`).join('')}${result.next_identity ? '<button id="evidence-next" class="detail-button">Next evidence page</button>' : ''}`;
+      content.innerHTML = `${packet ? candidatePacket(packet, escapeHtml) : ''}<h3>Source evidence</h3><p>Source completeness: <strong>${escapeHtml(result.source_completeness)}</strong>. ${result.returned_count} evidence records on this page.</p>${items || '<p>No related records in this query.</p>'}${result.next_identity ? '<button id="evidence-next" class="detail-button">Next evidence page</button>' : ''}`;
+      if (kind === 'finding' && !result.items.some(item => item.evidence.some(value => value.span?.path && value.span.start_line > 0))) {
+        content.prepend(element('p', {className: 'hint', text: 'No usable saved source span is recorded for this finding. These Details do not infer a source location.'}));
+      }
+      if (result.limitations.length) content.append(disclosure({title: 'Report-wide limitations',
+        content: element('ul', {}, result.limitations.map(value => element('li', {text: value})))}));
       content.querySelector('#evidence-next')?.addEventListener('click', () => open(kind, identity, result.next_identity, 0, binding));
       content.querySelector('#packet-next')?.addEventListener('click', () => open(kind, identity, '', packet.next_offset, binding));
       content.querySelector('#packet-previous')?.addEventListener('click', () => open(kind, identity, '', Math.max(0, packet.offset - packet.limit), binding));

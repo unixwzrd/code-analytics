@@ -11,6 +11,7 @@ from pydantic import Field, StrictInt, StrictStr
 
 from code_analysis.models import StrictModel
 from code_analysis.profile_runs import ProfileRunCatalog, profile_catalog, select_profiles
+from code_analysis.project_browsing import retained_source_location
 from code_analysis.report_models import AnalysisReport
 from code_analysis.reports.json_report import canonical_json
 from code_analysis.ui_runtime import RuntimeViewService
@@ -127,7 +128,17 @@ class RunRepository:
                 return self._cache[key]
             baseline = self._report(primary)
             candidate = None if comparison == "none" else self._report(comparison)
-            service = ReportViewService(baseline, candidate)
+            location = (
+                self.initial.source_location
+                if primary == "current" and self.initial
+                else retained_source_location(
+                    self.workspace.kind_directory(GenerationKind.ANALYSIS)
+                    / primary
+                    / "report.json",
+                    baseline,
+                )
+            )
+            service = ReportViewService(baseline, candidate, source_location=location)
             self._cache[key] = service
             while len(self._cache) > 2:
                 self._cache.popitem(last=False)

@@ -29,6 +29,7 @@ from code_analysis.dependency_navigation import (
 from code_analysis.models import Confidence
 from code_analysis.module_navigation import ReportModuleReader
 from code_analysis.profile_models import ProfileReport
+from code_analysis.project_browsing import LocalSourceLocation, retained_source_location
 from code_analysis.projection_models import (
     ComparisonProjection,
     GraphProjection,
@@ -90,6 +91,7 @@ class ReportViewService:
     primary: AnalysisReport
     comparison: AnalysisReport | None = None
     delta: ComparisonProjection | None = None
+    source_location: LocalSourceLocation | None = field(default=None, repr=False, compare=False)
     _overview: UIBootstrap | None = field(default=None, init=False, repr=False, compare=False)
     _overview_lock: Lock = field(default_factory=Lock, init=False, repr=False, compare=False)
     _module_reader: ReportModuleReader | None = field(
@@ -127,7 +129,12 @@ class ReportViewService:
 
     @classmethod
     def load(cls, primary: Path, comparison: Path | None = None) -> ReportViewService:
-        return cls(_load_bounded(primary), _load_bounded(comparison) if comparison else None)
+        report = _load_bounded(primary)
+        return cls(
+            report,
+            _load_bounded(comparison) if comparison else None,
+            source_location=retained_source_location(primary, report),
+        )
 
     def bootstrap(self) -> UIBootstrap:
         # Report selections are immutable snapshots. Cache only the small

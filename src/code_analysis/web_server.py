@@ -39,7 +39,12 @@ from code_analysis.comparison_browse import (
 from code_analysis.dependency_graph import DependencyGraphRequest
 from code_analysis.dependency_navigation import DependencyRequest, DependencyResult
 from code_analysis.models import Completeness, SourceLanguage, StrictModel
-from code_analysis.project_browsing import ProjectDocumentAccess
+from code_analysis.project_browsing import (
+    ProjectDocumentAccess,
+    SourceConnection,
+    located_source_root,
+    source_connection,
+)
 from code_analysis.projection_models import (
     GraphProjection,
     ProjectionCollapse,
@@ -140,10 +145,59 @@ class WebApplication:
     token: str
     runs: RunRepository | None = None
     source_root: Path | None = None
+    source_report_sha256: str | None = None
     runtime: RuntimeViewService | None = None
     collection: CollectionPlanner | None = None
     collection_session: CollectionSession | None = None
     project_documents: ProjectDocumentAccess = field(default_factory=ProjectDocumentAccess)
+
+
+def _source_root(app: WebApplication, service: ReportViewService | None) -> Path | None:
+    if service is None:
+        return None
+    if app.source_root is not None and (
+        app.source_report_sha256 is None
+        or app.source_report_sha256 == service.bootstrap().reports[0].report_sha256
+    ):
+        from code_analysis.ui_source import _open_confined
+
+        try:
+            descriptor = _open_confined(app.source_root, (), directory=True)
+            os.close(descriptor)
+            return app.source_root
+        except OSError:
+            return None
+    return located_source_root(service.source_location, app.collection)
+
+
+def _source_connection(app: WebApplication, service: ReportViewService) -> SourceConnection:
+    root = _source_root(app, service)
+    try:
+        connection = source_connection(service.primary, root, app.collection)
+    except OSError:
+        root = None
+        connection = source_connection(service.primary, None, app.collection)
+    if (service.source_location is not None or app.source_root is not None) and root is None:
+        return connection.model_copy(
+            update={
+                "message": (
+                    "The recorded source folder is unavailable, outside this session's "
+                    "collection root, or its local metadata is invalid. "
+                    "Choose the local project folder once to view code. "
+                    "Saved analysis remains available."
+                )
+            }
+        )
+    if root is not None and root != app.source_root:
+        return connection.model_copy(
+            update={
+                "message": (
+                    "Source folder recovered from validated collection metadata. "
+                    "Each file is checked against its saved hash before display."
+                )
+            }
+        )
+    return connection
 
 
 class ReportHTTPServer(ThreadingHTTPServer):
@@ -237,12 +291,14 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 context = _collection_context(app, report_available=service is not None).model_copy(
                     update={"runtime_available": runtime is not None}
                 )
+                connection = _source_connection(app, service) if service else None
                 result = build_workflow(
                     context,
                     service,
                     runtime,
-                    source_configured=app.source_root is not None,
+                    source_configured=connection.configured if connection else False,
                     run_catalog_available=app.runs is not None,
+                    source_connection=connection,
                 )
                 self._json(HTTPStatus.OK, result.model_dump(mode="json"))
                 return
@@ -321,6 +377,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 service = self.server.app.runs.select(
                     _single(params, "run", "current"), _single(params, "compare_run", "none")
                 )
+            source_root = _source_root(self.server.app, service)
             if parsed.path in {
                 "/api/candidate",
                 "/api/evidence",
@@ -580,7 +637,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                             comparison_source_payload = runtime_comparison_source_preview(
                                 service,
                                 runtime,
-                                source_root=self.server.app.source_root,
+                                source_root=source_root,
                                 compare_run=compare_run,
                                 query=comparison_source_query,
                             )
@@ -834,7 +891,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     browse_payload = SourceBrowseDocument(
                         report_sha256=browse_page.report_sha256,
                         revision=browse_page.revision,
-                        document=read_source_document(source_file, self.server.app.source_root),
+                        document=read_source_document(source_file, source_root),
                     )
                 elif parsed.path == "/api/code-browser/source":
                     if not browse_page.logical_path:
@@ -842,7 +899,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                     start = browse_request.line or 1
                     preview = preview_source(
                         service.primary,
-                        self.server.app.source_root,
+                        source_root,
                         browse_page.logical_path,
                         start=start,
                         end=start + 200,
@@ -955,7 +1012,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                         option_id=_single(params, "option_id", ""),
                     )
                     preview = preview_static_comparison_source(
-                        static_binding, static_source_query, self.server.app.source_root
+                        static_binding, static_source_query, source_root
                     )
                     self._json(HTTPStatus.OK, preview.model_dump(mode="json"))
                 else:
@@ -992,7 +1049,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                         SourcePreviewIdentity(
                             logical_path=choice.path, source_sha256=choice.source_sha256
                         ),
-                        self.server.app.source_root,
+                        source_root,
                         start=choice.start,
                         end=min(choice.end, choice.start + 39),
                     )
@@ -1003,7 +1060,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
 
                 preview = preview_source(
                     service.primary,
-                    self.server.app.source_root,
+                    source_root,
                     _single(params, "path", ""),
                     start=_single_int(params, "start", 1),
                     end=_single_int(params, "end", 40),
@@ -1245,7 +1302,10 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             root = validate_source_connection(service.primary, app.collection, request)
             result = source_connection(service.primary, root, app.collection)
             self.server.app = replace(
-                app, source_root=root, project_documents=ProjectDocumentAccess()
+                app,
+                source_root=root,
+                source_report_sha256=request.report_sha256,
+                project_documents=ProjectDocumentAccess(),
             )
         self._json(HTTPStatus.OK, result.model_dump(mode="json"))
 
@@ -1256,7 +1316,6 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             document_catalog,
             read_project_document,
             report_identity,
-            source_connection,
         )
 
         allowed = {"run", "compare_run", "report_sha256"}
@@ -1273,11 +1332,12 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
         result: StrictModel
         with self.server.lifecycle_lock:
             app = self.server.app
+            source_root = _source_root(app, service)
             if route == "/api/project/source":
-                result = source_connection(service.primary, app.source_root, app.collection)
+                result = _source_connection(app, service)
             elif route == "/api/project/documents":
                 catalog = document_catalog(
-                    service.primary, app.source_root, _single(params, "path", "")
+                    service.primary, source_root, _single(params, "path", "")
                 )
                 app.project_documents.allow(
                     catalog.report_sha256, catalog.root_identity, catalog.records
@@ -1292,7 +1352,7 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
                 )
                 document = read_project_document(
                     service.primary,
-                    app.source_root,
+                    source_root,
                     _single(params, "root_identity", ""),
                     _single(params, "path", ""),
                     _single(params, "sha256", ""),

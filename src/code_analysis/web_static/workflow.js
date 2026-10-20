@@ -162,6 +162,13 @@ export function workflowOverview(workflow, navigate, findingCount) {
   const summary = element('section', {className: 'workflow-summary panel', 'aria-label': 'Collection context and health'});
   summary.append(element('h2', {text: 'Current context'}),
     element('p', {className: 'hint', text: `Host: ${workflow.collection.host} · Static evidence: ${workflow.reports.length ? 'loaded' : 'not selected'} · Python profile: ${workflow.runtime.available ? 'loaded' : 'not selected'}`}), contextDetails);
+  if (workflow.source_connection) {
+    const source = workflow.source_connection;
+    summary.append(element('p', {className: 'workflow-source-status', role: 'status',
+      text: source.configured ? `Source folder: ${source.source_root}. ${source.message}` : source.message}));
+    if (!source.configured && source.can_connect) summary.append(button({label: 'Choose source folder for this collection',
+      onClick: () => navigate('browse')}));
+  }
   root.append(summary);
   const issues = workflow.overall_readiness.optional_issues;
   if (issues.length) {
