@@ -41,7 +41,13 @@ let workflowFailure;
 const collectionSession = {};
 const codeBrowserSession = {};
 const draftSession = new DraftSession();
-installSessionControl(token, draftSession);
+let sessionClosed = false;
+installSessionControl(token, draftSession, () => {
+  sessionClosed = true;
+  renderController?.abort();
+  handoffController?.abort();
+  clearTimeout(filterTimer);
+});
 // One investigation, retained only in this tab's memory. History contains a
 // reference, never filters, evidence bodies, source bytes, or draft contents.
 let investigationReturn;
@@ -87,12 +93,13 @@ async function returnToInvestigation({fromHistory = false} = {}) {
 }
 installUserHelp();
 window.addEventListener('beforeunload', event => {
-  if (!draftSession.hasDirty()) return;
+  if (sessionClosed || !draftSession.hasDirty()) return;
   event.preventDefault();
   event.returnValue = '';
 });
 
 async function request(path, signal) {
+  if (sessionClosed) throw new DOMException('Code Analysis session is closed', 'AbortError');
   const url = new URL(path, location.origin);
   // Handoff routes accept their exact selection fields alone; a catalog choice must
   // never travel with them or redirect the artifact their selection is validated against.
@@ -126,6 +133,7 @@ async function api(path, signal) {
 }
 
 async function post(path, body, signal) {
+  if (sessionClosed) throw new DOMException('Code Analysis session is closed', 'AbortError');
   const response = await fetch(path, {method: 'POST', signal, headers: {
     'X-Code-Analysis-Token': token, 'Content-Type': 'application/json'
   }, body: JSON.stringify(body)});
@@ -158,6 +166,7 @@ async function refreshWorkflow(signal) {
 }
 
 async function navigateView(destination, {operation} = {}) {
+  if (sessionClosed) return false;
   const definition = workflowDestination(workflow, destination);
   if (definition && ['missing', 'failed'].includes(definition.readiness.state)) {
     showWorkflowUnavailable(workflow, destination, (next, options) => navigateView(next, options).catch(showError));
@@ -390,6 +399,7 @@ function architectureGraph(graph) {
 }
 
 async function render() {
+  if (sessionClosed) return;
   if (!draftSession.canNavigate()) return;
   renderController?.abort();
   renderController = new AbortController();
@@ -676,7 +686,7 @@ document.querySelectorAll('.nav').forEach(button => button.addEventListener('cli
 }));
 let filterTimer;
 filter.addEventListener("input", () => { offset = 0; clearTimeout(filterTimer); filterTimer = setTimeout(() => render().catch(showError), 180); });
-function showError(error) { if (error.name === "AbortError") return; content.innerHTML = `<div class="empty error"><h2>Unable to render report</h2><p>${escapeHtml(error.message)}</p></div>`; }
+function showError(error) { if (sessionClosed || error.name === "AbortError") return; content.innerHTML = `<div class="empty error"><h2>Unable to render report</h2><p>${escapeHtml(error.message)}</p></div>`; }
 
 let handoffController;
 const runtimeHandoffFragment = () =>
@@ -753,6 +763,7 @@ async function followHandoff() {
   return true;
 }
 window.addEventListener('hashchange', () => {
+  if (sessionClosed) return;
   // Origin history entries already passed handoff validation. Even an expired
   // return reference must not replay an old handoff after switching reports.
   if (Number.isSafeInteger(history.state?.codeAnalysisInvestigation)
@@ -760,6 +771,7 @@ window.addEventListener('hashchange', () => {
   if (bootstrap || runtimeSession) followHandoff().catch(showError);
 });
 window.addEventListener('popstate', () => {
+  if (sessionClosed) return;
   if (refusedInvestigationBack) { refusedInvestigationBack = false; return; }
   if (history.state?.codeAnalysisInvestigation) {
     const origin = currentInvestigation();

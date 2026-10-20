@@ -1,7 +1,7 @@
 import {button, confirmDialog} from '/localops/index.js';
 
 /** Application lifecycle integration; closing/reloading a tab never stops jobs. */
-export async function installSessionControl(token, drafts) {
+export async function installSessionControl(token, drafts, onStopAccepted) {
   const actions = document.querySelector('.lui-shell__actions');
   const status = document.createElement('span');
   status.setAttribute('role', 'status');
@@ -40,9 +40,26 @@ export async function installSessionControl(token, drafts) {
         cancelLabel: 'Keep running', destructive: true,
       });
       if (!confirmed) return;
-      await call('/api/session/stop', {confirmed: true, cancel_jobs: state.active_jobs > 0});
+      const result = await call('/api/session/stop', {confirmed: true, cancel_jobs: state.active_jobs > 0});
+      if (result.stopping !== true || result.instance_id !== state.instance_id) {
+        throw new Error('The server did not confirm shutdown for this session.');
+      }
       stop.textContent = 'Stopping…';
-      status.textContent = 'Shutdown requested. Collection cleanup may take a few seconds. You can close this tab; run code-analysis to reopen later.';
+      onStopAccepted();
+      // Ordinary browser-created tabs may reject close(). Never bypass that
+      // policy: render the terminal state first so refusal cannot leave a live-looking UI.
+      const closed = document.createElement('main');
+      closed.className = 'empty'; closed.tabIndex = -1;
+      const heading = document.createElement('h1'); heading.textContent = 'Code Analysis session closed';
+      const notice = document.createElement('p'); notice.setAttribute('role', 'status');
+      notice.textContent = 'Shutdown requested. Server cleanup may take a few seconds. Saved evidence is retained; this page is no longer active.';
+      const hint = document.createElement('p');
+      hint.textContent = 'If this tab stays open, close it manually. Run code-analysis to start again.';
+      closed.append(heading, notice, hint);
+      document.body.replaceChildren(closed);
+      document.title = 'Code Analysis — session closed';
+      closed.focus();
+      try { window.close(); } catch { /* Browser policy may require manual closure. */ }
       return;
     } catch (error) {
       status.textContent = error.message;

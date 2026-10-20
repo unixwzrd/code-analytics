@@ -2,6 +2,8 @@
 
 ## 0.2.0b2 — synchronized code and project reading
 
+- After confirmed server shutdown, try closing the initiating tab and replace the interface with a noninteractive session-closed screen if the browser keeps it open. Abort pending UI work and prevent history navigation from reviving controls; failed/cancelled shutdown leaves the UI usable.
+
 - Selecting a source-bound relationship node now opens its verified source directly with pointer, Enter or Space; remove the redundant source-navigation button. Unresolved nodes remain inspection-only.
 - Add an explicitly confirmed **Connect source folder** workflow using the existing confined folder picker. Validate a recorded file hash before changing session access; connecting does not collect evidence, execute code or create a workspace.
 - Offer nearby README files and linked Markdown/reStructuredText/plain-text documents through the existing LocalOps content panel, with separate provenance, bounded history, literal safe text and spoiler labels. Project documents never become analyzed source or report evidence.

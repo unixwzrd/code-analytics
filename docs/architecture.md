@@ -103,6 +103,8 @@ Collection owns validated commands, captured output, cancellation/reconnection, 
 
 Closing or reloading a tab does not stop a job or server. Shutdown is authenticated, serialized with launch admission and respects cancellation consent; embedded owners may declare shutdown unavailable. Session drafts must be exported before shutdown. Private process receipts and logs are not portable analytical evidence.
 
+After authenticated shutdown acceptance, `session.js` replaces the initiating page with a noninteractive terminal screen and attempts normal `window.close()`. Application-owned teardown aborts pending view/handoff requests and prevents subsequent rendering, requests and history handlers from reviving the UI. Browser refusal leaves the terminal screen, not a live-looking dashboard. Acceptance is bound to the same server instance and is not a claim that asynchronous server/job cleanup has finished. Failed/cancelled shutdown does not enter this terminal state. No toolkit widget or browser-automation permission is required.
+
 ## Saved-only exports and extension rules
 
 Summary, query, comparison, static HTML and projection exports read validated saved evidence without rescanning source or launching workloads. Graphviz is an optional renderer; missing or failed rendering remains an explicit error. Source preview is a separately authorized action, not an export prerequisite.

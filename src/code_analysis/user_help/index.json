@@ -22,7 +22,7 @@
     },
     {
       "name": "user-guide.html",
-      "sha256": "418d7dc3f5b090154bf08c2b3823c4692fec1f44027445dd29667ecb38633cc0"
+      "sha256": "b3fafc2ba2bd65f504f54fc51842b6f8ecf1108220fda17bebc394bf2c58779b"
     }
   ],
   "configuration": "commonmark;html=false;tables=true;highlight=false;links=closed-v1",
@@ -720,7 +720,7 @@
     },
     {
       "name": "docs/ui-guide.md",
-      "sha256": "9d4597293c1b964641841d0414c2faf3f6db7d463d267d583e8e8277639841f1"
+      "sha256": "0b1a5d19f9d8e2fc61e6887839038b500fd20c9f8bbfb1ad96cc0138a1c2515d"
     }
   ]
 }

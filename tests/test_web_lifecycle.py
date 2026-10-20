@@ -15,7 +15,9 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 import pytest
+from browser_navigation import reveal_navigation
 from pydantic import ValidationError
+from test_code_browser_web import browser_source as _browser_source
 
 from code_analysis.cli import main
 from code_analysis.web_launcher import (
@@ -31,6 +33,8 @@ from code_analysis.web_launcher import (
 )
 from code_analysis.web_lifecycle import UIShutdownRequest
 from code_analysis.web_server import create_server
+
+browser_source = _browser_source
 
 
 def options(tmp_path, **changes):
@@ -382,6 +386,9 @@ def test_browser_close_preserves_server_and_explicit_stop_uses_toolkit(running_s
             page.close()
             assert not running_server.stopping
             page = browser.new_page()
+            page.add_init_script(
+                "window.closeAttempts = 0; window.close = () => { window.closeAttempts += 1; };"
+            )
             page.goto(url)
             page.get_by_role("button", name="Stop Code Analysis", exact=True).click()
             dialog = page.get_by_role("dialog", name="Stop Code Analysis?", exact=True)
@@ -393,6 +400,158 @@ def test_browser_close_preserves_server_and_explicit_stop_uses_toolkit(running_s
             playwright.expect(
                 page.get_by_role("status").filter(has_text="Shutdown requested")
             ).to_be_visible()
+            playwright.expect(
+                page.get_by_role("heading", name="Code Analysis session closed")
+            ).to_be_visible()
+            assert page.evaluate("window.closeAttempts") == 1
+            assert page.get_by_role("button").count() == 0
+            assert page.get_by_role("navigation").count() == 0
+            assert page.title() == "Code Analysis — session closed"
+            requests = []
+            page.on("request", lambda request: requests.append(request.url))
+            page.evaluate(
+                "history.pushState({}, '', '#browse');"
+                "dispatchEvent(new PopStateEvent('popstate'));"
+                "dispatchEvent(new HashChangeEvent('hashchange'));"
+            )
+            page.wait_for_timeout(150)
+            assert not requests
+            playwright.expect(
+                page.get_by_role("heading", name="Code Analysis session closed")
+            ).to_be_visible()
             assert running_server.stopping
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+def test_explicit_stop_closes_script_window_with_confirmed_dirty_draft(
+    running_server, browser_source, engine
+):
+    playwright = pytest.importorskip("playwright.sync_api")
+    source, service = browser_source
+    original = source.read_bytes()
+    running_server.app = replace(
+        running_server.app, service=service, source_root=source.parent.resolve(strict=True)
+    )
+    url = f"http://127.0.0.1:{running_server.server_address[1]}/?token=lifecycle-test"
+    with playwright.sync_playwright() as runtime:
+        browser = getattr(runtime, engine).launch()
+        try:
+            opener = browser.new_page()
+            opener.set_content('<button id="open">Open Code Analysis</button>')
+            opener.locator("#open").evaluate(
+                "(button, url) => button.onclick = () => window.open(url, '_blank')", url
+            )
+            with opener.expect_popup() as opened:
+                opener.get_by_role("button", name="Open Code Analysis").click()
+            page = opened.value
+            page.locator(".cards").wait_for()
+            reveal_navigation(page, "Browse code").click()
+            page.locator('.code-browser-list [data-browse-identity^="source-file-"]').click()
+            playwright.expect(page.locator(".code-browser-source")).to_contain_text(
+                "bound: Source bytes match", timeout=5000
+            )
+            page.get_by_role(
+                "button", name="Edit draft from verified original source", exact=True
+            ).click()
+            editor = page.locator(".code-browser-source textarea")
+            editor.fill("# Unsaved session draft\n")
+            page.get_by_role("button", name="Stop Code Analysis", exact=True).click()
+            playwright.expect(
+                page.get_by_role("dialog", name="Stop Code Analysis?", exact=True)
+            ).to_contain_text("Session-only drafts will be lost")
+            page.get_by_role("button", name="Keep running", exact=True).click()
+            playwright.expect(editor).to_have_value("# Unsaved session draft\n")
+            assert not running_server.stopping
+            page.get_by_role("button", name="Stop Code Analysis", exact=True).click()
+            with page.expect_event("close"):
+                page.get_by_role("button", name="Stop server", exact=True).click()
+            assert page.is_closed() and not opener.is_closed()
+            assert running_server.stopping
+            assert source.read_bytes() == original
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+@pytest.mark.parametrize("failure", ["provider", "wrong-instance", "not-stopping"])
+def test_failed_shutdown_does_not_close_or_disable_application(running_server, engine, failure):
+    playwright = pytest.importorskip("playwright.sync_api")
+    url = f"http://127.0.0.1:{running_server.server_address[1]}/?token=lifecycle-test"
+    with playwright.sync_playwright() as runtime:
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page()
+            page.add_init_script(
+                "window.closeAttempts = 0; window.close = () => { window.closeAttempts += 1; };"
+            )
+            result = running_server.lifecycle_status().model_dump(mode="json")
+            if failure == "provider":
+                result = {"error": {"message": "Synthetic shutdown failure"}}
+            elif failure == "wrong-instance":
+                result.update(stopping=True, instance_id="0" * 32)
+            page.route(
+                "**/api/session/stop",
+                lambda route: route.fulfill(
+                    status=500 if failure == "provider" else 200,
+                    content_type="application/json",
+                    body=json.dumps(result),
+                ),
+            )
+            page.goto(url)
+            page.get_by_role("button", name="Stop Code Analysis", exact=True).click()
+            page.get_by_role("button", name="Stop server", exact=True).click()
+            playwright.expect(
+                page.get_by_role("button", name="Stop Code Analysis", exact=True)
+            ).to_be_enabled()
+            message = (
+                "Synthetic shutdown failure"
+                if failure == "provider"
+                else "The server did not confirm shutdown"
+            )
+            playwright.expect(page.get_by_role("status").filter(has_text=message)).to_be_visible()
+            assert page.evaluate("window.closeAttempts") == 0
+            assert not running_server.stopping
+            assert page.get_by_role("heading", name="Code Analysis session closed").count() == 0
+            page.get_by_role("button", name="Collect / plan", exact=True).click()
+            playwright.expect(
+                page.get_by_role("heading", name="Collection setup", exact=True)
+            ).to_be_visible()
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "webkit"])
+def test_shutdown_cancels_pending_render_without_reviving_interface(running_server, engine):
+    playwright = pytest.importorskip("playwright.sync_api")
+    url = f"http://127.0.0.1:{running_server.server_address[1]}/?token=lifecycle-test"
+    with playwright.sync_playwright() as runtime:
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page()
+            page.add_init_script("window.close = () => {};")
+            page.goto(url)
+            page.get_by_role("heading", name="What would you like to investigate?").wait_for()
+            held = []
+            page.route("**/api/collection", lambda route: held.append(route))
+            page.get_by_role("button", name="Collect / plan", exact=True).click()
+            for _ in range(100):
+                if held:
+                    break
+                page.wait_for_timeout(10)
+            assert held
+            page.get_by_role("button", name="Stop Code Analysis", exact=True).click()
+            page.get_by_role("button", name="Stop server", exact=True).click()
+            playwright.expect(
+                page.get_by_role("heading", name="Code Analysis session closed")
+            ).to_be_visible()
+            for route in held:
+                route.fulfill(status=200, content_type="application/json", body="{}")
+            page.wait_for_timeout(100)
+            playwright.expect(
+                page.get_by_role("heading", name="Code Analysis session closed")
+            ).to_be_visible()
+            assert page.get_by_role("button").count() == 0
         finally:
             browser.close()
