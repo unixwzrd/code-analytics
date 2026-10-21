@@ -614,6 +614,71 @@
         "behavior-event-f730a4886ef0ae87be2d"
       ],
       "behavioral_invariant_ids": [
+        "behavior-invariant-1097771644e871090f24",
+        "behavior-invariant-5f77506fe519c5921609",
+        "behavior-invariant-a3c716fcf8f9a4845b33"
+      ],
+      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
+      "completeness": "partial",
+      "configuration_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
+      "cost_estimate_id": "abstraction-cost-293ba213ff57cf065969",
+      "counter_evidence_ids": [],
+      "duplicate_ids": [
+        "duplicate-5f2c55a7148c0fea1242"
+      ],
+      "evidence_ids": [
+        "evidence-4a88e063918c12328faf",
+        "evidence-1303915cd7d81ec2039c"
+      ],
+      "failed_gate_count": 0,
+      "limitations": [
+        "Duplicate evidence is not refactoring authorization.",
+        "syntax evidence cannot establish semantic equivalence"
+      ],
+      "observation_id": "candidate-observation-4ccd2742b2f67da8a7c7",
+      "owner_alternative_ids": [
+        "owner-alternative-167ca041b796e999da58",
+        "owner-alternative-27f45c9182fe1a2ef500",
+        "owner-alternative-867fbc3274cbe4970f7d",
+        "owner-alternative-e060c6f54d602653b7d9"
+      ],
+      "proposal_ids": [],
+      "qualification_requirement_ids": [
+        "candidate-qualification-15a77b0990b526c2922b",
+        "candidate-qualification-15e0b0fd85894145e8b3",
+        "candidate-qualification-2ea13cb6f39ee4b2dba1",
+        "candidate-qualification-76df64380b923230327d",
+        "candidate-qualification-857a42d43d5ed06d2922",
+        "candidate-qualification-906b32663fb994f721ee",
+        "candidate-qualification-aa0fe391394192d22d76",
+        "candidate-qualification-b28cbae61808bbbdff7c",
+        "candidate-qualification-dfdbd7f0b42d25b896c4"
+      ],
+      "responsibility_ids": [],
+      "run_identity_sha256": "b41e706e53be89cf277e6a03d335a714efa87ebe5b39cb1b2110a9597fd869d8",
+      "source_sha256s": [
+        "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
+        "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
+      ],
+      "state": "observed",
+      "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
+      "unresolved_gate_count": 0
+    },
+    {
+      "behavioral_difference_ids": [],
+      "behavioral_event_ids": [
+        "behavior-event-232961f7050ab90a09b5",
+        "behavior-event-2675214393522c140ac8",
+        "behavior-event-3ecb88d37e7c97ae980f",
+        "behavior-event-414070bc2754901dd3b3",
+        "behavior-event-959c691edd55470649f6",
+        "behavior-event-b69d7794048f0a0acab1",
+        "behavior-event-c0b8a2d6398c37680c5f",
+        "behavior-event-cd0887f56475dd96e049",
+        "behavior-event-dd8750faa4ca56ccc6d8",
+        "behavior-event-f730a4886ef0ae87be2d"
+      ],
+      "behavioral_invariant_ids": [
         "behavior-invariant-6679a8d835801ae8bda4",
         "behavior-invariant-7c5a9d51aed06892afd9",
         "behavior-invariant-ad58c445f9c89a1479d5"
@@ -633,7 +698,7 @@
         "Phase 4 test-impact evidence is unavailable.",
         "Static graph simulation does not establish runtime behavior or authorize source changes."
       ],
-      "observation_id": "candidate-observation-4d04ce4f333c6cc73c57",
+      "observation_id": "candidate-observation-bcf5e176276ecd0f5980",
       "owner_alternative_ids": [
         "owner-alternative-5a52767507033aa88a5f",
         "owner-alternative-c042f23719b90ba7df97",
@@ -657,7 +722,7 @@
       "responsibility_ids": [
         "responsibility-3b8985fe52cd4fd3236e"
       ],
-      "run_identity_sha256": "c39413092b99d5ede7db7ff67945ca99ed7576575b6c974f9185575a3134b22b",
+      "run_identity_sha256": "b41e706e53be89cf277e6a03d335a714efa87ebe5b39cb1b2110a9597fd869d8",
       "source_sha256s": [
         "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
         "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
@@ -700,7 +765,7 @@
         "Phase 4 test-impact evidence is unavailable.",
         "Static graph simulation does not establish runtime behavior or authorize source changes."
       ],
-      "observation_id": "candidate-observation-cd5d134826a27a12f094",
+      "observation_id": "candidate-observation-e967f715ee9a0c7cc582",
       "owner_alternative_ids": [
         "owner-alternative-225431c559fbb5a24b0e",
         "owner-alternative-8c9f3163a8faaef7589f",
@@ -724,7 +789,7 @@
       "responsibility_ids": [
         "responsibility-3b8985fe52cd4fd3236e"
       ],
-      "run_identity_sha256": "c39413092b99d5ede7db7ff67945ca99ed7576575b6c974f9185575a3134b22b",
+      "run_identity_sha256": "b41e706e53be89cf277e6a03d335a714efa87ebe5b39cb1b2110a9597fd869d8",
       "source_sha256s": [
         "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
         "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
@@ -732,71 +797,6 @@
       "state": "blocked",
       "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
       "unresolved_gate_count": 2
-    },
-    {
-      "behavioral_difference_ids": [],
-      "behavioral_event_ids": [
-        "behavior-event-232961f7050ab90a09b5",
-        "behavior-event-2675214393522c140ac8",
-        "behavior-event-3ecb88d37e7c97ae980f",
-        "behavior-event-414070bc2754901dd3b3",
-        "behavior-event-959c691edd55470649f6",
-        "behavior-event-b69d7794048f0a0acab1",
-        "behavior-event-c0b8a2d6398c37680c5f",
-        "behavior-event-cd0887f56475dd96e049",
-        "behavior-event-dd8750faa4ca56ccc6d8",
-        "behavior-event-f730a4886ef0ae87be2d"
-      ],
-      "behavioral_invariant_ids": [
-        "behavior-invariant-1097771644e871090f24",
-        "behavior-invariant-5f77506fe519c5921609",
-        "behavior-invariant-a3c716fcf8f9a4845b33"
-      ],
-      "candidate_id": "refactor-candidate-d128fb5cdbfbc30ac03a",
-      "completeness": "partial",
-      "configuration_sha256": "b205ba4c832f34a63d08f145cf1d8fbd248d04f59cdac566cf64a301a61c1a20",
-      "cost_estimate_id": "abstraction-cost-293ba213ff57cf065969",
-      "counter_evidence_ids": [],
-      "duplicate_ids": [
-        "duplicate-5f2c55a7148c0fea1242"
-      ],
-      "evidence_ids": [
-        "evidence-4a88e063918c12328faf",
-        "evidence-1303915cd7d81ec2039c"
-      ],
-      "failed_gate_count": 0,
-      "limitations": [
-        "Duplicate evidence is not refactoring authorization.",
-        "syntax evidence cannot establish semantic equivalence"
-      ],
-      "observation_id": "candidate-observation-df9795b5d8824ee33405",
-      "owner_alternative_ids": [
-        "owner-alternative-167ca041b796e999da58",
-        "owner-alternative-27f45c9182fe1a2ef500",
-        "owner-alternative-867fbc3274cbe4970f7d",
-        "owner-alternative-e060c6f54d602653b7d9"
-      ],
-      "proposal_ids": [],
-      "qualification_requirement_ids": [
-        "candidate-qualification-15a77b0990b526c2922b",
-        "candidate-qualification-15e0b0fd85894145e8b3",
-        "candidate-qualification-2ea13cb6f39ee4b2dba1",
-        "candidate-qualification-76df64380b923230327d",
-        "candidate-qualification-857a42d43d5ed06d2922",
-        "candidate-qualification-906b32663fb994f721ee",
-        "candidate-qualification-aa0fe391394192d22d76",
-        "candidate-qualification-b28cbae61808bbbdff7c",
-        "candidate-qualification-dfdbd7f0b42d25b896c4"
-      ],
-      "responsibility_ids": [],
-      "run_identity_sha256": "c39413092b99d5ede7db7ff67945ca99ed7576575b6c974f9185575a3134b22b",
-      "source_sha256s": [
-        "45ff1956fff11488b4f3950ac0ff7d6a80ff79029cc89e6e12453ffaa1fe7b12",
-        "4b834d6b035bc20be901ec0ee294440e4ce9c363e4ca068bfacb230449648eea"
-      ],
-      "state": "observed",
-      "target_identity_sha256": "9291e2f5e2a2fadb150518a68f3982b8e56b7d3969caf8b204a3d993ec26077c",
-      "unresolved_gate_count": 0
     }
   ],
   "candidate_qualification_requirements": [
@@ -2580,7 +2580,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b2"
+      "version": "0.2.0b3"
     },
     {
       "completeness": "complete",
@@ -2597,7 +2597,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b2"
+      "version": "0.2.0b3"
     },
     {
       "completeness": "complete",
@@ -2686,7 +2686,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-eb1d37c6f0cbddf92ee7",
       "candidate_id": "refactor-candidate-0fe28c81ea222124d3d8",
-      "candidate_observation_id": "candidate-observation-cd5d134826a27a12f094",
+      "candidate_observation_id": "candidate-observation-e967f715ee9a0c7cc582",
       "change_coupling_ids": [],
       "clone_cluster_ids": [],
       "compatibility_concerns": [
@@ -2951,7 +2951,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-671421bde844b8f7bf2c",
       "candidate_id": "refactor-candidate-8ceffc2f3a7e0bab50ed",
-      "candidate_observation_id": "candidate-observation-4d04ce4f333c6cc73c57",
+      "candidate_observation_id": "candidate-observation-bcf5e176276ecd0f5980",
       "change_coupling_ids": [],
       "clone_cluster_ids": [],
       "compatibility_concerns": [
@@ -3230,7 +3230,7 @@
       "state_resource_ids": []
     }
   ],
-  "run_identity_sha256": "71489053cbf5a6a86e0606fa7d1ac6bde70bc4ec66e861a8578b1d10312ded00",
+  "run_identity_sha256": "356eda5f46225bba7997447e1d4d650ebdd3c752b4a96f48094d33a2567db000",
   "schema_name": "code-analysis-report",
   "schema_version": "1.0.0",
   "section_coverage": [
@@ -3586,112 +3586,7 @@
   ],
   "static_call_occurrences": [
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "lowered.replaceAll",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-5521936c80279b7a9fb1"
-      ],
-      "language": "javascript",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-0aa1ad8ca88e135fb7fd",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 7,
-          "definition_line": 1,
-          "kind": "function",
-          "name": "normalize"
-        }
-      ],
-      "source_file_id": "source-file-7acf71e06d71ff847330",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "Error",
-      "conditional": true,
-      "deferred": true,
-      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-35c4f26b94df98510c0a"
-      ],
-      "language": "javascript",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-0e984f7f5491b7f50e97",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 7,
-          "definition_line": 1,
-          "kind": "function",
-          "name": "normalize"
-        }
-      ],
-      "source_file_id": "source-file-7acf71e06d71ff847330",
-      "syntax_kind": "constructor"
-    },
-    {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "raw.trim",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-7e5483b37635350f6ba6"
-      ],
-      "language": "javascript",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "main.js",
-      "occurrence_id": "call-occurrence-1da38d27443ac6fe7022",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 7,
-          "definition_line": 3,
-          "kind": "function",
-          "name": "transform"
-        }
-      ],
-      "source_file_id": "source-file-dc1116f671e2072fc963",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
       "callee_spelling": "trimmed.toLowerCase",
       "conditional": false,
       "deferred": true,
@@ -3707,7 +3602,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "main.js",
-      "occurrence_id": "call-occurrence-5415b0b6a7fb90c5011d",
+      "occurrence_id": "call-occurrence-096498255c313906d48d",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3726,23 +3621,23 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "String",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "JSON.stringify",
       "conditional": false,
       "deferred": true,
-      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
       "evaluation_context": "function-body",
       "evaluation_unknown": false,
       "evidence_ids": [
-        "evidence-ea158a46021c681d9fda"
+        "evidence-e005359eefc78d2d1664"
       ],
       "language": "javascript",
       "limitations": [
         "callee-spelling-does-not-establish-name-binding-or-dispatch",
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
-      "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-628b0c287bd993365fe5",
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-0cab63dbf46dc6a21405",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3752,32 +3647,32 @@
         },
         {
           "definition_column": 7,
-          "definition_line": 1,
+          "definition_line": 3,
           "kind": "function",
-          "name": "normalize"
+          "name": "transform"
         }
       ],
-      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "source_file_id": "source-file-dc1116f671e2072fc963",
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "raw.trim",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "normalize",
       "conditional": false,
       "deferred": true,
-      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
       "evaluation_context": "function-body",
       "evaluation_unknown": false,
       "evidence_ids": [
-        "evidence-6dce88e8c11b917c7970"
+        "evidence-ff7e2b80cf54ce658659"
       ],
       "language": "javascript",
       "limitations": [
         "callee-spelling-does-not-establish-name-binding-or-dispatch",
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
-      "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-67549eaf68a482d6e0b0",
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-2cbb58bea9cf46f257e2",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3787,16 +3682,16 @@
         },
         {
           "definition_column": 7,
-          "definition_line": 1,
+          "definition_line": 3,
           "kind": "function",
-          "name": "normalize"
+          "name": "transform"
         }
       ],
-      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "source_file_id": "source-file-dc1116f671e2072fc963",
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
       "callee_spelling": "JSON.stringify",
       "conditional": false,
       "deferred": true,
@@ -3812,7 +3707,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-7075e3b337e6548dc3a6",
+      "occurrence_id": "call-occurrence-3e84b19c211b23d8f35d",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3831,7 +3726,182 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "raw.trim",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-6dce88e8c11b917c7970"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-52a22f1b4d72156cfe05",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "lowered.replaceAll",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-5521936c80279b7a9fb1"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-7a794e67f7b8e95fe2e6",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "trimmed.toLowerCase",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-d0f549f1f22760d4ef5d"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-7ba8f001bf80eb428403",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "String",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-de8a12d26381ec91f0cb"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "main.js",
+      "occurrence_id": "call-occurrence-8f2882b5dac401a35bd8",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 3,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "Error",
+      "conditional": true,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-35c4f26b94df98510c0a"
+      ],
+      "language": "javascript",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-991d85c8ad199ce6b008",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 7,
+          "definition_line": 1,
+          "kind": "function",
+          "name": "normalize"
+        }
+      ],
+      "source_file_id": "source-file-7acf71e06d71ff847330",
+      "syntax_kind": "constructor"
+    },
+    {
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
       "callee_spelling": "Error",
       "conditional": true,
       "deferred": true,
@@ -3847,7 +3917,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "main.js",
-      "occurrence_id": "call-occurrence-79bc5bf8a8bc79e1da99",
+      "occurrence_id": "call-occurrence-9a33a460af935243bfc9",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3866,15 +3936,15 @@
       "syntax_kind": "constructor"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "normalize",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
+      "callee_spelling": "raw.trim",
       "conditional": false,
       "deferred": true,
       "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
       "evaluation_context": "function-body",
       "evaluation_unknown": false,
       "evidence_ids": [
-        "evidence-ff7e2b80cf54ce658659"
+        "evidence-7e5483b37635350f6ba6"
       ],
       "language": "javascript",
       "limitations": [
@@ -3882,7 +3952,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "main.js",
-      "occurrence_id": "call-occurrence-95945568090efa95a014",
+      "occurrence_id": "call-occurrence-a88a3f70d5dae84899c1",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3901,42 +3971,7 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "trimmed.toLowerCase",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-d0f549f1f22760d4ef5d"
-      ],
-      "language": "javascript",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "shared.js",
-      "occurrence_id": "call-occurrence-cbe8bab7362217323883",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 7,
-          "definition_line": 1,
-          "kind": "function",
-          "name": "normalize"
-        }
-      ],
-      "source_file_id": "source-file-7acf71e06d71ff847330",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
       "callee_spelling": "lowered.replaceAll",
       "conditional": false,
       "deferred": true,
@@ -3952,7 +3987,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "main.js",
-      "occurrence_id": "call-occurrence-cd439522a3ea3cb022e2",
+      "occurrence_id": "call-occurrence-abbfe1ce065147e07fca",
       "scope_path": [
         {
           "definition_column": 0,
@@ -3971,58 +4006,23 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
-      "callee_spelling": "JSON.stringify",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-e005359eefc78d2d1664"
-      ],
-      "language": "javascript",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "main.js",
-      "occurrence_id": "call-occurrence-e170fba76098e99872b7",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 7,
-          "definition_line": 3,
-          "kind": "function",
-          "name": "transform"
-        }
-      ],
-      "source_file_id": "source-file-dc1116f671e2072fc963",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "bb497ba35b31e6357c811115bfb6c698b7488fe8c2489680f0778d9015424a3f",
+      "analysis_identity_sha256": "177b6e5fca609840145127b02d7f44f59e2a7b19584ae02035e67dbd2acb06bc",
       "callee_spelling": "String",
       "conditional": false,
       "deferred": true,
-      "enclosing_subject_id": "subject-8a8904dbf16de495a5e6",
+      "enclosing_subject_id": "subject-ed2f62b844893bbb2fdd",
       "evaluation_context": "function-body",
       "evaluation_unknown": false,
       "evidence_ids": [
-        "evidence-de8a12d26381ec91f0cb"
+        "evidence-ea158a46021c681d9fda"
       ],
       "language": "javascript",
       "limitations": [
         "callee-spelling-does-not-establish-name-binding-or-dispatch",
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
-      "module_name": "main.js",
-      "occurrence_id": "call-occurrence-fe2f8cbf615003cee153",
+      "module_name": "shared.js",
+      "occurrence_id": "call-occurrence-b390d98f56e7bfaee10a",
       "scope_path": [
         {
           "definition_column": 0,
@@ -4032,12 +4032,12 @@
         },
         {
           "definition_column": 7,
-          "definition_line": 3,
+          "definition_line": 1,
           "kind": "function",
-          "name": "transform"
+          "name": "normalize"
         }
       ],
-      "source_file_id": "source-file-dc1116f671e2072fc963",
+      "source_file_id": "source-file-7acf71e06d71ff847330",
       "syntax_kind": "call"
     }
   ],
@@ -4226,7 +4226,7 @@
       "target_text": null
     }
   ],
-  "tool_version": "0.2.0b2",
+  "tool_version": "0.2.0b3",
   "unresolved_edges": [],
   "validation_patterns": []
 }

@@ -174,7 +174,7 @@ def test_browser_source_preview_is_text_and_rechecks_hash(source_report) -> None
                 assert not page.get_by_role("dialog").is_visible()
                 assert node.evaluate("element => element === document.activeElement")
                 reveal_navigation(page, "Modules").click()
-                page.get_by_role("button", name="sample", exact=True).click()
+                page.get_by_role("button", name="Module details for sample", exact=True).click()
                 page.get_by_role("heading", name="Symbols and source").wait_for()
             finally:
                 browser.close()

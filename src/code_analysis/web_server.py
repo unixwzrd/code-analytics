@@ -106,6 +106,9 @@ _ASSETS: Final = {
     "/project_browser.js": ("project_browser.js", "text/javascript; charset=utf-8"),
     "/collection_picker.js": ("collection_picker.js", "text/javascript; charset=utf-8"),
     "/code_drafts.js": ("code_drafts.js", "text/javascript; charset=utf-8"),
+    "/source_relationships.js": ("source_relationships.js", "text/javascript; charset=utf-8"),
+    "/source_findings.js": ("source_findings.js", "text/javascript; charset=utf-8"),
+    "/application_info.js": ("application_info.js", "text/javascript; charset=utf-8"),
     "/icon.svg": ("icon.svg", "image/svg+xml"),
     "/styles.css": ("styles.css", "text/css; charset=utf-8"),
     "/localops_adapter.js": ("localops_adapter.js", "text/javascript; charset=utf-8"),
@@ -269,6 +272,13 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             return
         try:
             params = parse_qs(parsed.query, keep_blank_values=True)
+            if parsed.path == "/api/application-info":
+                from code_analysis.web_identity import application_info
+
+                if params:
+                    raise ValueError("application identity accepts no selectors")
+                self._json(HTTPStatus.OK, application_info().model_dump(mode="json"))
+                return
             if parsed.path == "/api/session":
                 if params:
                     raise ValueError("session status accepts no selectors")
@@ -837,6 +847,51 @@ class ReportRequestHandler(BaseHTTPRequestHandler):
             if parsed.path.startswith("/api/project/"):
                 assert service is not None
                 self._project_get(parsed.path, params, service)
+                return
+            if parsed.path in {"/api/code-browser/findings", "/api/code-browser/relationships"}:
+                from code_analysis.source_findings import SourceFindingRequest
+                from code_analysis.source_relationships import SourceRelationshipRequest
+
+                allowed = {"run", "compare_run", "report_sha256", "revision", "path", "max_records"}
+                if parsed.path.endswith("relationships"):
+                    allowed.add("identity")
+                if set(params) - allowed:
+                    raise ValueError("unsupported source investigation parameters")
+                if parsed.path.endswith("findings"):
+                    markers = service.source_findings(
+                        SourceFindingRequest(
+                            report_sha256=_single(params, "report_sha256", ""),
+                            revision=_single_int(params, "revision", 0),
+                            path=_single(params, "path", ""),
+                            max_records=_single_int(params, "max_records", 500),
+                        )
+                    )
+                    self._json(
+                        HTTPStatus.OK,
+                        markers.model_dump(mode="json"),
+                        {
+                            "X-Analysis-Completeness": markers.completeness.value,
+                            "X-Projection-Truncated": str(markers.truncated).lower(),
+                        },
+                    )
+                else:
+                    relationships = service.source_relationships(
+                        SourceRelationshipRequest(
+                            report_sha256=_single(params, "report_sha256", ""),
+                            revision=_single_int(params, "revision", 0),
+                            path=_single(params, "path", ""),
+                            identity=_single(params, "identity", ""),
+                            max_records=_single_int(params, "max_records", 100),
+                        )
+                    )
+                    self._json(
+                        HTTPStatus.OK,
+                        relationships.model_dump(mode="json"),
+                        {
+                            "X-Analysis-Completeness": relationships.completeness.value,
+                            "X-Projection-Truncated": str(relationships.truncated).lower(),
+                        },
+                    )
                 return
             if parsed.path in {
                 "/api/code-browser",

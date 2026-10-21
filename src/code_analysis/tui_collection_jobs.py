@@ -88,14 +88,26 @@ class CollectionJobsPanel(Vertical):
 
     @work(group="collection-poll")
     async def refresh_jobs(self) -> None:
-        if self.polling or self.busy:
+        if (
+            self.polling
+            or self.busy
+            or not self.is_mounted
+            or not self.is_attached
+            or not self.screen.is_active
+        ):
             return
+        selection = self.query_one("#jobs-selection", Select)
+        detail = self.query_one("#jobs-detail", Static)
+        status = self.query_one("#jobs-status", Static)
         self.polling = True
         try:
             catalog = await asyncio.to_thread(self.session.catalog)
-            if not self.is_mounted:
+            # Children may detach before their parent's unmount event. Keep the
+            # initiating controls, then reject a late result during teardown.
+            if not self.is_mounted or not all(
+                widget.is_attached for widget in (selection, detail, status)
+            ):
                 return
-            selection = self.query_one("#jobs-selection", Select)
             old = selection.value
             identities = {job.job_id for job in catalog.records}
             selection.set_options(
@@ -111,14 +123,15 @@ class CollectionJobsPanel(Vertical):
             job = next((item for item in catalog.records if item.job_id == selection.value), None)
             if job is not None:
                 generation = job.binding.generation_id if job.binding else "unverified/unavailable"
-                self.query_one("#jobs-detail", Static).update(
+                detail.update(
                     plain_text(
                         f"{job.state} · native status {job.status}\n{job.reason}\n"
                         f"Generation: {generation}"
                     )
                 )
         except (OSError, ValueError) as exc:
-            self.query_one("#jobs-status", Static).update(plain_text(str(exc)))
+            if status.is_attached:
+                status.update(plain_text(str(exc)))
         finally:
             self.polling = False
 

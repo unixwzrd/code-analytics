@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import errno
 import marshal
+from threading import Event
 
 import pytest
 
@@ -11,6 +12,49 @@ from code_analysis.browse_index_build import build_browse_index
 from code_analysis.collection_commands import CollectionPlanner
 from code_analysis.collection_service import CollectionSession, CollectionWorkspace
 from code_analysis.web_service import ReportViewService
+
+
+def test_catalog_refresh_does_not_query_children_removed_during_teardown(tmp_path, monkeypatch):
+    pytest.importorskip("textual")
+    from textual.app import App, ComposeResult
+    from textual.widgets import Select
+
+    from code_analysis.tui_collection_jobs import CollectionJobsPanel
+
+    session = CollectionSession(CollectionPlanner(tmp_path))
+    entered, release = Event(), Event()
+    original = session.catalog
+
+    def held_catalog():
+        result = original()
+        entered.set()
+        assert release.wait(5)
+        return result
+
+    monkeypatch.setattr(session, "catalog", held_catalog)
+
+    class TestApp(App):
+        def compose(self) -> ComposeResult:
+            yield CollectionJobsPanel(session, lambda index: None)
+
+    async def exercise():
+        app = TestApp()
+        async with app.run_test() as pilot:
+            assert await asyncio.to_thread(entered.wait, 5)
+            panel = app.query_one(CollectionJobsPanel)
+            await panel.query_one("#jobs-selection", Select).remove()
+            assert panel.is_mounted
+            release.set()
+            await app.workers.wait_for_complete()
+            await panel.remove()
+            await pilot.pause()
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        release.set()
+        session.close()
+        session.planner.close()
 
 
 @pytest.mark.parametrize("bound", [True, False])

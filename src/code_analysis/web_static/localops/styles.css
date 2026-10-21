@@ -563,10 +563,20 @@ summary:focus-visible,
 .lui-editor__toolbar input[type="checkbox"] { width: auto; }
 .lui-editor__toolbar label { display: flex; gap: var(--lui-space-2); align-items: center; }
 .lui-editor__status { margin: 0; overflow-wrap: anywhere; }
+.lui-editor__annotations { position: relative; flex: 0 0 5rem; overflow: auto; min-width: 0; border: var(--lui-border); border-radius: var(--lui-radius-sm); padding: 4px; }
+.lui-editor__annotations [role="option"] { overflow-wrap: anywhere; padding: 4px 8px; border-inline-start: 3px solid transparent; cursor: pointer; }
+.lui-editor__annotations [data-tone="info"] { border-inline-start-color: var(--lui-color-accent); }
+.lui-editor__annotations [data-tone="success"] { border-inline-start-color: var(--lui-color-success); }
+.lui-editor__annotations [data-tone="warning"] { border-inline-start-color: var(--lui-color-warning); }
+.lui-editor__annotations [data-tone="error"] { border-inline-start-color: var(--lui-color-danger); }
+.lui-editor__annotations [aria-selected="true"] { outline: 2px solid var(--lui-color-accent); outline-offset: -2px; font-weight: 700; }
+.lui-editor__annotations:focus-visible { outline: 2px solid var(--lui-color-accent); outline-offset: 2px; }
+.lui-editor__gutter [data-annotations]:not([data-annotations="0"]) { border-inline-start: 2px solid var(--lui-color-muted); }
+.lui-editor__gutter [data-selected="true"] { border-inline-start: 3px solid var(--lui-color-accent); font-weight: 700; }
 .lui-editor__viewport { position: relative; display: flex; flex: 1; min-height: 12rem; min-width: 0; overflow: hidden; }
 .lui-editor textarea { flex: 1; width: 0; min-width: 0; resize: none; margin: 0; padding: 12px; overflow: auto; tab-size: 4; }
 .lui-editor textarea, .lui-editor__gutter, .lui-editor__measure { font: 14px/21px var(--lui-font-mono); box-sizing: border-box; }
-.lui-editor__gutter { width: 4rem; flex-shrink: 0; overflow: hidden; padding: 12px 6px; text-align: right; color: var(--lui-color-muted); }
+.lui-editor__gutter { width: calc(7ch + 16px); flex-shrink: 0; overflow: hidden; padding: 12px 6px; border-block: 1px solid transparent; text-align: right; color: var(--lui-color-muted); white-space: nowrap; }
 .lui-editor__measure { position: absolute; visibility: hidden; pointer-events: none; top: 0; height: 0; overflow: hidden; overflow-wrap: break-word; tab-size: 4; }
 .lui-editor__measure div { min-height: 21px; }
 .lui-result-reader {

@@ -8,6 +8,9 @@
 * { box-sizing:border-box; }
 [hidden] { display:none!important; }
 body { margin:0; color:var(--text); background:var(--lui-color-bg); min-height:100dvh; }
+body:has(.application-info) .lui-shell { height:calc(100dvh - 3.25rem); }
+.application-info { position:fixed; inset:auto 0 0; min-height:3.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.4rem 1rem; background:var(--panel); color:var(--muted); border-top:1px solid var(--line); z-index:15; font-size:.85rem; }
+#application-issue-report textarea { display:block; width:100%; min-height:10rem; margin-block:.5rem 1rem; resize:vertical; }
 button,input { font:inherit; }
 .mark { display:block; width:36px; height:36px; border-radius:9px; }
 .app-brand { display:flex; align-items:center; gap:12px; font-size:1rem; }
@@ -248,6 +251,14 @@ dialog .panel { margin-bottom:12px; }
 /* Saved code browsing; no source writes or draft persistence. */
 .code-browser { display:grid; grid-template-columns:minmax(190px,1fr) minmax(220px,1fr) minmax(280px,1.6fr); gap:12px; }
 .code-browser-toolbar { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:8px; }
+.code-browser[data-source-focused="true"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.code-browser[data-source-focused="true"] .code-browser-source { grid-column:1/-1; }
+.code-browser[data-source-focused="true"][data-active-pane="source"] .code-browser-source { grid-row:2; }
+.code-browser[data-expanded="true"] { grid-template-columns:minmax(0,1fr); }
+.code-browser[data-expanded="true"] > .code-browser-outline,
+.code-browser[data-expanded="true"] > .code-browser-map { display:none; }
+.code-browser-source { min-inline-size:0; }
+.code-browser-source .code-browser-pane { max-height:none; }
 .code-browser-status { overflow-wrap:anywhere; }
 .code-browser section { min-width:0; padding:12px; }
 .code-browser h2 { font-size:1rem; }
@@ -259,11 +270,18 @@ dialog .panel { margin-bottom:12px; }
 .code-browser-list button[aria-pressed="true"] { border-color:var(--accent); }
 .code-browser input { max-width:100%; width:100%; color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:8px; }
 .code-browser-pager { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
-.code-browser-lines { max-width:100%; overflow:auto; border:1px solid var(--line); border-radius:6px; }
-.code-browser-line { display:flex; min-width:max-content; gap:12px; padding-right:10px; }
+.code-browser-lines { max-width:100%; max-height:32rem; overflow:auto; border:1px solid var(--line); border-radius:6px; }
+.code-browser-line { display:flex; min-width:max-content; gap:12px; padding-right:10px; border-inline-start:3px solid transparent; }
 .code-browser-line>button { flex:0 0 58px; text-align:right; border:0; border-radius:0; padding:3px 6px; color:var(--muted); }
 .code-browser-line code { white-space:pre; font:13px/24px ui-monospace,SFMono-Regular,Menlo,monospace; }
 .code-browser-line[data-selected="true"] { background:color-mix(in srgb,var(--accent) 15%,transparent); }
+.code-browser-line[data-severity="warning"], .source-finding-list [data-severity="warning"] { border-inline-start:3px solid #d3a641; }
+.code-browser-line[data-severity="error"], .source-finding-list [data-severity="error"] { border-inline-start:3px solid #db7272; }
+.code-browser-line[data-severity="info"], .source-finding-list [data-severity="info"] { border-inline-start:3px solid var(--accent); }
+.source-line-severity { align-self:center; flex:0 0 4.5rem; font-size:.75rem; color:var(--text); }
+.source-finding-list { padding-inline-start:1rem; }
+.source-finding-list li { padding-inline-start:.6rem; margin-block:.5rem; }
+.source-relationships { border-block-start:1px solid var(--line); margin-block-start:1rem; }
 .code-browser .graph-wrap { max-height:45vh; }
 .code-drafts { margin-top:16px; border-top:1px solid var(--line); }
 .code-drafts-identity { overflow-wrap:anywhere; }
@@ -275,7 +293,8 @@ dialog .panel { margin-bottom:12px; }
 .code-drafts-editor .lui-editor { height:100%; }
 .code-browser .lui-editor input { width:auto; }
 @media (max-width:1100px) {
-  .code-browser { grid-template-columns:minmax(0,1fr); }
+  .code-browser, .code-browser[data-source-focused="true"] { grid-template-columns:minmax(0,1fr); }
+  .code-browser[data-source-focused="true"] .code-browser-source { grid-row:auto; }
   .code-browser > section { display:none; }
   .code-browser[data-active-pane="outline"] .code-browser-outline,
   .code-browser[data-active-pane="map"] .code-browser-map,

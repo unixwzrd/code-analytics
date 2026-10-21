@@ -1,7 +1,7 @@
 {
   "assets_sha256": {
     "chart.js": "c3ce3ddfc1c3fb9fa9a101a6c6b10ebbb5f33a19c0a10bb3fdfe2f13a004d0cb",
-    "code-editor.js": "8268a40d5ccdf531ef33b0bc97b6cf07478f8884f53985a68e56fa8ec28d4db4",
+    "code-editor.js": "431dbdcbda5eae88790f99d1c0f271ec2181c4851c459a517df8a7c1865c7fdd",
     "content-panel.js": "bb0650341def9839d3ce23ca529a4dde9f2b813ce36ab08abdbfeaa021030fd4",
     "contracts.js": "679079ee5a8bcd74eba5b9180e6a675dd208f9fb97ebe726f30a523cc9607a39",
     "data-table.js": "2cec0ea088b58ce189e22e72037db6fc07a1e6c5fc720e254b1d570c1dfc6ecb",
@@ -16,13 +16,13 @@
     "primitives.js": "d5464501b954b0bc9eae8de696a781d393a9e010d988c94bd0d218ca6ead459e",
     "result-reader.js": "818c47b2c9212131571e29a8e90c24ffcd0eac643e1f9aa58380e6f8a4ce08b0",
     "shell.js": "4f6cc0214786cc3d43e1658a2c5b70322efc73cf8b4acaa46f25213ae8739337",
-    "styles.css": "60b7cf9b92777b753af1a1080cf84401277e47c16dcabd0a12e401d885bdb412",
+    "styles.css": "dc688af38969cf427b7019c0c93140561c04c8c5900c537956e78db9dd9525fc",
     "task-monitor.js": "d730a1aee3775a5bbe33551b5a261ca25b5ff5365712658256755e19eabf1949"
   },
   "license": "MIT",
   "name": "LocalOps UI Kit",
   "policy": "Unmodified browser assets from the reviewed wheel; changes belong upstream.",
   "upstream_assets": "packages/web/static/",
-  "version": "0.1.5",
-  "wheel_sha256": "89800189b2c3177eefff40d4bc518c3eb0060ca68f97d375be76fb9d94f20929"
+  "version": "0.3.0",
+  "wheel_sha256": "0ce9d1447085a81d1adabb6850c920b4d699aed127aa8b00367b5951d123dac7"
 }

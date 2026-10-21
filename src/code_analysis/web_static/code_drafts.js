@@ -190,6 +190,7 @@ export class DraftSession {
   constructor() {
     this._entries = new Map();
     this._navigationGuards = new Set();
+    this.wrapLines = false;
   }
 
   registerNavigationGuard(guard) {
@@ -332,6 +333,8 @@ export function mountDraftPane(host, options, session) {
     identity = '',
     sourceAvailable = true,
     onDirtyChange,
+    findings,
+    selectedRange,
   } = options;
   if (!host || !api || !signal || !reportSha256 || !path || revision === undefined || !session) {
     throw new TypeError('mountDraftPane requires host, api, signal, reportSha256, path, revision and session');
@@ -483,6 +486,20 @@ export function mountDraftPane(host, options, session) {
     return true;
   }
 
+  function applyOriginalAnnotations(entry) {
+    if (!editor || !entryMatchesBrowse(entry) || !findings
+        || findings.report_sha256 !== entry.reportSha256 || findings.path !== entry.logicalPath
+        || findings.source_sha256 !== entry.sourceSha256 || editor.getSnapshot().dirty) return;
+    // Retained observations are reusable only on this freshly verified clean
+    // original. No asynchronous result is relabelled with a new editor token.
+    const context = editor.getAnnotationContext();
+    const annotations = findings.records.map(item => ({id: item.annotation_id,
+      label: item.label, description: item.description,
+      startLine: item.start_line, endLine: item.end_line, tone: item.severity}));
+    const result = editor.setAnnotations({context, annotations});
+    if (!result.ok) setStatus(`Original annotations unavailable: ${result.error.message}`);
+  }
+
   function mountEditor(entry, {replace = true} = {}) {
     if (replace) destroyEditor();
     if (!entry.editorId) entry.editorId = allocateEditorId();
@@ -500,6 +517,7 @@ export function mountDraftPane(host, options, session) {
         entry.dirty = snapshot.dirty;
         notifyDirtyForBrowse();
         renderOpenList();
+        if (!snapshot.dirty) applyOriginalAnnotations(entry);
       },
       onCopy: async snapshot => {
         try {
@@ -528,6 +546,19 @@ export function mountDraftPane(host, options, session) {
     });
     editorHost.append(editor.root);
     applySnapshotToEditor(entry);
+    const wrap = editor.root.querySelector('label input[type="checkbox"]');
+    if (wrap.checked !== session.wrapLines) wrap.click();
+    listen(wrap, 'change', () => { session.wrapLines = wrap.checked; });
+    applyOriginalAnnotations(entry);
+    if (selectedRange && entryMatchesBrowse(entry) && !editor.getSnapshot().dirty) {
+      const end = logicalLineCount(entry.baselineLfText);
+      const marker = findings?.records.find(item => item.start_line <= selectedRange.startLine
+        && item.end_line >= selectedRange.startLine);
+      const revealed = marker && editor.revealAnnotation({context: editor.getAnnotationContext(),
+        id: marker.annotation_id}, {focus: false});
+      if (!revealed?.ok) editor.revealLines({startLine: Math.min(selectedRange.startLine, end),
+        endLine: Math.min(selectedRange.endLine, end)}, {focus: false});
+    }
   }
 
   async function switchDraft(key) {

@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a reproducible problem with Code Analysis.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues are public. Do not include credentials, private source, reports, local paths or unredacted logs/screenshots. Nothing from the application is attached automatically.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the problem briefly.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the relevant view and actions, using a minimal public example where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Application and environment
+      description: Review the prefilled summary. Add browser name/version manually if relevant; omit identifying information.
+      placeholder: Application version, OS family, Python version, current view
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Optional redacted screenshots
+      description: Check for private paths, code, tokens and personal information before attaching anything.

@@ -620,9 +620,6 @@ def test_existing_module_evidence_opens_code_browser(browser_source, engine, wid
             reveal_navigation(page, "Modules").click()
             page.locator('[data-kind="navigation"][data-identity]').first.click()
             dialog = page.locator("#evidence-dialog")
-            dialog.get_by_role(
-                "button", name="Browse code at this source", exact=True
-            ).first.click()
             playwright.expect(dialog).not_to_be_visible()
             playwright.expect(page.locator(".code-browser-source")).to_be_visible()
             playwright.expect(page.locator(".code-browser-source")).to_contain_text(

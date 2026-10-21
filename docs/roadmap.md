@@ -12,7 +12,19 @@ The first post-public-beta browsing refinement adds one-activation graph-to-sour
 
 Local collection opening now restores the source location from its owned JSON metadata within the session's collection boundary; Overview explains missing/moved/invalid locations before investigation. Finding investigations open source-first, with concise context and full evidence available on demand rather than an obligatory evidence modal. Source hashes, saved-evidence partiality and authorization boundaries remain unchanged.
 
-## Next user-workflow improvements
+## Next code-investigation usability improvements
+
+Recent walkthrough feedback puts source-centered investigation ahead of persistent project setup. The source workspace, bounded saved relationships, finding markers and version/issue-report controls are implemented; their integrated qualification and renewed human walkthrough remain separate gates. Broader per-view navigation refinement remains ongoing:
+
+1. Give verified source and session drafts enough desktop space for at least 80 actual monospace columns, with explicit source-focused layout and collapsible neighboring panes rather than squeezed editors.
+2. Reveal recorded problem ranges and show concise, accessible finding annotations beside the code. Reusable editor annotation behavior belongs in LocalOps UI Kit; exact toolkit delivery and independent integration qualification remain prerequisites. Edited drafts must not display original findings as newly analyzed results.
+3. Link dependency/analytical rows directly to recorded entities and source, retaining return context. Show severity only when backed by a retained finding; fan-in/fan-out alone does not establish a defect.
+4. Make callers, callees and existing structure/dictionary lineage discoverable. Keep lexical/name-matched, resolved static, unresolved and runtime-observed relationships distinct; saved evidence must not imply complete dispatch or general variable tracing.
+5. Display the running application version persistently and add a nearby GitHub issue-reporting link with a repository-owned bug-report form/template. Distinguish the running version from older report producers; offer only reviewed, editable, privacy-conscious diagnostic prefills, never automatic source/report/log uploads.
+
+These views use retained JSON/profile evidence without rescanning source. Verified source reads remain separately hash-bound and confined. Desktop remains primary, tablet secondary; human walkthrough acceptance stays separate from automated qualification. Broader variable def/use analysis requires a separate design, not a claim that cProfile records variable values.
+
+## Other user-workflow improvements
 
 1. Review first-use feedback: begin unaided, understand unavailable evidence, investigate/return with context, and use Help without losing work.
 2. Add explicit project selection and local profiles with clear source target, browse boundary, trusted interpreter and evidence destination. Preserve active jobs/drafts and single-workspace session ownership.

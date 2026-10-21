@@ -1,13 +1,15 @@
 import {wireGraphDisplay} from './projections.js';
 import {DraftSession, mountDraftPane} from './code_drafts.js';
 import {projectBrowser} from './project_browser.js';
+import {findingsForLine, renderSourceFindings} from './source_findings.js';
+import {renderSourceRelationships} from './source_relationships.js';
 
 // This view presents backend-owned identities and containment. It never parses
 // source, invents call relationships, writes a repository or persists text.
 const HISTORY_KEY = 'codeAnalysisBrowse';
 const BROWSE_PANES = new Set(['outline', 'map', 'source']);
 const SESSION_FIELDS = ['report_sha256', 'path', 'identity', 'search', 'offset', 'line',
-  'revision', 'layer', 'collapsed', 'active_pane'];
+  'revision', 'layer', 'collapsed', 'active_pane', 'source_focused'];
 
 export function codeBrowserSelectionMetadata(session) {
   return Object.fromEntries(SESSION_FIELDS.filter(key => Object.hasOwn(session, key))
@@ -28,7 +30,7 @@ function action(label, callback) {
   return button;
 }
 
-function shell(content, activePane, onPaneChange) {
+function shell(content, activePane, focused, onPaneChange, onLayoutChange) {
   const root = element('div', undefined, 'code-browser');
   const toolbar = element('div', undefined, 'code-browser-toolbar');
   const panels = new Map();
@@ -41,6 +43,7 @@ function shell(content, activePane, onPaneChange) {
     panel.append(heading, body); root.append(panel);
     panels.set(key, body);
     const button = action(title, () => {
+      delete root.dataset.expanded;
       root.dataset.activePane = key;
       onPaneChange(key);
       heading.focus();
@@ -48,6 +51,18 @@ function shell(content, activePane, onPaneChange) {
     toolbar.append(button);
   }
   root.dataset.activePane = activePane;
+  root.dataset.sourceFocused = String(focused);
+  const expand = action('Expand code', () => {
+    root.dataset.activePane = 'source'; root.dataset.sourceFocused = 'true';
+    root.dataset.expanded = 'true';
+    onLayoutChange(true); onPaneChange('source');
+    panels.get('source').parentElement.querySelector('h2').focus();
+  });
+  const restore = action('Restore layout', () => {
+    delete root.dataset.expanded;
+    root.dataset.sourceFocused = 'false'; onLayoutChange(false);
+  });
+  toolbar.append(expand, restore);
   root.prepend(toolbar);
   const status = element('p', 'Loading saved file inventory…', 'hint code-browser-status');
   status.setAttribute('role', 'status');
@@ -225,7 +240,7 @@ function relationshipMap(host, result, session, navigate, signal) {
   wireGraphDisplay(host, signal);
 }
 
-function sourceLines(host, response, selected, navigate, project) {
+function sourceLines(host, response, selected, navigate, project, findings) {
   const preview = response.preview;
   const message = preview.state === 'disabled'
     ? 'Source files are not connected for this analysis yet. Connect the project folder here to display the selected code.'
@@ -241,8 +256,16 @@ function sourceLines(host, response, selected, navigate, project) {
     button.setAttribute('aria-label', `Select original line ${line.number}`);
     const active = selected?.spans.some(span => span.path === preview.logical_path && span.start_line <= line.number && span.end_line >= line.number);
     if (active) row.dataset.selected = 'true';
+    const markers = findingsForLine(findings, line.number);
+    let markerLabel = '';
+    if (markers.length) {
+      row.dataset.severity = markers.some(item => item.severity === 'error') ? 'error'
+        : markers.some(item => item.severity === 'warning') ? 'warning' : 'info';
+      button.title = markers.map(item => `${item.severity}: ${item.label}`).join('\n');
+      if (markers.some(item => item.start_line === line.number)) markerLabel = row.dataset.severity;
+    }
     const text = element('code', line.text);
-    row.append(button, text); code.append(row);
+    row.append(button, element('span', markerLabel, 'source-line-severity'), text); code.append(row);
   }
   host.append(code);
   const pager = element('div', undefined, 'code-browser-pager');
@@ -252,6 +275,8 @@ function sourceLines(host, response, selected, navigate, project) {
   const next = action('Next source lines', () => navigate({line: preview.next_line, identity: ''}));
   next.disabled = preview.next_line === null;
   pager.append(previous, next); host.append(pager);
+  if (findings) renderSourceFindings(host, findings, selected,
+    item => navigate({line: item.start_line, identity: '', offset: 0}));
 }
 
 function detailsForSelection(host, page, select) {
@@ -282,8 +307,10 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
   if (saved?.report_sha256 === reportSha256 && location.hash === '#browse') Object.assign(session, codeBrowserSelectionMetadata(saved));
   if (!BROWSE_PANES.has(session.active_pane)) session.active_pane = session.path ? 'source' : 'outline';
   let paneIntent = 0;
-  const {root, panels, status} = shell(content, session.active_pane, key => {
+  const {root, panels, status} = shell(content, session.active_pane, session.source_focused !== false, key => {
     session.active_pane = key; paneIntent += 1; remember(true);
+  }, focused => {
+    session.source_focused = focused; remember(true);
   });
   const access = element('section'); root.before(access);
   const project = projectBrowser(access, api, options.post, signal, reportSha256, {
@@ -306,10 +333,15 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
   }
   async function navigateSource(patch, {offerSetup = false} = {}) {
     const intent = paneIntent;
-    const accepted = await navigate({...patch, active_pane: 'source'});
+    const initiatingFocus = document.activeElement;
+    const accepted = await navigate({...patch, active_pane: 'source', source_focused: true});
     if (!accepted || signal.aborted || !root.isConnected || intent !== paneIntent) return;
     root.dataset.activePane = 'source'; remember(true);
-    panels.get('source').parentElement.querySelector('h2').focus();
+    // A completed fetch must not steal newer keyboard focus (for example the
+    // next graph node). Removed initiating controls normally leave body focused.
+    if (document.activeElement === initiatingFocus || document.activeElement === document.body) {
+      panels.get('source').parentElement.querySelector('h2').focus();
+    }
     if (offerSetup && sourceState === 'disabled' && !offeredSourceSetup && sourceConnectionAction) {
       const revision = session.revision;
       const opened = await project.requestConnection(sourceConnectionAction,
@@ -323,8 +355,12 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
     const layer = element('select'); layer.setAttribute('aria-label', 'Relationship layer');
     for (const [value, title] of GRAPH_LAYERS) { const option = element('option', title); option.value = value; layer.append(option); }
     layer.value = session.layer || 'containment'; label.append(layer); host.append(label);
-    layer.addEventListener('change', () => navigate({layer: layer.value}));
-    const body = element('div'); host.append(body);
+    layer.addEventListener('change', async () => {
+      const desired = layer.value;
+      const accepted = await navigate({layer: desired});
+      if (!accepted && layer.isConnected && layer.value === desired) layer.value = session.layer || 'containment';
+    });
+    const body = element('div', undefined, 'code-browser-graph-body'); host.append(body);
     if (!page.logical_path) { body.append(element('p', 'Choose a single recorded source location for a focused graph.', 'hint')); return; }
     const graphParams = new URLSearchParams({report_sha256: reportSha256, revision: params.get('revision'), path: page.logical_path, identity: session.identity || '', layer: layer.value, depth: 1, max_nodes: 100, max_edges: 250});
     body.append(element('p', 'Loading saved relationships…', 'hint'));
@@ -344,6 +380,7 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
       if (!current(result) || result.layer !== layer.value || !boundProfile) {
         throw new Error('Saved graph identities disagree with the selected report, profile or revision');
       }
+      body.dataset.relationshipLayer = result.layer;
       relationshipMap(body, result, session, patch => navigateSource(patch, {offerSetup: true}), local);
     } catch (error) {
       if (!signal.aborted && !local.aborted) body.replaceChildren(element('p', `Relationship layer unavailable: ${error.message}. Other saved views remain available.`, 'hint'));
@@ -354,6 +391,11 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
     if (!drafts.canNavigate()) return false;
     if (patch.path !== undefined && patch.path !== session.path
         && !drafts.allowSwitch('Switch original files? Dirty drafts stay in this session; export them before leaving.')) return false;
+    const oldGraph = panels.get('map').querySelector('.code-browser-graph-body');
+    if (oldGraph) {
+      delete oldGraph.dataset.relationshipLayer;
+      oldGraph.replaceChildren(element('p', 'Loading selected relationships…', 'hint'));
+    }
     Object.assign(session, patch); session.revision += 1;
     pending?.abort(); pending = new AbortController();
     const local = pending.signal;
@@ -372,6 +414,7 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
       session.path = page.logical_path || '';
       project.update(session.path);
       root.dataset.activePane = session.active_pane;
+      root.dataset.sourceFocused = String(session.source_focused !== false);
       if (recordHistory) remember();
       status.textContent = `${page.completeness} saved evidence · report ${reportSha256} · source remains read-only`;
       renderOutline(panels.get('outline'), displayed, session, select, navigate);
@@ -388,13 +431,31 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
         if (signal.aborted || local.aborted || !root.isConnected) return false;
         if (current(response)) {
           sourceState = response.preview.state;
-          sourceConnectionAction = sourceLines(body, response, active, navigateSource, project);
+          let findings;
+          if (response.preview.state === 'bound') {
+            try {
+              const markers = await api(`/api/code-browser/findings?${new URLSearchParams({
+                report_sha256: reportSha256, revision, path: page.logical_path})}`, local);
+              if (!current(markers) || markers.path !== page.logical_path
+                  || markers.source_sha256 !== response.preview.expected_sha256) {
+                throw new Error('Finding annotation report/source identity mismatch');
+              }
+              findings = markers;
+            } catch (error) {
+              if (!signal.aborted && !local.aborted) source.append(element('p', `Finding annotations unavailable: ${error.message}`, 'hint'));
+            }
+          }
+          if (signal.aborted || local.aborted || !root.isConnected) return false;
+          sourceConnectionAction = sourceLines(body, response, active, navigateSource, project, findings);
           if (response.preview.state === 'bound' || drafts.size() > 0) {
             const draftHost = element('div'); source.insertBefore(draftHost, body);
             const mapping = element('p', '', 'hint'); source.insertBefore(mapping, body);
             const highlighted = [...body.querySelectorAll('[data-selected="true"]')];
             mountDraftPane(draftHost, {api, signal: local, reportSha256,
               path: page.logical_path, revision, identity: session.identity || '',
+              findings,
+              selectedRange: {startLine: session.line || active?.spans[0]?.start_line || 1,
+                endLine: Math.max(session.line || 1, active?.spans[0]?.end_line || 1)},
               sourceAvailable: response.preview.state === 'bound',
               onDirtyChange: dirty => {
                 for (const row of highlighted) {
@@ -413,10 +474,26 @@ export async function codeBrowser(content, api, signal, reportSha256, session = 
       } catch (error) {
         if (!signal.aborted && !local.aborted) body.replaceChildren(element('p', `Source unavailable: ${error.message}. Saved analytics remain available.`, 'hint'));
       }
+      if (active && !local.aborted) {
+        const related = element('div'); source.append(related);
+        try {
+          const relations = await api(`/api/code-browser/relationships?${new URLSearchParams({
+            report_sha256: reportSha256, revision, identity: active.identity, path: page.logical_path})}`, local);
+          if (!current(relations) || relations.selected.identity !== active.identity) {
+            throw new Error('Relationship report or selection identity mismatch');
+          }
+          renderSourceRelationships(related, relations, select);
+        } catch (error) {
+          if (!signal.aborted && !local.aborted) related.textContent = `Related code unavailable: ${error.message}`;
+        }
+      }
       await graphLoading;
       return !signal.aborted && !local.aborted && root.isConnected;
     } catch (error) {
-      if (!signal.aborted && !local.aborted) status.textContent = `Unable to load this selection: ${error.message}`;
+      if (!signal.aborted && !local.aborted) {
+        status.textContent = `Unable to load this selection: ${error.message}`;
+        if (oldGraph?.isConnected) oldGraph.replaceChildren(element('p', 'Relationship selection unavailable. Choose a layer or source to retry.', 'hint'));
+      }
       return false;
     }
   }

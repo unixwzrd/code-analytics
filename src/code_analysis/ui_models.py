@@ -115,6 +115,7 @@ class UIModuleRow(StrictModel):
     fan_in: StrictInt = Field(ge=0)
     fan_out: StrictInt = Field(ge=0)
     finding_count: StrictInt = Field(ge=0)
+    finding_severity: Literal["info", "warning", "error"] | None = None
 
 
 class UIFindingRow(StrictModel):

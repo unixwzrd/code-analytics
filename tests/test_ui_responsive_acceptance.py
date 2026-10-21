@@ -220,7 +220,9 @@ def test_saved_evidence_dialog_keyboard_closes_and_restores_focus(
             _open_navigation(page)
             reveal_navigation(page, "Modules").click()
             page.get_by_role("columnheader", name="Module", exact=True).wait_for()
-            module_button = page.get_by_role("button", name="visible", exact=True)
+            module_button = page.get_by_role(
+                "button", name="Module details for visible", exact=True
+            )
             module_button.focus()
             page.keyboard.press("Enter")
             dialog = page.get_by_role("dialog")

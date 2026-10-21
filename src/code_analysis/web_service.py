@@ -41,6 +41,16 @@ from code_analysis.queries import build_query
 from code_analysis.query_models import QueryResponse, QuerySelector, QuerySelectorKind
 from code_analysis.report_models import AnalysisReport
 from code_analysis.reports.json_report import canonical_json, load_json
+from code_analysis.source_findings import (
+    SourceFindingPage,
+    SourceFindingRequest,
+    read_source_findings,
+)
+from code_analysis.source_relationships import (
+    SourceRelationshipPage,
+    SourceRelationshipRequest,
+    read_source_relationships,
+)
 from code_analysis.static_comparison_source import (
     StaticComparisonSourceBinding,
     build_comparison_source_bindings,
@@ -159,6 +169,12 @@ class ReportViewService:
     def code_browse(self, request: CodeBrowseRequest) -> CodeBrowsePage:
         """Serve bounded saved outlines; source disclosure is a separate service."""
         return self._code_browse_reader().read(request)
+
+    def source_findings(self, request: SourceFindingRequest) -> SourceFindingPage:
+        return read_source_findings(self.primary, request, reader=self._code_browse_reader())
+
+    def source_relationships(self, request: SourceRelationshipRequest) -> SourceRelationshipPage:
+        return read_source_relationships(self.primary, request, reader=self._code_browse_reader())
 
     def _code_browse_reader(self) -> CodeBrowseReader:
         with self._code_lock:

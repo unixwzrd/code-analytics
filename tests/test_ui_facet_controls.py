@@ -148,9 +148,11 @@ def test_browser_facets_forward_language_module_and_owner(ordinary_report) -> No
                 page.get_by_role("button", name="Apply scope filters").click()
                 page.get_by_role("columnheader", name="Module", exact=True).wait_for()
                 assert page.locator("tbody tr").count() >= 1
+                module_links = page.locator('tbody tr td:first-child [data-direct-source="true"]')
+                assert module_links.count() == page.locator("tbody tr").count()
                 assert all(
                     value == module or value.startswith(module + ".")
-                    for value in page.locator("tbody tr td:first-child").all_text_contents()
+                    for value in module_links.all_text_contents()
                 )
                 assert any("language=ruby" in request for request in requests)
                 assert any(

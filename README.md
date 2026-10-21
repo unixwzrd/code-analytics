@@ -2,7 +2,7 @@
 
 ![Code Analysis Suite transforms source structure into evidence-backed architecture views](docs/assets/code-analysis-banner.png)
 
-*Last updated: 2026-10-20*
+*Last updated: 2026-10-21*
 
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue)](#installation) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -10,7 +10,7 @@ Code Analysis Suite turns source structure into portable evidence for architectu
 
 **New here? Start with the [Python beginner tutorial](tutorials/python/beginner/README.md)** or browse [all nine Python, JavaScript and Ruby exercises](tutorials/README.md). Each supplies a working application, saved evidence and an independent investigation before the solutions.
 
-The public beta source is available on GitHub; the current version is `0.2.0b2`. Read the [beta scope and known limitations](docs/beta.md), then install from the repository below. Python 3.12+ is required; the recorded qualification environment uses Python 3.12.13, not a claim that every supported interpreter has been qualified. Repository availability is separate from a tagged release or PyPI publication.
+The current tagged beta is [`0.2.0b3`](https://github.com/unixwzrd/code-analytics/releases/tag/v0.2.0b3). Read the [beta scope and known limitations](docs/beta.md), then install this fixed release from the repository below. Python 3.12+ is required; the recorded qualification environment uses Python 3.12.13, not a claim that every supported interpreter has been qualified. GitHub release assets are separate from PyPI publication.
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ Static analysis parses source without importing or executing the target project.
 Install the repository into an isolated Python environment; these commands do not depend on a PyPI release:
 
 ```bash
-git clone https://github.com/unixwzrd/code-analytics.git
+git clone --branch v0.2.0b3 https://github.com/unixwzrd/code-analytics.git
 cd code-analytics
 python3.12 -m venv .venv
 . .venv/bin/activate

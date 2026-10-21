@@ -1,6 +1,6 @@
 # Public beta scope and known limitations
 
-Code Analysis Suite is preparing its first public beta. It is a developer investigation tool, not a certification that code is correct, secure, fast or safe to refactor. The candidate is not a stable API or report-format compatibility promise. Publication and release assets require a qualified, maintainer-reviewed commit.
+Code Analysis Suite is available for public beta testing; `0.2.0b3` is the current fixed release checkpoint. It is a developer investigation tool, not a certification that code is correct, secure, fast or safe to refactor. A beta release is not a stable API or report-format compatibility promise. Publication and release assets require a qualified, maintainer-reviewed commit.
 
 ## What to try
 
@@ -12,7 +12,7 @@ Python, JavaScript/JSX and Ruby have peer parser-adapter packages, but they do n
 
 Python 3.12.13 is the reproducible qualification baseline. The workflow runs Black, Ruff, strict mypy, the complete product suite in disjoint non-UI and UI/support partitions, clean package builds, and installed offline Chromium/WebKit checks. See [the commit-bound CI results](https://github.com/unixwzrd/code-analytics/actions) for current statuses and test counts; pending or failed jobs remain pending or failed. The source distribution retains all 135 tutorial files, and supplied report source hashes are checked without rerunning or rewriting the exercises.
 
-These technical checks do not establish unfamiliar-user comprehension, real Safari/hardware IME or every interpreter/platform combination. The `0.2.0b1` preparation additionally corrects the strict mypy failures exposed by clean CI; the local checker now passes across 213 source modules with psutil development stubs, without disabling checks. Source self-analysis retains partiality for bounded/unresolved evidence rather than returning a clean verdict.
+These technical checks do not establish unfamiliar-user comprehension, real Safari/hardware IME or every interpreter/platform combination. Strict mypy checks cover 217 source modules with psutil development stubs, without disabling checks. Source self-analysis retains partiality for bounded/unresolved evidence rather than returning a clean verdict. The source-centered UI adds recorded finding annotations and saved relationships, not general variable tracing or runtime-dispatch proof.
 
 ## Known limitations
 
@@ -20,6 +20,7 @@ These technical checks do not establish unfamiliar-user comprehension, real Safa
 - Tutorial qualification exposed incomplete JavaScript finding/aggregate-cycle and Ruby branch/clone/state/test-discovery contributions. Consult [the tutorial capability observations](../tutorials/VALIDATION.md#observed-missing-and-deferred). A complete collection state describes declared scope, not language feature parity or proof of clean code.
 - Candidate admission is conservative. Empty candidate/proposal inventories are possible even for deliberately awkward code. Complexity alone cannot authorize an extraction; missing coverage or ownership evidence remains visible.
 - cProfile measures supported Python scopes, not every thread, child process or native/device operation. Unavailable timing stays unavailable. See [profiling scope](threaded-profile-investigation.md). JavaScript and Ruby runtime profiling are not supported.
+- Managed collection uses exact PID/start-time ownership checks. On macOS, clock-sensitive process timestamps can disagree between a long-running UI and a newly launched collector; qualification observed a one-second discrepancy. The captured report is retained, but generation binding fails closed and the result remains unqualified. Restart an idle UI and collect again after the clock stabilizes; do not loosen identity checks or assume the saved result is verified. See [psutil's creation-time limitations](https://psutil.readthedocs.io/stable/index.html#psutil.Process.create_time).
 - The tutorial's direct Python script profiling exercise exposed an import-context failure while its module-based unittest workload succeeded. Do not assume every script workload has the same import path as direct interpreter invocation; preserve failures and use the documented supported workload rather than claiming a complete capture.
 - Browser qualification covers Chromium and WebKit automation. Real Safari, hardware IME, unfamiliar-user comprehension and broader platform/runtime combinations need further review. Python 3.12.13 is the qualification interpreter; Python 3.13 exposed an authoritative-golden difference and is not qualified by that result.
 - Project profiles, an in-session change-project workflow, entry-point suggestions, tutorials integrated into the UI, storage-management controls, incremental collection, live tracing and AI/IDE integration remain planned. The tutorial files are available from a source checkout, not an installed-wheel tutorial browser.

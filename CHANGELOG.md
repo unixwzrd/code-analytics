@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0b3 — 2026-10-21 — source-centered investigation
+
+- Give source selections and session drafts a wide desktop workspace, explicit code expansion and retained wrap preference; keep files and relationships reachable instead of shrinking the editor.
+- Integrate the exact LocalOps 0.3.0 editor-annotation candidate without modifying its resources. Bind recorded finding markers to report/source/document revisions, retain accessible severity labels, and clear markers on draft edits.
+- Add bounded saved-only caller/callee and structure-relationship inspection, distinguishing lexical occurrences, name matches, explicit flows and unresolved targets. Module rows open source directly and show severity only from recorded findings.
+- Display the running application version and add a privacy-reviewed GitHub issue-reporting flow plus repository-owned bug form. No automatic source, report or log attachments.
+- Remove stale graph nodes while changing relationship layers and preserve newer keyboard focus when an earlier source load finishes. Keep direct-source navigation and optional Details inspection independently accessible.
+- Prevent terminal collection polls from querying controls removed while their panel is closing. Preserve strict process/source binding; document clock-sensitive process-start verification as a known limitation.
+
 ## 0.2.0b2 — synchronized code and project reading
 
 - Restore source folders from validated local collection JSON metadata when opening collected or saved results, instead of asking again during graph navigation. Explain unavailable/moved/invalid locations in Overview, preserve portable report identities, and keep source-hash checks and filesystem confinement.

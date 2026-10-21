@@ -21,6 +21,9 @@ UI_SUPPORT = frozenset(
         "test_static_comparison_source_review.py",
         "test_comparison_filters.py",
         "test_comparison_export.py",
+        "test_source_findings.py",
+        "test_source_relationships.py",
+        "test_application_info.py",
     }
 )
 

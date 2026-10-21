@@ -46,7 +46,9 @@ def test_localops_table_preserves_order_and_evidence_after_column_changes(ordina
                 == identities
             )
             table.locator("tbody [data-identity]").first.click()
-            playwright.expect(page.locator("#evidence-dialog")).to_be_visible()
+            playwright.expect(page.locator("#evidence-dialog")).not_to_be_visible()
+            playwright.expect(page.locator(".code-browser-source")).to_be_visible()
+            playwright.expect(page.locator(".code-browser-source")).to_contain_text(identities[0])
         finally:
             browser.close()
 

@@ -15,9 +15,9 @@ from code_analysis.web_service import ReportViewService
 def test_bundled_localops_provenance_and_license() -> None:
     root = files("code_analysis").joinpath("web_static/localops")
     provenance = json.loads(root.joinpath("provenance.json").read_text())
-    assert provenance["version"] == "0.1.5"
+    assert provenance["version"] == "0.3.0"
     assert provenance["wheel_sha256"] == (
-        "89800189b2c3177eefff40d4bc518c3eb0060ca68f97d375be76fb9d94f20929"
+        "0ce9d1447085a81d1adabb6850c920b4d699aed127aa8b00367b5951d123dac7"
     )
     assert len(provenance["assets_sha256"]) == 18
     for name, digest in provenance["assets_sha256"].items():

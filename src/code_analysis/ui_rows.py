@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Iterator
 from enum import StrEnum
+from typing import Literal
 
 from code_analysis.clone_browsing import CloneRow, clone_rows
 from code_analysis.contract_browsing import ContractRow, ShapeRow, contract_rows, shape_rows
@@ -89,6 +90,12 @@ def state_effect_rows(report: AnalysisReport) -> Iterator[UIStateEffectRow]:
 
 def module_rows(report: AnalysisReport) -> Iterator[UIModuleRow]:
     counts = Counter(item.module for item in report.findings)
+    severity_order = {"error": 0, "warning": 1, "info": 2}
+    severities: dict[str, Literal["info", "warning", "error"]] = {}
+    for finding in report.findings:
+        previous = severities.get(finding.module)
+        if previous is None or severity_order[finding.severity] < severity_order[previous]:
+            severities[finding.module] = finding.severity
     for item in report.modules:
         yield UIModuleRow(
             module=item.name,
@@ -99,6 +106,7 @@ def module_rows(report: AnalysisReport) -> Iterator[UIModuleRow]:
             fan_in=item.fan_in,
             fan_out=item.fan_out,
             finding_count=counts[item.name],
+            finding_severity=severities.get(item.name),
         )
 
 

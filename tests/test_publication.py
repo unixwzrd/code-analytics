@@ -87,6 +87,9 @@ def test_beta_metadata_and_documented_tutorial_entry_point_agree() -> None:
     assert project["version"] == __version__
     assert "Development Status :: 4 - Beta" in project["classifiers"]
     readme = (ROOT / "README.md").read_text()
+    assert f"`{__version__}`" in readme
+    assert f"--branch v{__version__}" in readme
+    assert (ROOT / "CHANGELOG.md").read_text().splitlines()[2].startswith(f"## {__version__} — ")
     assert "tutorials/python/beginner/README.md" in readme
     assert "docs/beta.md" in readme
 

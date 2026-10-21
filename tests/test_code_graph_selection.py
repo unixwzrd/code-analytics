@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 from browser_navigation import reveal_navigation
@@ -116,6 +117,59 @@ def test_keyboard_graph_selection_updates_outline_and_source(browser_source):
             browser.close()
 
 
+@pytest.mark.parametrize("engine", ("chromium", "webkit"))
+def test_completed_source_load_preserves_newer_graph_keyboard_focus(browser_source, engine):
+    playwright = pytest.importorskip("playwright.sync_api")
+    source, service = browser_source
+    module = service.primary.modules[0]
+    outer = next(symbol for symbol in module.symbols if symbol.name == "outer")
+    inner = next(symbol for symbol in module.symbols if symbol.name == "inner")
+    outer_identity = f"{module.name}:{outer.qualified_name}"
+    with (
+        served(create_server(service, source_root=source.parent, token=TOKEN)) as server,
+        playwright.sync_playwright() as runtime,
+    ):
+        browser = getattr(runtime, engine).launch()
+        try:
+            page = browser.new_page(viewport={"width": 1440, "height": 900})
+            page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
+            graph = _open_file_graph(page)
+            held = []
+
+            def hold_selected_relationships(route):
+                identity = parse_qs(urlsplit(route.request.url).query).get("identity")
+                if identity == [outer_identity]:
+                    held.append(route)
+                else:
+                    route.continue_()
+
+            page.route("**/api/code-browser/relationships?*", hold_selected_relationships)
+            node = graph.locator(f'[data-code-graph-node="code-browse-contained:{outer_identity}"]')
+            node.focus()
+            with page.expect_request(
+                lambda request: "/api/code-browser/relationships?" in request.url
+                and parse_qs(urlsplit(request.url).query).get("identity") == [outer_identity]
+            ):
+                page.keyboard.press("Enter")
+            playwright.expect(page.locator(".code-browser-source h3")).to_have_text(
+                outer.qualified_name
+            )
+            next_node = graph.locator(
+                f'[data-code-graph-node="code-browse-contained:{module.name}:{inner.qualified_name}"]'
+            )
+            next_node.focus()
+            assert len(held) == 1
+            held[0].continue_()
+            page.locator(".source-relationships").wait_for()
+            playwright.expect(next_node).to_be_focused()
+            page.keyboard.press(" ")
+            playwright.expect(page.locator(".code-browser-source h3")).to_have_text(
+                inner.qualified_name
+            )
+        finally:
+            browser.close()
+
+
 def test_graph_selection_history_and_rejected_dirty_navigation(browser_source):
     playwright = pytest.importorskip("playwright.sync_api")
     source, service = browser_source
@@ -179,7 +233,9 @@ def test_unresolved_graph_node_stays_inspection_only(browser_source):
             page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
             graph = _open_file_graph(page)
             graph.get_by_label("Relationship layer", exact=True).select_option("static-call-sites")
-            graph.locator("[data-code-graph-node]").first.wait_for()
+            graph.locator(
+                '[data-relationship-layer="static-call-sites"] [data-code-graph-node]'
+            ).first.wait_for()
             found = False
             for node in graph.locator("[data-code-graph-node]").all():
                 heading_before = page.locator(".code-browser-source h3").text_content() or ""
@@ -202,5 +258,34 @@ def test_unresolved_graph_node_stays_inspection_only(browser_source):
                 )
                 break
             assert found, "expected an inspection-only call-site node"
+        finally:
+            browser.close()
+
+
+def test_layer_change_removes_previous_graph_before_outline_response(browser_source):
+    playwright = pytest.importorskip("playwright.sync_api")
+    source, service = browser_source
+    with (
+        served(create_server(service, source_root=source.parent, token=TOKEN)) as server,
+        playwright.sync_playwright() as runtime,
+    ):
+        browser = _launch(runtime)
+        try:
+            page = browser.new_page(viewport={"width": 1440, "height": 900})
+            page.goto(f"http://127.0.0.1:{server.server_address[1]}/?token={TOKEN}")
+            graph = _open_file_graph(page)
+            held = []
+            page.route("**/api/code-browser?*", lambda route: held.append(route))
+            with page.expect_request("**/api/code-browser?*"):
+                graph.get_by_label("Relationship layer", exact=True).select_option(
+                    "static-call-sites"
+                )
+            playwright.expect(graph.locator("[data-code-graph-node]")).to_have_count(0)
+            playwright.expect(graph).to_contain_text("Loading selected relationships")
+            assert len(held) == 1
+            held[0].continue_()
+            graph.locator(
+                '[data-relationship-layer="static-call-sites"] [data-code-graph-node]'
+            ).first.wait_for()
         finally:
             browser.close()

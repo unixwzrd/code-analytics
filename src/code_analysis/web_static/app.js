@@ -9,6 +9,7 @@ import {DraftSession} from './code_drafts.js';
 import {installSessionControl} from './session.js';
 import {wireComparisonSources, wireComparisonDownloads} from './comparison.js';
 import {installUserHelp} from './help.js';
+import {mountApplicationInfo} from './application_info.js';
 import {disclosure, element} from '/localops/index.js';
 import {mountWorkflowNavigation, revealWorkflowView, workflowDestination, renderWorkflowGuidance,
   showWorkflowUnavailable, workflowOverview} from './workflow.js';
@@ -93,7 +94,14 @@ async function returnToInvestigation({fromHistory = false} = {}) {
   if (scroller) scroller.scrollTop = origin.scrollTop;
   return true;
 }
-installUserHelp();
+const helpReader = installUserHelp();
+const applicationInfo = mountApplicationInfo({
+  api,
+  currentView: () => view,
+});
+const issueHelp = element('button', {type: 'button', className: 'detail-button', text: 'Report an issue'});
+issueHelp.addEventListener('click', () => applicationInfo.openIssue(issueHelp));
+helpReader.content.prepend(issueHelp);
 window.addEventListener('beforeunload', event => {
   if (sessionClosed || !draftSession.hasDirty()) return;
   event.preventDefault();
@@ -106,7 +114,7 @@ async function request(path, signal) {
   // Handoff routes accept their exact selection fields alone; a catalog choice must
   // never travel with them or redirect the artifact their selection is validated against.
   const handoff = url.pathname === '/api/handoff' || url.pathname === '/api/runtime/handoff';
-  if (!handoff && runSelection && !url.pathname.startsWith('/api/collection') && url.pathname !== '/api/runs' && !url.searchParams.has('run')) {
+  if (!handoff && runSelection && !url.pathname.startsWith('/api/collection') && !['/api/runs', '/api/application-info'].includes(url.pathname) && !url.searchParams.has('run')) {
     url.searchParams.set('run', runSelection.primary);
     url.searchParams.set('compare_run', runSelection.comparison);
   }
@@ -237,6 +245,7 @@ const openEvidence = evidenceViewer(api, escapeHtml, {
 });
 const evidenceButton = (kind, identity, label) => `<button class="detail-button" data-kind="${escapeHtml(kind)}" data-identity="${escapeHtml(identity)}">${escapeHtml(label)}</button>`;
 const findingButton = (value, row) => `${row.symbol ? `<div class="hint">${escapeHtml(row.symbol)}</div>` : ''}<button class="detail-button" data-kind="finding" data-identity="${escapeHtml(row.finding_id)}" data-finding-symbol="${escapeHtml(row.symbol || '')}">${escapeHtml(value)}</button> <button class="detail-button" data-finding-details="${escapeHtml(row.finding_id)}">Details</button>`;
+const moduleSourceButton = (value) => `<button class="detail-button" data-kind="navigation" data-identity="${escapeHtml(value)}" data-direct-source="true">${escapeHtml(value)}</button> <button class="detail-button" data-kind="navigation" data-identity="${escapeHtml(value)}" aria-label="Module details for ${escapeHtml(value)}">Details</button>`;
 
 async function jumpToCode(selection, signal) {
   if (!draftSession.canNavigate()) return;
@@ -410,6 +419,11 @@ content.addEventListener('click', event => {
   if (button) findingSourceController?.abort();
   if (button) evidenceFocus = {kind: button.dataset.kind, identity: button.dataset.identity};
   if (button?.dataset.kind === 'finding') { openFindingSource(button); return; }
+  if (button?.dataset.directSource) {
+    findingSourceContext = undefined;
+    jumpToCode({report_sha256: bootstrap.reports[0].report_sha256, identity: button.dataset.identity}, renderController.signal).catch(showError);
+    return;
+  }
   if (button) findingSourceContext = undefined;
   if (button) openEvidence(button.dataset.kind, button.dataset.identity, '', 0,
     button.dataset.kind === 'test' ? {report_sha256: bootstrap.reports[0].report_sha256, signal: renderController.signal} : null);
@@ -678,7 +692,7 @@ async function render() {
   if (view === "modules") {
     const scoped = scopedFacets();
     const page = await api(`/api/modules?offset=${offset}&limit=${pageSize}&q=${q}&${scoped}`, signal);
-    content.innerHTML = facetControls() + table([["Module","module",value => evidenceButton('navigation',value,value)],["Language","language",badge],["Lines","lines"],["Symbols","symbols"],["Fan in","fan_in"],["Fan out","fan_out"],["Findings","finding_count"]], page);
+    content.innerHTML = facetControls() + '<p class="hint">Fan in/out counts module imports, not calls or runtime frequency. Select a module to browse source; severity labels come only from recorded findings.</p>' + table([["Module","module",moduleSourceButton],["Language","language",badge],["Lines","lines"],["Symbols","symbols"],["Fan in","fan_in"],["Fan out","fan_out"],["Findings","finding_count",(value, row) => `${escapeHtml(value)} ${row.finding_severity ? badge(row.finding_severity) : 'No retained findings'}`]], page);
     wireFacetControls();
     await wirePager(page, signal);
   } else if (view === "architecture") {
