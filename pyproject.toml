@@ -46,7 +46,7 @@ dev = [
   "types-psutil>=7.2.2.20260906,<8",
   "pytest>=9",
   "pytest-cov>=7",
-  "ruff>=0.15",
+  "ruff==0.16.3",
 ]
 browser = ["playwright>=1.55,<2"]
 docs = ["markdown-it-py==4.0.0"]

@@ -1009,7 +1009,18 @@ class ProposalAdmissionFunnel(StrictModel):
             raise ValueError("proposal admission candidate counts must reconcile")
         if self.admitted_candidates != (self.retained_proposals + self.proposal_bound_omissions):
             raise ValueError("proposal admission retained counts must reconcile")
-        if len(self.rejection_examples) > self.call_only_rejections:
+        if (
+            sum(
+                item.reason is ProposalAdmissionRejectionReason.INCOMPLETE_CALL_RESOLUTION_ONLY
+                for item in self.rejection_examples
+            )
+            > self.call_only_rejections
+            or sum(
+                item.reason is ProposalAdmissionRejectionReason.RESPONSIBILITY_COMPONENT_TOO_BROAD
+                for item in self.rejection_examples
+            )
+            > self.too_broad_rejections
+        ):
             raise ValueError("proposal rejection examples exceed rejected candidates")
         identities = tuple(item.candidate_id for item in self.rejection_examples)
         _require_sorted_unique("proposal rejection example IDs", identities)

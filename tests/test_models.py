@@ -322,6 +322,30 @@ def test_proposal_admission_funnel_is_strict_and_reconciled() -> None:
                 "rejection_examples": (example, example),
             }
         )
+    too_broad = example.model_copy(
+        update={"reason": ProposalAdmissionRejectionReason.RESPONSIBILITY_COMPONENT_TOO_BROAD}
+    )
+    assert ProposalAdmissionFunnel(
+        responsibility_clusters_considered=2,
+        proposal_candidates_considered=3,
+        admitted_candidates=2,
+        call_only_rejections=0,
+        too_broad_rejections=1,
+        proposal_bound_omissions=1,
+        retained_proposals=1,
+        rejection_examples=(too_broad,),
+    ).rejection_examples == (too_broad,)
+    with pytest.raises(ValidationError, match="rejection examples exceed"):
+        ProposalAdmissionFunnel(
+            responsibility_clusters_considered=2,
+            proposal_candidates_considered=3,
+            admitted_candidates=2,
+            call_only_rejections=0,
+            too_broad_rejections=1,
+            proposal_bound_omissions=1,
+            retained_proposals=1,
+            rejection_examples=(example,),
+        )
 
 
 def test_oversized_responsibility_evidence_and_too_broad_rejection_are_retained() -> None:
