@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0b4 — 2026-11-11 — proposal admission validation (release candidate)
+
+- Accept valid reports containing responsibility-component-too-broad rejection examples. Previously, all examples were checked against the call-resolution-only rejection count, so a scan could fail report validation despite reconciled aggregate counts. Validate each reason against its own count while preserving strict types, candidate/retained arithmetic, deterministic unique IDs and the 25-example limit. Report fields and schema are unchanged.
+- Add regression coverage for valid broad-component examples and rejection reasons whose examples exceed their own count.
+- Update CI to Ruby 3.3.13 with Prism 1.9.0 and pin the development Ruff dependency to 0.16.3 for reproducible lint qualification. Ruby is still optional for Python analysis and saved-report browsing; these pins do not change the base runtime dependencies.
+- Synchronize installation/version documentation, report-model invariants and bundled offline help. Historical tutorial reports and qualification records retain their original producer versions.
+
+This candidate is not yet published. Commit-bound CI, including the browser gate, must pass before release; the b3 tag and assets remain unchanged.
+
 ## 0.2.0b3 — 2026-10-21 — source-centered investigation
 
 - Give source selections and session drafts a wide desktop workspace, explicit code expansion and retained wrap preference; keep files and relationships reachable instead of shrinking the editor.

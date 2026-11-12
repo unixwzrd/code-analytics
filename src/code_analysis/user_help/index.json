@@ -10,7 +10,7 @@
     },
     {
       "name": "getting-started.html",
-      "sha256": "78b06b5797c94d45c3cba4caa92a1cc20fe0c24943275f772944ef6b5ce0e0b5"
+      "sha256": "114249474daa657c7cc2258f7ce8b522e5f9eb4ef748be7f89e7a3a89da6d573"
     },
     {
       "name": "reports.html",
@@ -704,7 +704,7 @@
   "sources": [
     {
       "name": "README.md",
-      "sha256": "581f1a7b70d5e1577fc8fae5d0bd5d139a721ac02008a1649cdd35b6cbb5c90d"
+      "sha256": "95a5d4d47b8d92eb7b660e1cc4d18559a18e154648ade0b5955ac6ff839fed7e"
     },
     {
       "name": "docs/cli-examples.md",

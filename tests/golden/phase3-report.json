@@ -472,7 +472,7 @@
         "Phase 4 test-impact evidence is unavailable.",
         "Static graph simulation does not establish runtime behavior or authorize source changes."
       ],
-      "observation_id": "candidate-observation-60aa133db0ee4908cc6e",
+      "observation_id": "candidate-observation-06ccad92a37488077204",
       "owner_alternative_ids": [
         "owner-alternative-0e9e0990cf818edad086",
         "owner-alternative-68079ea1947b34f3b7b8",
@@ -497,7 +497,7 @@
       "responsibility_ids": [
         "responsibility-2fd397069bf0a104a063"
       ],
-      "run_identity_sha256": "559b4344e621d178e58f85f2ca31ac4db9e20c37cd755d0edb4b36c11396e9a9",
+      "run_identity_sha256": "8c1c51ce9f2841fe7fcd8537a5a01e61b6e0ecb093e21f092bfbc3e71617c704",
       "source_sha256s": [
         "4ac38deb9aadc762f3ad48237676c242b09e7a776f522117f18f7b2e2d46ef30",
         "7760bf104fd48c633055539019ac926d62cb6893fc6ee0e08d3107daf2bef973",
@@ -540,7 +540,7 @@
         "Phase 4 test-impact evidence is unavailable.",
         "Static graph simulation does not establish runtime behavior or authorize source changes."
       ],
-      "observation_id": "candidate-observation-9d154433b6ee18476fa3",
+      "observation_id": "candidate-observation-3620fdb2ed0e84bb3c8d",
       "owner_alternative_ids": [
         "owner-alternative-bddf7a63c08106ea455a",
         "owner-alternative-d1bab80fc1d80d59b1b6",
@@ -565,7 +565,7 @@
       "responsibility_ids": [
         "responsibility-2fd397069bf0a104a063"
       ],
-      "run_identity_sha256": "559b4344e621d178e58f85f2ca31ac4db9e20c37cd755d0edb4b36c11396e9a9",
+      "run_identity_sha256": "8c1c51ce9f2841fe7fcd8537a5a01e61b6e0ecb093e21f092bfbc3e71617c704",
       "source_sha256s": [
         "4ac38deb9aadc762f3ad48237676c242b09e7a776f522117f18f7b2e2d46ef30",
         "7760bf104fd48c633055539019ac926d62cb6893fc6ee0e08d3107daf2bef973",
@@ -4633,7 +4633,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b3"
+      "version": "0.2.0b4"
     },
     {
       "completeness": "complete",
@@ -4650,7 +4650,7 @@
       "state": "success",
       "stderr_sha256": null,
       "stdout_sha256": null,
-      "version": "0.2.0b3"
+      "version": "0.2.0b4"
     },
     {
       "completeness": "complete",
@@ -4739,7 +4739,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-819d4f229ae4770f9fd3",
       "candidate_id": "refactor-candidate-1a59da04878aa1ed4c80",
-      "candidate_observation_id": "candidate-observation-9d154433b6ee18476fa3",
+      "candidate_observation_id": "candidate-observation-3620fdb2ed0e84bb3c8d",
       "change_coupling_ids": [],
       "clone_cluster_ids": [
         "clone-cluster-236cb60cfb873613e69f"
@@ -5100,7 +5100,7 @@
       ],
       "architecture_estimate_id": "architecture-estimate-b933c963eb57996e41ec",
       "candidate_id": "refactor-candidate-d4ea0be1a1ea11057c68",
-      "candidate_observation_id": "candidate-observation-60aa133db0ee4908cc6e",
+      "candidate_observation_id": "candidate-observation-06ccad92a37488077204",
       "change_coupling_ids": [],
       "clone_cluster_ids": [
         "clone-cluster-236cb60cfb873613e69f"
@@ -5475,7 +5475,7 @@
       "state_resource_ids": []
     }
   ],
-  "run_identity_sha256": "ded50b36a19f6b597fa4450d6c456a92198ee22bb3d8dd26d2f8b7ba13e1079c",
+  "run_identity_sha256": "18b09361d5358ea02d92c70cbce01843cd4f9536ab110ff548565990eb3f26e0",
   "schema_name": "code-analysis-report",
   "schema_version": "1.0.0",
   "section_coverage": [
@@ -5899,155 +5899,7 @@
   ],
   "static_call_occurrences": [
     {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
-      "callee_spelling": "shared",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-7525bc4f62b52267af81",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-28de19809378af2b9966"
-      ],
-      "language": "python",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "implicit-context-manager-calls-not-modeled",
-        "implicit-decorator-application-not-modeled",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "package.work",
-      "occurrence_id": "call-occurrence-3cf5f424f54b4318e766",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 0,
-          "definition_line": 18,
-          "kind": "function",
-          "name": "third"
-        }
-      ],
-      "source_file_id": "source-file-71d8e5264566196f8954",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
-      "callee_spelling": "shared",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-ce076f447805f53c83d8",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-1de88220ad3c4d2cf808"
-      ],
-      "language": "python",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "implicit-context-manager-calls-not-modeled",
-        "implicit-decorator-application-not-modeled",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "package.combine_a",
-      "occurrence_id": "call-occurrence-4eff223f76de08c30b01",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 0,
-          "definition_line": 5,
-          "kind": "function",
-          "name": "transform"
-        }
-      ],
-      "source_file_id": "source-file-fd22ca93fa0f90e9f663",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
-      "callee_spelling": "shared",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-110b6e0a6bc182d3039b",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-4b88066048b9c490a962"
-      ],
-      "language": "python",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "implicit-context-manager-calls-not-modeled",
-        "implicit-decorator-application-not-modeled",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "package.work",
-      "occurrence_id": "call-occurrence-5f3b5362933b3505b3ad",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 0,
-          "definition_line": 11,
-          "kind": "function",
-          "name": "second"
-        }
-      ],
-      "source_file_id": "source-file-71d8e5264566196f8954",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
-      "callee_spelling": "work.first",
-      "conditional": false,
-      "deferred": true,
-      "enclosing_subject_id": "subject-f7326b273e0da8dcf15e",
-      "evaluation_context": "function-body",
-      "evaluation_unknown": false,
-      "evidence_ids": [
-        "evidence-69698579e34961ed9806"
-      ],
-      "language": "python",
-      "limitations": [
-        "callee-spelling-does-not-establish-name-binding-or-dispatch",
-        "implicit-context-manager-calls-not-modeled",
-        "implicit-decorator-application-not-modeled",
-        "syntactic-context-is-not-runtime-execution-or-call-order"
-      ],
-      "module_name": "package.domain_bad",
-      "occurrence_id": "call-occurrence-c0c97f33e7ecbfb407ec",
-      "scope_path": [
-        {
-          "definition_column": 0,
-          "definition_line": 1,
-          "kind": "module",
-          "name": null
-        },
-        {
-          "definition_column": 0,
-          "definition_line": 4,
-          "kind": "function",
-          "name": "violates_direction"
-        }
-      ],
-      "source_file_id": "source-file-21d49a1c6d60f955656b",
-      "syntax_kind": "call"
-    },
-    {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -6065,7 +5917,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.work",
-      "occurrence_id": "call-occurrence-f0be8461f987ba78e565",
+      "occurrence_id": "call-occurrence-1ce324e10672fcdca742",
       "scope_path": [
         {
           "definition_column": 0,
@@ -6084,7 +5936,118 @@
       "syntax_kind": "call"
     },
     {
-      "analysis_identity_sha256": "b303941930e08649f43b6d95eaaff5b8e6cf00fea9b38a3ade66df7cda7cb7f8",
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
+      "callee_spelling": "shared",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-110b6e0a6bc182d3039b",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-4b88066048b9c490a962"
+      ],
+      "language": "python",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "implicit-context-manager-calls-not-modeled",
+        "implicit-decorator-application-not-modeled",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "package.work",
+      "occurrence_id": "call-occurrence-398aac219b6bf2c9a4b9",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 0,
+          "definition_line": 11,
+          "kind": "function",
+          "name": "second"
+        }
+      ],
+      "source_file_id": "source-file-71d8e5264566196f8954",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
+      "callee_spelling": "shared",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-ce076f447805f53c83d8",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-1de88220ad3c4d2cf808"
+      ],
+      "language": "python",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "implicit-context-manager-calls-not-modeled",
+        "implicit-decorator-application-not-modeled",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "package.combine_a",
+      "occurrence_id": "call-occurrence-5d0d1535a44499776906",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 0,
+          "definition_line": 5,
+          "kind": "function",
+          "name": "transform"
+        }
+      ],
+      "source_file_id": "source-file-fd22ca93fa0f90e9f663",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
+      "callee_spelling": "shared",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-7525bc4f62b52267af81",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-28de19809378af2b9966"
+      ],
+      "language": "python",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "implicit-context-manager-calls-not-modeled",
+        "implicit-decorator-application-not-modeled",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "package.work",
+      "occurrence_id": "call-occurrence-9469a7a6391ddb35f493",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 0,
+          "definition_line": 18,
+          "kind": "function",
+          "name": "third"
+        }
+      ],
+      "source_file_id": "source-file-71d8e5264566196f8954",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
       "callee_spelling": "shared",
       "conditional": false,
       "deferred": true,
@@ -6102,7 +6065,7 @@
         "syntactic-context-is-not-runtime-execution-or-call-order"
       ],
       "module_name": "package.combine_b",
-      "occurrence_id": "call-occurrence-fb9aa2dc5a190c2f4f79",
+      "occurrence_id": "call-occurrence-bdd01266a55bd1f29f72",
       "scope_path": [
         {
           "definition_column": 0,
@@ -6118,6 +6081,43 @@
         }
       ],
       "source_file_id": "source-file-be2dcf6dd9547a2c3013",
+      "syntax_kind": "call"
+    },
+    {
+      "analysis_identity_sha256": "baffc461a4f8a5d2f3d01aeb4a7d4eb0e076132a4228da983bcf01a2ec8da96c",
+      "callee_spelling": "work.first",
+      "conditional": false,
+      "deferred": true,
+      "enclosing_subject_id": "subject-f7326b273e0da8dcf15e",
+      "evaluation_context": "function-body",
+      "evaluation_unknown": false,
+      "evidence_ids": [
+        "evidence-69698579e34961ed9806"
+      ],
+      "language": "python",
+      "limitations": [
+        "callee-spelling-does-not-establish-name-binding-or-dispatch",
+        "implicit-context-manager-calls-not-modeled",
+        "implicit-decorator-application-not-modeled",
+        "syntactic-context-is-not-runtime-execution-or-call-order"
+      ],
+      "module_name": "package.domain_bad",
+      "occurrence_id": "call-occurrence-f663402460d2a278d8dd",
+      "scope_path": [
+        {
+          "definition_column": 0,
+          "definition_line": 1,
+          "kind": "module",
+          "name": null
+        },
+        {
+          "definition_column": 0,
+          "definition_line": 4,
+          "kind": "function",
+          "name": "violates_direction"
+        }
+      ],
+      "source_file_id": "source-file-21d49a1c6d60f955656b",
       "syntax_kind": "call"
     }
   ],
@@ -6327,7 +6327,7 @@
   "test_fixtures": [],
   "test_modules": [],
   "test_relationships": [],
-  "tool_version": "0.2.0b3",
+  "tool_version": "0.2.0b4",
   "unresolved_edges": [],
   "validation_patterns": []
 }

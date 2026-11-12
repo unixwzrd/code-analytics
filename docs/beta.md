@@ -1,6 +1,12 @@
 # Public beta scope and known limitations
 
-Code Analysis Suite is available for public beta testing; `0.2.0b3` is the current fixed release checkpoint. It is a developer investigation tool, not a certification that code is correct, secure, fast or safe to refactor. A beta release is not a stable API or report-format compatibility promise. Publication and release assets require a qualified, maintainer-reviewed commit.
+Code Analysis Suite is available for public beta testing; `0.2.0b4` is the next release candidate and `0.2.0b3` remains the published fixed checkpoint until qualification and publication finish. It is a developer investigation tool, not a certification that code is correct, secure, fast or safe to refactor. A beta release is not a stable API or report-format compatibility promise. Publication and release assets require a qualified, maintainer-reviewed commit.
+
+## Changes in the b4 candidate
+
+Proposal-admission validation now checks each rejection reason against its own aggregate count. Valid too-broad-component examples no longer cause a scan or saved-report load to fail against the unrelated call-resolution-only count. Candidate accounting, strict report validation, completeness and schema are unchanged. CI uses Ruby 3.3.13 / Prism 1.9.0 and Ruff 0.16.3; these are qualification dependencies rather than additional base-install requirements.
+
+An earlier browser qualification run reported a blank severity filter after return navigation. A preceding pass with the same application source does not prove intermittency. Keep that result unresolved until inspected qualification establishes the current candidate's status; this release note makes no browser-fix claim.
 
 ## What to try
 

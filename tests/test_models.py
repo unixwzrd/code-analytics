@@ -348,6 +348,47 @@ def test_proposal_admission_funnel_is_strict_and_reconciled() -> None:
         )
 
 
+@pytest.mark.parametrize("call_count", range(3))
+@pytest.mark.parametrize("broad_count", range(3))
+@pytest.mark.parametrize("call_examples", range(3))
+@pytest.mark.parametrize("broad_examples", range(3))
+def test_proposal_rejection_examples_obey_each_reason_count(
+    call_count: int, broad_count: int, call_examples: int, broad_examples: int
+) -> None:
+    reasons = (
+        ProposalAdmissionRejectionReason.INCOMPLETE_CALL_RESOLUTION_ONLY,
+    ) * call_examples + (
+        ProposalAdmissionRejectionReason.RESPONSIBILITY_COMPONENT_TOO_BROAD,
+    ) * broad_examples
+    examples = tuple(
+        ProposalRejectionExample(
+            candidate_id=f"proposal-candidate-{index:020x}",
+            kind=ProposalCandidateKind.EXTRACT_RESPONSIBILITY,
+            responsibility_id="responsibility-" + "2" * 20,
+            affected_subject_ids=("subject-" + "1" * 20, "subject-" + "2" * 20),
+            affected_modules=("package.module",),
+            reason=reason,
+            evidence=(_shape_evidence(),),
+        )
+        for index, reason in enumerate(reasons)
+    )
+    payload = {
+        "responsibility_clusters_considered": 1,
+        "proposal_candidates_considered": call_count + broad_count,
+        "admitted_candidates": 0,
+        "call_only_rejections": call_count,
+        "too_broad_rejections": broad_count,
+        "proposal_bound_omissions": 0,
+        "retained_proposals": 0,
+        "rejection_examples": examples,
+    }
+    if call_examples <= call_count and broad_examples <= broad_count:
+        assert ProposalAdmissionFunnel.model_validate(payload).rejection_examples == examples
+    else:
+        with pytest.raises(ValidationError, match="rejection examples exceed"):
+            ProposalAdmissionFunnel.model_validate(payload)
+
+
 def test_oversized_responsibility_evidence_and_too_broad_rejection_are_retained() -> None:
     members = tuple(f"subject-{index:020d}" for index in range(13))
     cluster = ResponsibilityCluster(
